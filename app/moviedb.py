@@ -16,5 +16,6 @@ if x == 1:
     #con.execute("create table PaymentTable (paymentID INTEGER PRIMARY KEY AUTOINCREMENT, paymentMethod TEXT NOT NULL, customerTypeID INTEGER FORIEGN KEY REFERENCES CustomerType(customerTypeID))")
     #con.execute("create table TicketTable (ticketID INTEGER PRIMARY KEY AUTOINCREMENT, bookingID INTEGER FORIEGN KEY REFERENCES BookingTable(bookingID), customerTypeID INTEGER FORIEGN KEY REFERENCES CustomerType(customerTypeID))")
     #con.execute("create table CustomerTable (customerID INTEGER PRIMARY KEY AUTOINCREMENT, ticketID INTEGER FORIEGN KEY REFERENCES TicketTable(ticketID), paymentID INTEGER FORIEGN KEY REFERENCES PaymentTable(paymentID), memberID INTEGER FORIEGN KEY REFERENCES MemberTable(memberID))")
+    pass
 
 con.close()
