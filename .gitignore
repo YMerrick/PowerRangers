@@ -1,0 +1,5 @@
+venv/pyvenv.cfg
+.vscode/
+__pycache__/
+*.py[cod]
+*$py.class
