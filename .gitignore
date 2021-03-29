@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 app/__pycache__/__init__.cpython-37.pyc
 .vscode/settings.json
+venv/**
 venv/Lib/site-packages/blinker/__pycache__/__init__.cpython-37.pyc
 venv/Lib/site-packages/blinker/__pycache__/_saferef.cpython-37.pyc
 venv/Lib/site-packages/blinker/__pycache__/_utilities.cpython-37.pyc
