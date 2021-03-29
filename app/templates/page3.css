@@ -1,0 +1,40 @@
+@charset "utf-8";
+.header{ width:972px; margin:0 auto;}
+.top_img{ height:100px;  margin-bottom:3px;} 
+.logo{ width:300px; height:80px;float:left; padding-top:15px; padding-bottom:5px; padding-left:10px; padding-right:5px;}
+.contenter{ width:972px; margin:0 auto; padding-top:10px;}
+.right{ width:730px; float:right; overflow:hidden}
+.left{ width:230px; float:left;overflow:hidden}
+.right_con{ background:url(rcon_bg.jpg) no-repeat;}
+.right_content{ padding:15px;}
+.right_content p{ line-height:25px;}
+.right_content p span{ font-weight:bold;}
+
+.curry{ height:31px; line-height:31px; text-indent:45px;}
+.taber{ clear:both; overflow:hidden; padding-top:10px; _padding-top:6px;}
+
+.selected{
+	background:#6b620e;
+	color:#fff
+}
+#nav ul{
+	height:28px;
+	line-height:28px;
+	list-style:none;
+}
+#nav ul li{
+	float:left;
+	width:79px;
+	height:28px;
+	text-align:center;
+	cursor:pointer;
+}
+#nav_content{
+	margin:0px;
+	padding:10px;
+	width:650px;
+	border:1px solid #CCCCCC;
+}
+#nav_content div{ line-height:28px;}
+
+.booknow{ width:100px; height:26px; border:none; background:url(dgbg.jpg) no-repeat center center; color:#fff; font-size:14px; cursor:pointer;}

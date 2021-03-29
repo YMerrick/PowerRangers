@@ -2,6 +2,22 @@
 <html>
 <head>
   <title>Ticket Generator Design</title>
+<script>
+function checkbox(){
+
+var checkboxes = document.getElementsByName('seats');
+var checkboxesChecked = [];
+// loop over them all
+for (var i=0; i<checkboxes.length; i++) {
+   // And stick the checked ones onto an array...
+   if (checkboxes[i].checked) {
+      checkboxesChecked.push(checkboxes[i].value);
+   }
+}
+document.getElementById("show").value = checkboxesChecked;
+
+}
+</script>
 </head>
 <style>
 .paragraph {
@@ -25,11 +41,12 @@
   line-height:24px;
   border: groove;"
 }
-.seat tbody tr td:not(:first-child) {
+
+/* .seat tbody tr td:not(:first-child) {
   border: 1px solid black;
   width: 1em;
-  height:1em;
-}
+  height: 1em;
+} */
 
 .seat tr td:nth-child(5) {
   border:none!important;
@@ -39,9 +56,18 @@
   border:none!important;
 }
 .seat {
-  border-spacing: 1em;
+  border-spacing: 1.5em;
   padding:20px;
   margin:auto;
+}
+/* .seat td:hover {
+  cursor: pointer;
+  background-color: #5568fa;
+} */
+input[type=checkbox]
+{
+  transform: scale(2);
+  padding: 10px;
 }
 </style>
 <body>
@@ -61,121 +87,122 @@
         <td></td>
         <td>4</td>
         <td>5</td>
+        <td>6</td>
         <td>7</td>
         <td>8</td>
         <td>9</td>
-        <td>10</td>
         <td></td>
+        <td>10</td>
         <td>11</td>
         <td>12</td>
-        <td>13</td>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td style="font-weight:bold">A</td>
+        <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="A1"></td>
+        <td><input type="checkbox" id="seat2"name="seats" onclick="checkbox();" value="A2"></td>
+        <td><input type="checkbox" id="seat3"name="seats" onclick="checkbox();" value="A3"></td>
         <td></td>
+        <td><input type="checkbox" id="seat4"name="seats" onclick="checkbox();" value="A4"></td>
+        <td><input type="checkbox" id="seat5"name="seats" onclick="checkbox();" value="A5"></td>
+        <td><input type="checkbox" id="seat6"name="seats" onclick="checkbox();" value="A6"></td>
+        <td><input type="checkbox" id="seat7"name="seats" onclick="checkbox();" value="A7"></td>
+        <td><input type="checkbox" id="seat8"name="seats" onclick="checkbox();" value="A8"></td>
+        <td><input type="checkbox" id="seat9"name="seats" onclick="checkbox();" value="A9"></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><input type="checkbox" id="seat10" name="seats" onclick="checkbox();" value="A10"></td>
+        <td><input type="checkbox" id="seat11" name="seats" onclick="checkbox();" value="A11"></td>
+        <td><input type="checkbox" id="seat12" name="seats" onclick="checkbox();" value="A12"></td>
       </tr>
       <tr>
         <td style="font-weight:bold">B</td>
+        <td><input type="checkbox" id="seat13"name="seats" onclick="checkbox();" value="B1"></td>
+        <td><input type="checkbox" id="seat14"name="seats" onclick="checkbox();" value="B2"></td>
+        <td><input type="checkbox" id="seat15"name="seats" onclick="checkbox();" value="B3"></td>
         <td></td>
+        <td><input type="checkbox" id="seat16"name="seats" onclick="checkbox();" value="B4"></td>
+        <td><input type="checkbox" id="seat17"name="seats" onclick="checkbox();" value="B5"></td>
+        <td><input type="checkbox" id="seat18"name="seats" onclick="checkbox();" value="B6"></td>
+        <td><input type="checkbox" id="seat19"name="seats" onclick="checkbox();" value="B7"></td>
+        <td><input type="checkbox" id="seat20"name="seats" onclick="checkbox();" value="B8"></td>
+        <td><input type="checkbox" id="seat21"name="seats" onclick="checkbox();" value="B9"></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><input type="checkbox" id="seat22" name="seats" onclick="checkbox();" value="B10"></td>
+        <td><input type="checkbox" id="seat23" name="seats" onclick="checkbox();" value="B11"></td>
+        <td><input type="checkbox" id="seat24" name="seats" onclick="checkbox();" value="B12"></td>
       </tr>
       <tr>
         <td style="font-weight:bold">C</td>
+        <td><input type="checkbox" id="seat25"name="seats" onclick="checkbox();" value="C1"></td>
+        <td><input type="checkbox" id="seat26"name="seats" onclick="checkbox();" value="C2"></td>
+        <td><input type="checkbox" id="seat27"name="seats" onclick="checkbox();" value="C3"></td>
         <td></td>
+        <td><input type="checkbox" id="seat28"name="seats" onclick="checkbox();" value="C4"></td>
+        <td><input type="checkbox" id="seat29"name="seats" onclick="checkbox();" value="C5"></td>
+        <td><input type="checkbox" id="seat30"name="seats" onclick="checkbox();" value="C6"></td>
+        <td><input type="checkbox" id="seat31"name="seats" onclick="checkbox();" value="C7"></td>
+        <td><input type="checkbox" id="seat32"name="seats" onclick="checkbox();" value="C8"></td>
+        <td><input type="checkbox" id="seat33"name="seats" onclick="checkbox();" value="C9"></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><input type="checkbox" id="seat34" name="seats" onclick="checkbox();" value="C10"></td>
+        <td><input type="checkbox" id="seat35" name="seats" onclick="checkbox();" value="C11"></td>
+        <td><input type="checkbox" id="seat36" name="seats" onclick="checkbox();" value="C12"></td>
       </tr>
       <tr>
         <td style="font-weight:bold">D</td>
+        <td><input type="checkbox" id="seat37"name="seats" onclick="checkbox();" value="D1"></td>
+        <td><input type="checkbox" id="seat38"name="seats" onclick="checkbox();" value="D2"></td>
+        <td><input type="checkbox" id="seat39"name="seats" onclick="checkbox();" value="D3"></td>
         <td></td>
+        <td><input type="checkbox" id="seat40"name="seats" onclick="checkbox();" value="D4"></td>
+        <td><input type="checkbox" id="seat41"name="seats" onclick="checkbox();" value="D5"></td>
+        <td><input type="checkbox" id="seat42"name="seats" onclick="checkbox();" value="D6"></td>
+        <td><input type="checkbox" id="seat43"name="seats" onclick="checkbox();" value="D7"></td>
+        <td><input type="checkbox" id="seat44"name="seats" onclick="checkbox();" value="D8"></td>
+        <td><input type="checkbox" id="seat45"name="seats" onclick="checkbox();" value="D9"></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><input type="checkbox" id="seat46" name="seats" onclick="checkbox();" value="D10"></td>
+        <td><input type="checkbox" id="seat47" name="seats" onclick="checkbox();" value="D11"></td>
+        <td><input type="checkbox" id="seat48" name="seats" onclick="checkbox();" value="D12"></td>
       </tr>
       <tr>
         <td style="font-weight:bold">E</td>
+        <td><input type="checkbox" id="seat49"name="seats" onclick="checkbox();" value="E1"></td>
+        <td><input type="checkbox" id="seat50"name="seats" onclick="checkbox();" value="E2"></td>
+        <td><input type="checkbox" id="seat51"name="seats" onclick="checkbox();" value="E3"></td>
         <td></td>
+        <td><input type="checkbox" id="seat52"name="seats" onclick="checkbox();" value="E4"></td>
+        <td><input type="checkbox" id="seat53"name="seats" onclick="checkbox();" value="E5"></td>
+        <td><input type="checkbox" id="seat54"name="seats" onclick="checkbox();" value="E6"></td>
+        <td><input type="checkbox" id="seat55"name="seats" onclick="checkbox();" value="E7"></td>
+        <td><input type="checkbox" id="seat56"name="seats" onclick="checkbox();" value="E8"></td>
+        <td><input type="checkbox" id="seat57"name="seats" onclick="checkbox();" value="E9"></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><input type="checkbox" id="seat58" name="seats" onclick="checkbox();" value="E10"></td>
+        <td><input type="checkbox" id="seat59" name="seats" onclick="checkbox();" value="E11"></td>
+        <td><input type="checkbox" id="seat60" name="seats" onclick="checkbox();" value="E12"></td>
       </tr>
       <tr>
         <td style="font-weight:bold">F</td>
+        <td><input type="checkbox" id="seat61"name="seats" onclick="checkbox();" value="F1"></td>
+        <td><input type="checkbox" id="seat62"name="seats" onclick="checkbox();" value="F2"></td>
+        <td><input type="checkbox" id="seat63"name="seats" onclick="checkbox();" value="F3"></td>
         <td></td>
+        <td><input type="checkbox" id="seat64"name="seats" onclick="checkbox();" value="F4"></td>
+        <td><input type="checkbox" id="seat65"name="seats" onclick="checkbox();" value="F5"></td>
+        <td><input type="checkbox" id="seat66"name="seats" onclick="checkbox();" value="F6"></td>
+        <td><input type="checkbox" id="seat67"name="seats" onclick="checkbox();" value="F7"></td>
+        <td><input type="checkbox" id="seat68"name="seats" onclick="checkbox();" value="F8"></td>
+        <td><input type="checkbox" id="seat69"name="seats" onclick="checkbox();" value="F9"></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><input type="checkbox" id="seat70" name="seats" onclick="checkbox();" value="F10"></td>
+        <td><input type="checkbox" id="seat71" name="seats" onclick="checkbox();" value="F11"></td>
+        <td><input type="checkbox" id="seat72" name="seats" onclick="checkbox();" value="F12"></td>
       </tr>
     </tbody>
     </table>
+     <input type="text" id="show" name="seats"><br> <!--will print seats selected -->
   </div>
 </body>
 
