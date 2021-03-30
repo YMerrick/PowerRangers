@@ -29,8 +29,8 @@ class Models():
     #Gets all the infromation from MoviesTable and dumps it in a list
     def getMoviesTable(self):
         #Trying to work out why query returns only one value from the database when there is 3
-        pprint(dir(self.db.session.query(self.MoviesTable)))
-        print(self.db.session.query(self.MoviesTable).count())
+        #pprint(dir(self.db.session.query(self.MoviesTable)))
+        #print(self.db.session.query(self.MoviesTable).count())
         
         #returns all the data from the MoviesTable as an sqlalchemy object
         return self.db.session.query(self.MoviesTable).all()
@@ -56,5 +56,8 @@ class Models():
     def getSeatTable(self):
         return self.db.session.query(self.SeatTable).all()
 
-    def TicketTable(self):
+    def getTicketTable(self):
         return self.db.session.query(self.TicketTable).all()
+
+    def addMoviesTableEntry(self):
+        pass
