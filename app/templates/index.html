@@ -8,5 +8,8 @@
   </head>
   <body>
       <h1>Hello, {{ user.name }}!</h1>
+      {% for c in all_movies %}
+        <p>{{ c.title }}</p>
+      {% endfor %}
   </body>
 </html>
