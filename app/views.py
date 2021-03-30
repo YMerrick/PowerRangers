@@ -12,8 +12,15 @@ db = SQLAlchemy(app)
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 MoviesTable = Base.classes.MoviesTable
+BookingTable = Base.classes.BookingTable
+CustomerTable = Base.classes.CustomerTable
+MemberTable = Base.classes.MemberTable
+PaymentTable = Base.classes.PaymentTable
+ScreeningTable = Base.classes.ScreeningTable
+ScreenTable = Base.classes.ScreenTable
+SeatTable = Base.classes.SeatTable
+TicketTable = Base.classes.TicketTable
 
-#test
 
 @app.route('/')
 def index():
