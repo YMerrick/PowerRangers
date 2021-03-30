@@ -5,7 +5,7 @@ from app import app
 from pprint import pprint
 
 
-
+#Models class for database querying and limiting it to just methods
 class Models():
     #Initialises the model class with the database and automaps the tables to classes
     def __init__(self):
