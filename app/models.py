@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from flask import Flask
 from app import app
+#This is only to print out the dir of objects in a pretty way
 from pprint import pprint
 
 
@@ -35,25 +36,25 @@ class Models():
         return self.db.session.query(self.MoviesTable).all()
     
     def getBookingTable(self):
-        pass
+        return self.db.session.query(self.BookingTable).all()
 
     def getCustomerTable(self):
-        pass
+        return self.db.session.query(self.CustomerTable).all()
 
     def getMemberTable(self):
-        pass
+        return self.db.session.query(self.MemberTable).all()
 
     def getPaymentTable(self):
-        pass
+        return self.db.session.query(self.PaymentTable).all()
 
     def getScreeningTable(self):
-        pass
+        return self.db.session.query(self.ScreeningTable).all()
 
     def getScreenTable(self):
-        pass
+        return self.db.session.query(self.ScreenTable).all()
 
     def getSeatTable(self):
-        pass
+        return self.db.session.query(self.SeatTable).all()
 
     def TicketTable(self):
-        pass
+        return self.db.session.query(self.TicketTable).all()
