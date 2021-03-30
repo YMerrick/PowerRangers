@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+    <body>
+        <table>
+            <thead>
+                <td>Title</td>
+                <td>Genre</td>
+                <td>Director</td>
+                <td>Actor List</td>
+            </thead>
+            {% for row in all_movies %}
+            <tr>
+                <td>{{row["title"]}}</td>
+                <td>{{row["genre"]}}</td>
+                <td>{{row["director"]}}</td>
+                <td>{{row["actorList"]}}</td>	
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
