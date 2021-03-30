@@ -3,9 +3,12 @@ from flask import Flask
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
+from .models import Models
 
+dbmodel = Models()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movie.db'
+#Moved this to models.py and created it as a class instead to get a working api
+'''app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movie.db'
 
 db = SQLAlchemy(app)
 
@@ -19,11 +22,11 @@ PaymentTable = Base.classes.PaymentTable
 ScreeningTable = Base.classes.ScreeningTable
 ScreenTable = Base.classes.ScreenTable
 SeatTable = Base.classes.SeatTable
-TicketTable = Base.classes.TicketTable
+TicketTable = Base.classes.TicketTable'''
 
 
 @app.route('/')
 def index():
-    movies = db.session.query(MoviesTable).all()
+    movies = dbmodel.getMoviesTable()
     return render_template('movieList.html',
                            title='Movie List', all_movies = movies)
