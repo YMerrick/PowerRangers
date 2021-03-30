@@ -30,3 +30,28 @@ def index():
     movies = dbmodel.getMoviesTable()
     return render_template('movieList.html',
                            title='Movie List', all_movies = movies)
+
+@app.route('/cinemaSeats')
+def cinemaSeat():
+    return render_template('CinemaSeat.html', 
+                           title = 'Pick your seats')
+
+@app.route('/MainPage')
+def mainPage():
+    return render_template('MainPage.html',
+                           title = 'The Main Page')
+
+@app.route('/movieDetails')
+def movieDetails():
+    return render_template('Movie Details.html', 
+                           title = 'Movie Details')
+
+@app.route('/ticket')
+def ticket():
+    return render_template('Printable Ticket.html',
+                           title = 'The Ticket')
+
+@app.route('/movieInfo')
+def movieInfo():
+    return render_template('MovieInfo.html',
+                           title = 'Movie Infos')
