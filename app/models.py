@@ -44,7 +44,13 @@ class Models():
             return genreQuery.all()
         else:
             return genreQuery.filter_by(genreDesc = genre).all()
+
+    def getMovieInfo(self, title):
+        return self.db.session.query(self.MoviesTable).filter_by(title = title).first_or_404()
     
+    def getGenres(self):
+        return self.db.session.query(self.GenreTable.genreDesc).all()
+        
     def getBookingTable(self):
         return self.db.session.query(self.BookingTable).all()
 
