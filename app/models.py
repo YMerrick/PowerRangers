@@ -59,5 +59,7 @@ class Models():
     def getTicketTable(self):
         return self.db.session.query(self.TicketTable).all()
 
-    def addMoviesTableEntry(self):
-        pass
+    def addMoviesTableEntry(self,movieIn):
+        self.db.session.add(movieIn)
+        self.db.session.commit()
+        return 0

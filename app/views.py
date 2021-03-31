@@ -67,7 +67,19 @@ def movieAdded():
     if request.method == 'POST':
         result = request.form
         print(result.get('blurb'))
-        
-        return render_template('movieAdded.html',result = result)
+        moviesTable = dbmodel.MoviesTable
+        movies = dbmodel.getMoviesTable()
+        title = result.get('title')
+        blurb = result.get('blurb')
+        certificate = result.get('certificate')
+        genre = result.get('genre')
+        director=result.get('director')
+        actorList=result.get('actorList')
+        imagePath=result.get('imagePath')
+        trailerLink=result.get('trailerLink')
+        print(imagePath)
+        new_movie = moviesTable(title=title,blurb=blurb,certificate=certificate,genre=genre,director=director,actorList=actorList)
+        dbmodel.addMoviesTableEntry(new_movie)
+        return render_template('movieList.html',all_movies = movies)
     else:
         return index()
