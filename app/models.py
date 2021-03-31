@@ -25,6 +25,8 @@ class Models():
         self.ScreenTable     =   Base.classes.ScreenTable
         self.SeatTable       =   Base.classes.SeatTable
         self.TicketTable     =   Base.classes.TicketTable
+        self.MovieGenreTable =   Base.classes.MovieGenreTable
+        self.GenreTable      =   Base.classes.GenreTable
 
     #Gets all the infromation from MoviesTable and dumps it in a list
     def getMoviesTable(self):
@@ -34,6 +36,14 @@ class Models():
         
         #returns all the data from the MoviesTable as an sqlalchemy object
         return self.db.session.query(self.MoviesTable).all()
+
+    #Gets the movie record from the db and filters by the genre it is
+    def getMovieFromGenre(self,genre = None):
+        genreQuery = self.db.session.query(self.MoviesTable).select_from(self.MoviesTable).join(self.MovieGenreTable).join(self.GenreTable)
+        if genre == None:
+            return genreQuery.all()
+        else:
+            return genreQuery.filter_by(genreDesc = genre).all()
     
     def getBookingTable(self):
         return self.db.session.query(self.BookingTable).all()
@@ -67,11 +77,3 @@ class Models():
     def getTitle(self):
         title = self.db.session.query(self.MoviesTable).filter_by(title="Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train")
         return title.one().title
-
-    def getMovieDetails(self,genre = None):
-        if genre == None:
-            return self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).all()
-        else:
-            return self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).filter_by(genre= genre).all()
-        
-    
