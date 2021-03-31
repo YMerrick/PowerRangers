@@ -45,7 +45,7 @@ def mainPage():
 
 @app.route('/movieDetails')
 def movieDetails():
-    movies = dbmodel.getMovieDetails()
+    movies = dbmodel.getMovieFromGenre()
     return render_template('Movie Details.html', 
                            title = 'Movie Details',movies = movies)
 
