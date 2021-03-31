@@ -5,7 +5,7 @@
 .contenter{ width:972px; margin:0 auto; padding-top:10px;}
 .right{ width:730px; float:right; overflow:hidden}
 .left{ width:230px; float:left;overflow:hidden}
-.right_con{ background:url(rcon_bg.jpg) no-repeat;}
+
 .right_content{ padding:15px;}
 .right_content p{ line-height:25px;}
 .right_content p span{ font-weight:bold;}
@@ -29,12 +29,21 @@
 	text-align:center;
 	cursor:pointer;
 }
-#nav_content{
-	margin:0px;
-	padding:10px;
-	width:650px;
-	border:1px solid #CCCCCC;
-}
+
 #nav_content div{ line-height:28px;}
 
 .booknow{ width:100px; height:26px; border:none; background:url(dgbg.jpg) no-repeat center center; color:#fff; font-size:14px; cursor:pointer;}
+
+.paragraph {
+	margin-top: 100px;
+	margin: auto;
+	width: 1280px;
+	padding: 10px;
+	font-size: 17px;
+	font-family: sans-serif;
+	background: #f7f7f7;
+	line-height:24px;
+	height: 120vh;
+	border-radius: 20px 20px 20px 20px;
+	border: groove;"
+  }
