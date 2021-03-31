@@ -29,7 +29,7 @@ TicketTable = Base.classes.TicketTable'''
 #This just means we have to call the page again with a post this time 
 @app.route('/')
 def index():
-    movies = dbmodel.getMoviesTable()
+    movies = dbmodel.getMovieFromGenre()
     return render_template('movieList.html',
                            title='Movie List', all_movies = movies)
 
@@ -45,7 +45,7 @@ def mainPage():
 
 @app.route('/movieDetails')
 def movieDetails():
-    movies = dbmodel.getMovieDetails()
+    movies = dbmodel.getMovieFromGenre()
     return render_template('Movie Details.html', 
                            title = 'Movie Details',movies = movies)
 

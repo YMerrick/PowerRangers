@@ -4,16 +4,16 @@
         <table>
             <thead>
                 <td>Title</td>
-                <td>Genre</td>
                 <td>Director</td>
                 <td>Actor List</td>
+                <td>Image Path</td>
             </thead>
             {% for row in all_movies %}
             <tr>
                 <td>{{row["title"]}}</td>
-                <td>{{row["genre"]}}</td>
                 <td>{{row["director"]}}</td>
-                <td>{{row["actorList"]}}</td>	
+                <td>{{row["actorList"]}}</td>
+                <td>{{row["imagePath"]}}</td>	
             </tr>
             {% endfor %}
         </table>
