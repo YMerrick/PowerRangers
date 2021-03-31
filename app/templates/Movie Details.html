@@ -70,30 +70,19 @@ height:20px;
       <button class="navitem">09 Tus</button>
     </div>
     <div class="row" style="margin-top:30px;">
-      <div class="column">
-        <img src="Deadpool.png" alt="" width=300 height=300>
-          <h1>
-            Deadpool
-          </h1>
-          <h1 style="font-size: 20px;">
-          </h1>
-        <button type="submit">Booking</button>
-      </div>
+        {% for row in movies %}
+          <div class="column">
+           <img src="{{url_for('static', filename=row['imagePath'])}}" width=300 height=300>
+            <h1 style="font-size: 20px;">{{row['title']}}</h1>
+            <button type="submit">Booking</button>
+          </div>
+        {% endfor %}
     <div class="column">
       <a href="MovieInfo.html">
-        <img src="Power Rangers.png" alt="" width=300 height=300>
+        <img src="{{url_for('static', filename='Power Rangers.png')}}" alt="" width=300 height=300>
       </a>
         <h1>
           Power Rangers
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
-    </div>
-    <div class="column">
-      <img src="Eternal Sunshine.jpg" alt="" width=300 height=300>
-        <h1>
-          Eternal Sunshine
         </h1>
         <h1 style="font-size: 20px;">
         </h1>
@@ -121,7 +110,7 @@ height:20px;
       <button type="submit">Booking</button>
     </div>
     <div class="column">
-      <img src="Toy_Story_4.jpg" alt="" width=300 height=300>
+      <img src='templates\img\Toy_Story_4.jpg' alt="" width=300 height=300>
       <h1>
         Toy Story 4
       </h1>
