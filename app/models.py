@@ -67,4 +67,11 @@ class Models():
     def getTitle(self):
         title = self.db.session.query(self.MoviesTable).filter_by(title="Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train")
         return title.one().title
+
+    def getMovieDetails(self,genre = None):
+        if genre == None:
+            self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).all()
+        else:
+            self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).filter_by(genre= genre).all()
+        pass
     
