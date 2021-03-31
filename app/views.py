@@ -60,6 +60,7 @@ def movieInfo():
 
 @app.route('/addMovie')
 def addMovie():
+    print(dbmodel.getTitle())
     return render_template('addMovie.html')
 
 @app.route('/movieAdded', methods = ['POST','GET'])

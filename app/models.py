@@ -63,3 +63,8 @@ class Models():
         self.db.session.add(movieIn)
         self.db.session.commit()
         return 0
+    
+    def getTitle(self):
+        title = self.db.session.query(self.MoviesTable).filter_by(title="Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train")
+        return title.one().title
+    
