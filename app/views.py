@@ -1,5 +1,5 @@
 from flask import render_template
-from flask import Flask, request
+from flask import Flask, request, url_for, redirect
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
@@ -45,19 +45,22 @@ def mainPage():
 
 @app.route('/movieDetails')
 def movieDetails():
-    movies = dbmodel.getMovieFromGenre()
+    movieGenres = dbmodel.getGenres()
+    genre = request.args.get('genre')
+    movies = dbmodel.getMovieFromGenre(genre)
     return render_template('Movie Details.html', 
-                           title = 'Movie Details',movies = movies)
+                           title = 'Movie Details',movies = movies, genres = movieGenres)
 
 @app.route('/ticket')
 def ticket():
     return render_template('Printable Ticket.html',
                            title = 'The Ticket')
 
-@app.route('/movieInfo')
-def movieInfo():
+@app.route('/movieInfo/<title>')
+def movieInfo(title):
+    movie = dbmodel.getMovieInfo(title)
     return render_template('MovieInfo.html',
-                           title = 'Movie Infos')
+                           title = 'Movie Infos',movie = movie)
 
 @app.route('/addMovie')
 def addMovie():
