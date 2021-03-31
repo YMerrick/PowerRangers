@@ -70,8 +70,8 @@ class Models():
 
     def getMovieDetails(self,genre = None):
         if genre == None:
-            self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).all()
+            return self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).all()
         else:
-            self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).filter_by(genre= genre).all()
-        pass
+            return self.db.session.query(self.MoviesTable.title, self.MoviesTable.imagePath).filter_by(genre= genre).all()
+        
     
