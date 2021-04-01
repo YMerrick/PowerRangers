@@ -65,20 +65,44 @@ class Models():
 
     #Gets the screening info for a bookingID and returns the automap object
     #This method also gives the screen its showing on
+    #Returns the title, date, time and screen name as a tuple
     def getScreeningInfoForBooking(self,bookingID):
-        return self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date).select_from(self.BookingTable).join(self.ScreeningTable).join(self.MoviesTable).join(self.ScreenTable)
+        return (
+                self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date)
+                .select_from(self.BookingTable)
+                .filter_by(bookingID = bookingID)
+                .join(self.ScreeningTable)
+                .join(self.MoviesTable)
+                .join(self.ScreenTable)
+        )
 
     #Gets the seat row and returns the automap object
-    def getSeatInfo(self):
-        pass
+    def getSeatInfoForBooking(self,bookingId):
+        return (
+                self.db.session.query(self.SeatTable.rowNumber, self.BookingTable.seatNumber)
+                .select_from(self.BookingTable)
+                .filter_by(bookingID = bookingId)
+                .join(self.SeatTable)
+                .subquery()
+        )
 
-    #Gets the booking information from a screening and seat number and row
-    def getBookingInfo(self):
-        pass
+    #Gets the booking information from the ticket ID
+    def getBookingInfoForTicket(self,ticketId):
+        ticketInfo = (
+            self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date,self.SeatTable.rowNumber, self.BookingTable.seatNumber)
+            .select_from(self.TicketTable).filter_by(ticketID = ticketId)
+            .join(self.ScreenTable, self.ScreeningTable.screenID == self.ScreenTable.screenID)
+            .join(self.SeatTable, self.BookingTable.rowID == self.SeatTable.rowID)
+            .join(self.MoviesTable, self.ScreeningTable.movieID == self.MoviesTable.movieID)
+            .join(self.BookingTable, self.TicketTable.bookingID == self.BookingTable.bookingID)
+            .join(self.ScreeningTable, self.BookingTable.screeningID == self.ScreeningTable.screeningID)
+        )
+        
+
+        return ticketInfo.first()
 
     #Gets the ticket information from the customer ID 
-    def getTicketInfo(self):
-        
+    def getTicketInfo(self,ticketId):
         pass
 
     def getBookingTable(self):
