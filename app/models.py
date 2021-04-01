@@ -38,6 +38,7 @@ class Models():
         return self.db.session.query(self.MoviesTable).all()
 
     #Gets the movie record from the db and filters by the genre it is
+    #Otherwise it returns all movies in the db
     def getMovieFromGenre(self,genre = None):
         genreQuery = self.db.session.query(self.MoviesTable).select_from(self.MoviesTable).join(self.MovieGenreTable).join(self.GenreTable).order_by(self.MoviesTable.title.asc())
         if genre == None:
@@ -45,11 +46,40 @@ class Models():
         else:
             return genreQuery.filter_by(genreDesc = genre).all()
 
+    #Takes a movie title and returns the list of genres associated with it
+    def getGenreForMovie(self,movieTitle):
+        genreQuery = self.db.session.query(self.GenreTable).select_from(self.GenreTable).join(self.MovieGenreTable).join(self.MoviesTable).order_by(self.GenreTable.genreDesc.asc())
+        queryList = genreQuery.filter_by(title = movieTitle).all()
+        genreList = []
+        for q in queryList:
+            genreList.append(q.genreDesc)
+        return genreList
+
+    #Gets the information for a specific movie title
     def getMovieInfo(self, title):
         return self.db.session.query(self.MoviesTable).filter_by(title = title).first_or_404()
     
+    #Gets all the genres in the db
     def getGenres(self):
         return self.db.session.query(self.GenreTable.genreDesc).order_by(self.GenreTable.genreDesc.asc()).all()
+
+    #Gets the screening info for a bookingID and returns the automap object
+    #This method also gives the screen its showing on
+    def getScreeningInfoForBooking(self,bookingID):
+        return self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date).select_from(self.BookingTable).join(self.ScreeningTable).join(self.MoviesTable).join(self.ScreenTable)
+
+    #Gets the seat row and returns the automap object
+    def getSeatInfo(self):
+        pass
+
+    #Gets the booking information from a screening and seat number and row
+    def getBookingInfo(self):
+        pass
+
+    #Gets the ticket information from the customer ID 
+    def getTicketInfo(self):
+        
+        pass
 
     def getBookingTable(self):
         return self.db.session.query(self.BookingTable).all()
@@ -75,6 +105,7 @@ class Models():
     def getTicketTable(self):
         return self.db.session.query(self.TicketTable).all()
 
+    #Adds a genre taken as an automapped class of the GenreTable
     def addGenre(self,genreIn):
         self.db.session.add(genreIn)
         self.db.session.commit()
