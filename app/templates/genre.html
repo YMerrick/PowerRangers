@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <form method = "POST" action = "http://localhost:5000/genre">
+            <label for = "genre">Enter to add a genre: </label>
+            <input type = "text" name = "genre">
+            <input type="submit" value="Submit">
+        </form>
+        These are all the current genres present:<br>
+        {% for genre in genres %}
+        {{genre.genreDesc}}<br>
+        {% endfor %}
+    </body>
+</html>
