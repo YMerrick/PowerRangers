@@ -39,7 +39,7 @@ class Models():
 
     #Gets the movie record from the db and filters by the genre it is
     def getMovieFromGenre(self,genre = None):
-        genreQuery = self.db.session.query(self.MoviesTable).select_from(self.MoviesTable).join(self.MovieGenreTable).join(self.GenreTable)
+        genreQuery = self.db.session.query(self.MoviesTable).select_from(self.MoviesTable).join(self.MovieGenreTable).join(self.GenreTable).order_by(self.MoviesTable.title.asc())
         if genre == None:
             return genreQuery.all()
         else:
@@ -49,8 +49,8 @@ class Models():
         return self.db.session.query(self.MoviesTable).filter_by(title = title).first_or_404()
     
     def getGenres(self):
-        return self.db.session.query(self.GenreTable.genreDesc).all()
-        
+        return self.db.session.query(self.GenreTable.genreDesc).order_by(self.GenreTable.genreDesc.asc()).all()
+
     def getBookingTable(self):
         return self.db.session.query(self.BookingTable).all()
 
@@ -80,6 +80,6 @@ class Models():
         self.db.session.commit()
         return 0
     
-    def getTitle(self):
-        title = self.db.session.query(self.MoviesTable).filter_by(title="Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train")
+    def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
+        title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title

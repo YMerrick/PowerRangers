@@ -47,9 +47,11 @@ def mainPage():
 def movieDetails():
     movieGenres = dbmodel.getGenres()
     genre = request.args.get('genre')
+    if genre == "None":
+        genre = None
     movies = dbmodel.getMovieFromGenre(genre)
-    return render_template('Movie Details.html', 
-                           title = 'Movie Details',movies = movies, genres = movieGenres)
+    return render_template('movieList.html', 
+                           title = 'Movie Details',all_movies = movies, genres = movieGenres)
 
 @app.route('/ticket')
 def ticket():

@@ -1,6 +1,15 @@
 <!doctype html>
 <html>
     <body>
+        <form action = "http://localhost:5000/movieDetails" method = "GET">
+            <select name = "genre">
+                <option value = "None">Choose Genre</option>
+                {% for genre in genres %}
+                <option value={{genre.genreDesc}}>{{genre.genreDesc}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value = "Submit"/>
+         </form>
         <table>
             <thead>
                 <td>Title</td>
@@ -16,6 +25,6 @@
                 <td>{{row["imagePath"]}}</td>	
             </tr>
             {% endfor %}
-        </table>
+        </table>    
     </body>
 </html>
