@@ -64,11 +64,17 @@ def movieInfo(title):
     return render_template('MovieInfo.html',
                            title = 'Movie Infos',movie = movie)
 
-@app.route('/addGenre')
-def addGenre():
-
-    return render_template('addGenre.html')
-    pass
+@app.route('/genre', methods = ['POST','GET'])
+def genre():
+    if request.method == 'POST':
+        result = request.form
+        genreTable = dbmodel.GenreTable
+        genreDesc = result.get('genre')
+        print(genreDesc)
+        newGenre = genreTable(genreDesc = genreDesc)
+        dbmodel.addGenre(newGenre)
+    return render_template('genre.html',
+                           genres = dbmodel.getGenres())
 
 @app.route('/addMovie')
 def addMovie():
