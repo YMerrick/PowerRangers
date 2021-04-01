@@ -75,9 +75,23 @@ class Models():
     def getTicketTable(self):
         return self.db.session.query(self.TicketTable).all()
 
-    def addMoviesTableEntry(self,movieIn):
+    #returns True if genres have been added to movie and false otherwise
+    def addGenreForMovie(self,genres,movieTitle):
+        if type(genres) == type([]):
+            for genre in genres:
+                genreTable = self.MovieGenreTable
+                genreId = self.db.session.query(self.GenreTable.genreID).filter_by(genreDesc = genre).first().genreID
+                movieId = self.db.session.query(self.MoviesTable.movieID).filter_by(title = movieTitle).first().movieID
+                newGenreForMovie = genreTable(movieID=movieId,genreID=genreId)
+                self.db.session.add(newGenreForMovie)
+                self.db.session.commit()
+            return True
+        return False
+
+    def addMoviesTableEntry(self,movieIn,genre):
         self.db.session.add(movieIn)
         self.db.session.commit()
+        self.addGenreForMovie(genre,movieIn.title)
         return 0
     
     def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
