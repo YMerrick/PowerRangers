@@ -19,10 +19,10 @@
             </thead>
             {% for row in all_movies %}
             <tr>
-                <td>{{row["title"]}}</td>
-                <td>{{row["director"]}}</td>
-                <td>{{row["actorList"]}}</td>
-                <td>{{row["imagePath"]}}</td>	
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["title"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["director"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["actorList"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["imagePath"]}}</a></td>	
             </tr>
             {% endfor %}
         </table>    
