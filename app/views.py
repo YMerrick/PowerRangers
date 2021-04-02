@@ -26,7 +26,7 @@ TicketTable = Base.classes.TicketTable'''
 
 #In order to get data from the database, need to query before hand and then pass the JSON data to it
 #If we want to do searches and sort by certain aspects of the database then we have to reload the page with a condition in the query to return the data with
-#This just means we have to call the page again with a post this time 
+#This just means we have to call the page again with a post this time
 @app.route('/')
 def index():
     movies = dbmodel.getMovieFromGenre()
@@ -35,7 +35,7 @@ def index():
 
 @app.route('/cinemaSeats')
 def cinemaSeat():
-    return render_template('CinemaSeat.html', 
+    return render_template('CinemaSeat.html',
                            title = 'Pick your seats')
 
 @app.route('/MainPage')
@@ -43,10 +43,17 @@ def mainPage():
     return render_template('MainPage.html',
                            title = 'The Main Page')
 
-@app.route('/movieDetails')
+@app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
+    if request.method == "POST":
+        genre = request.form.get("selectGenre")
+        if genre == "":
+            pass
+        else:
+            genreList = dbmodel.getMovieFromGenre(genre)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = genreList)
     movies = dbmodel.getMovieFromGenre()
-    return render_template('Movie Details.html', 
+    return render_template('Movie Details.html',
                            title = 'Movie Details',movies = movies)
 
 @app.route('/ticket')
