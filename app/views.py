@@ -53,6 +53,14 @@ def movieDetails():
     return render_template('movieList.html', 
                            title = 'Movie Details',all_movies = movies, genres = movieGenres)
 
+@app.route('/ticketTest')
+def ticketTest():
+    #returns movie title, screen name, screening time and date, seat number and, row
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    return render_template('ticket.html',
+                           title = 'Test Ticket',ticket = ticketInfo)
+
+
 @app.route('/ticket')
 def ticket():
     return render_template('Printable Ticket.html',

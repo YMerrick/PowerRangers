@@ -97,8 +97,6 @@ class Models():
             .join(self.BookingTable, self.TicketTable.bookingID == self.BookingTable.bookingID)
             .join(self.ScreeningTable, self.BookingTable.screeningID == self.ScreeningTable.screeningID)
         )
-        
-
         return ticketInfo.first()
 
     #Gets the ticket information from the customer ID 
