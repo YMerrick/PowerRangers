@@ -171,8 +171,30 @@ class Models():
         )
         return screeningInfo.all()
 
-    #return movie from the date that it is screening
+
+    def getMoviesFromGenre(self,query,genre):
+        genreQuery = (
+            query
+            .join(self.MovieGenreTable)
+            .join(self.GenreTable)
+            .filter_by(genreDesc = genre)
+        )
+        return genreQuery
+
+    #return movies from the date that it is screening
     #Returns all movies relating to the date asked for
-    def getMovieFromDate(self,date):
-        
-        pass
+    def getMovieFromDate(self,query,date):
+        movieInfo = query.join(self.ScreeningTable).filter_by(date = date)            
+        return movieInfo
+
+    #Returns all movies filtered by date and genre if either are present or not
+    def getMovie(self,date=None,genre=None):
+        movieInfo = (
+            self.db.session.query(self.MoviesTable)
+            .select_from(self.MoviesTable)
+        )
+        if genre != None:
+            movieInfo = self.getMoviesFromGenre(movieInfo,genre)
+        if date != None:
+            movieInfo = self.getMovieFromDate(movieInfo,date)
+        return movieInfo.order_by(self.MoviesTable.title.asc()).all()
