@@ -75,8 +75,8 @@ def ticket():
 
 @app.route('/movieInfo')
 def movieInfo():
-    movie = request.args.get('movie')
-    movies = dbmodel.getMovieInfo(movie)
+    movieId = request.args.get('movie')
+    movies = dbmodel.getMoviesTable(movieId)
     return render_template('MovieInfo.html',
                            title = 'Movie Info', row = movies)
 
