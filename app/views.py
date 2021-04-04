@@ -1,5 +1,6 @@
 from flask import render_template
 from flask import Flask, request
+from flask import url_for, redirect
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
@@ -47,11 +48,14 @@ def mainPage():
 def movieDetails():
     if request.method == "POST":
         genre = request.form.get("selectGenre")
+        movieID = request.form.get("movie")
         if genre == "":
             pass
         else:
             genreList = dbmodel.getMovieFromGenre(genre)
             return render_template('Movie Details.html', title = 'Movie Details', movies = genreList)
+        if movieID != None:
+            return redirect(url_for('movieInfo', movie=movieID))
     movies = dbmodel.getMovieFromGenre()
     return render_template('Movie Details.html',
                            title = 'Movie Details',movies = movies)
@@ -63,8 +67,10 @@ def ticket():
 
 @app.route('/movieInfo')
 def movieInfo():
+    movie = request.args.get('movie')
+    movies = dbmodel.getMoviesTable(movie)
     return render_template('MovieInfo.html',
-                           title = 'Movie Infos')
+                           title = 'Movie Info', row = movies)
 
 @app.route('/addMovie')
 def addMovie():

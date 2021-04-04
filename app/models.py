@@ -29,11 +29,15 @@ class Models():
         self.GenreTable      =   Base.classes.GenreTable
 
     #Gets all the infromation from MoviesTable and dumps it in a list
-    def getMoviesTable(self):
+    def getMoviesTable(self, movieID=None):
         #Trying to work out why query returns only one value from the database when there is 3
         #pprint(dir(self.db.session.query(self.MoviesTable)))
         #print(self.db.session.query(self.MoviesTable).count())
-        
+        if movieID==None:
+            pass
+        else:
+            return self.db.session.query(self.MoviesTable).filter_by(movieID=movieID).first()
+
         #returns all the data from the MoviesTable as an sqlalchemy object
         return self.db.session.query(self.MoviesTable).all()
 
