@@ -3,7 +3,11 @@
     <p>Title <input type = "text" name = "title" /></p>
     <p>blurb <input type = "text" name = "blurb" /></p>
     <p>certificate <input type = "text" name = "certificate" /></p>
-    <p>genre <input type = "text" name = "genre" /></p>
+    <p>genre:
+        {% for genre in genres %}
+            <input type = "checkbox" name = "genre" value = {{genre.genreDesc}}>{{genre.genreDesc}}<br>
+        {% endfor %}
+    </p>
     <p>director <input type = "text" name = "director" /></p>
     <p>actorList <input type = "text" name = "actorList" /></p>
     <p>imagePath <input type = "text" name = "imagePath" /></p>

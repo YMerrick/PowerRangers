@@ -50,7 +50,7 @@ def movieDetails():
         genre = request.form.get("selectGenre")
         movieID = request.form.get("movie")
         if genre == "":
-            pass
+            genre = None
         else:
             genreList = dbmodel.getMovieFromGenre(genre)
             return render_template('Movie Details.html', title = 'Movie Details', movies = genreList)
@@ -60,6 +60,14 @@ def movieDetails():
     return render_template('Movie Details.html',
                            title = 'Movie Details',movies = movies)
 
+@app.route('/ticketTest')
+def ticketTest():
+    #returns movie title, screen name, screening time and date, seat number and, row
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    return render_template('ticket.html',
+                           title = 'Test Ticket',ticket = ticketInfo)
+
+
 @app.route('/ticket')
 def ticket():
     return render_template('Printable Ticket.html',
@@ -68,33 +76,43 @@ def ticket():
 @app.route('/movieInfo')
 def movieInfo():
     movie = request.args.get('movie')
-    movies = dbmodel.getMoviesTable(movie)
+    movies = dbmodel.getMovieInfo(movie)
     return render_template('MovieInfo.html',
                            title = 'Movie Info', row = movies)
 
+@app.route('/genre', methods = ['POST','GET'])
+def genre():
+    if request.method == 'POST':
+        result = request.form
+        genreTable = dbmodel.GenreTable
+        genreDesc = result.get('genre')
+        print(genreDesc)
+        newGenre = genreTable(genreDesc = genreDesc)
+        dbmodel.addGenre(newGenre)
+    return render_template('genre.html',
+                           genres = dbmodel.getGenres())
+
 @app.route('/addMovie')
 def addMovie():
-    print(dbmodel.getTitle())
-    return render_template('addMovie.html')
+    return render_template('addMovie.html',
+                           genres = dbmodel.getGenres())
 
 @app.route('/movieAdded', methods = ['POST','GET'])
 def movieAdded():
     if request.method == 'POST':
         result = request.form
-        print(result.get('blurb'))
         moviesTable = dbmodel.MoviesTable
         movies = dbmodel.getMoviesTable()
         title = result.get('title')
         blurb = result.get('blurb')
         certificate = result.get('certificate')
-        genre = result.get('genre')
+        genre = result.getlist('genre')
         director=result.get('director')
         actorList=result.get('actorList')
         imagePath=result.get('imagePath')
         trailerLink=result.get('trailerLink')
-        print(imagePath)
-        new_movie = moviesTable(title=title,blurb=blurb,certificate=certificate,genre=genre,director=director,actorList=actorList)
-        dbmodel.addMoviesTableEntry(new_movie)
+        new_movie = moviesTable(title=title,blurb=blurb,certificate=certificate,director=director,actorList=actorList)
+        dbmodel.addMoviesTableEntry(new_movie,genre)
         return render_template('movieList.html',all_movies = movies)
     else:
         return index()

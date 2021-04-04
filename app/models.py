@@ -42,13 +42,71 @@ class Models():
         return self.db.session.query(self.MoviesTable).all()
 
     #Gets the movie record from the db and filters by the genre it is
+    #Otherwise it returns all movies in the db
     def getMovieFromGenre(self,genre = None):
-        genreQuery = self.db.session.query(self.MoviesTable).select_from(self.MoviesTable).join(self.MovieGenreTable).join(self.GenreTable)
+        genreQuery = self.db.session.query(self.MoviesTable).select_from(self.MoviesTable).join(self.MovieGenreTable).join(self.GenreTable).order_by(self.MoviesTable.title.asc())
         if genre == None:
             return genreQuery.all()
         else:
             return genreQuery.filter_by(genreDesc = genre).all()
+
+    #Takes a movie title and returns the list of genres associated with it
+    def getGenreForMovie(self,movieTitle):
+        genreQuery = self.db.session.query(self.GenreTable).select_from(self.GenreTable).join(self.MovieGenreTable).join(self.MoviesTable).order_by(self.GenreTable.genreDesc.asc())
+        queryList = genreQuery.filter_by(title = movieTitle).all()
+        genreList = []
+        for q in queryList:
+            genreList.append(q.genreDesc)
+        return genreList
+
+    #Gets the information for a specific movie title
+    def getMovieInfo(self, title):
+        return self.db.session.query(self.MoviesTable).filter_by(title = title).first_or_404()
     
+    #Gets all the genres in the db
+    def getGenres(self):
+        return self.db.session.query(self.GenreTable.genreDesc).order_by(self.GenreTable.genreDesc.asc()).all()
+
+    #Gets the screening info for a bookingID and returns the automap object
+    #This method also gives the screen its showing on
+    #Returns the title, date, time and screen name as a tuple
+    def getScreeningInfoForBooking(self,bookingID):
+        return (
+                self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date)
+                .select_from(self.BookingTable)
+                .filter_by(bookingID = bookingID)
+                .join(self.ScreeningTable)
+                .join(self.MoviesTable)
+                .join(self.ScreenTable)
+        )
+
+    #Gets the seat row and returns the automap object
+    def getSeatInfoForBooking(self,bookingId):
+        return (
+                self.db.session.query(self.SeatTable.rowNumber, self.BookingTable.seatNumber)
+                .select_from(self.BookingTable)
+                .filter_by(bookingID = bookingId)
+                .join(self.SeatTable)
+                .subquery()
+        )
+
+    #Gets the booking information from the ticket ID
+    def getBookingInfoForTicket(self,ticketId):
+        ticketInfo = (
+            self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date,self.SeatTable.rowNumber, self.BookingTable.seatNumber)
+            .select_from(self.TicketTable).filter_by(ticketID = ticketId)
+            .join(self.ScreenTable, self.ScreeningTable.screenID == self.ScreenTable.screenID)
+            .join(self.SeatTable, self.BookingTable.rowID == self.SeatTable.rowID)
+            .join(self.MoviesTable, self.ScreeningTable.movieID == self.MoviesTable.movieID)
+            .join(self.BookingTable, self.TicketTable.bookingID == self.BookingTable.bookingID)
+            .join(self.ScreeningTable, self.BookingTable.screeningID == self.ScreeningTable.screeningID)
+        )
+        return ticketInfo.first()
+
+    #Gets the ticket information from the customer ID 
+    def getTicketInfo(self,ticketId):
+        pass
+
     def getBookingTable(self):
         return self.db.session.query(self.BookingTable).all()
 
@@ -73,11 +131,31 @@ class Models():
     def getTicketTable(self):
         return self.db.session.query(self.TicketTable).all()
 
-    def addMoviesTableEntry(self,movieIn):
+    #Adds a genre taken as an automapped class of the GenreTable
+    def addGenre(self,genreIn):
+        self.db.session.add(genreIn)
+        self.db.session.commit()
+        return True
+
+    #returns True if genres have been added to movie and false otherwise
+    def addGenreForMovie(self,genres,movieTitle):
+        if type(genres) == type([]):
+            for genre in genres:
+                genreTable = self.MovieGenreTable
+                genreId = self.db.session.query(self.GenreTable.genreID).filter_by(genreDesc = genre).first().genreID
+                movieId = self.db.session.query(self.MoviesTable.movieID).filter_by(title = movieTitle).first().movieID
+                newGenreForMovie = genreTable(movieID=movieId,genreID=genreId)
+                self.db.session.add(newGenreForMovie)
+            self.db.session.commit()
+            return True
+        return False
+
+    def addMoviesTableEntry(self,movieIn,genre):
         self.db.session.add(movieIn)
         self.db.session.commit()
+        self.addGenreForMovie(genre,movieIn.title)
         return 0
     
-    def getTitle(self):
-        title = self.db.session.query(self.MoviesTable).filter_by(title="Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train")
+    def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
+        title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title

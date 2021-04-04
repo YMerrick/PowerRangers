@@ -1,6 +1,15 @@
 <!doctype html>
 <html>
     <body>
+        <form action = "http://localhost:5000/movieDetails" method = "GET">
+            <select name = "genre">
+                <option value = "None">Choose Genre</option>
+                {% for genre in genres %}
+                <option value={{genre.genreDesc}}>{{genre.genreDesc}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value = "Submit"/>
+         </form>
         <table>
             <thead>
                 <td>Title</td>
@@ -10,12 +19,12 @@
             </thead>
             {% for row in all_movies %}
             <tr>
-                <td>{{row["title"]}}</td>
-                <td>{{row["director"]}}</td>
-                <td>{{row["actorList"]}}</td>
-                <td>{{row["imagePath"]}}</td>	
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["title"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["director"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["actorList"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["imagePath"]}}</a></td>	
             </tr>
             {% endfor %}
-        </table>
+        </table>    
     </body>
 </html>
