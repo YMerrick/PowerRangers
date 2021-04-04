@@ -116,3 +116,8 @@ def movieAdded():
         return render_template('movieList.html',all_movies = movies)
     else:
         return index()
+
+@app.route('/signup', methods = ['GET', 'POST'])
+def register():
+    #if request.method == 'POST':
+    return render_template('signup.html', users = users)
