@@ -29,13 +29,12 @@ class Models():
         self.GenreTable      =   Base.classes.GenreTable
 
     #Gets all the infromation from MoviesTable and dumps it in a list
+    #If an id is passed then it returns the row corresponding to the id
     def getMoviesTable(self, movieID=None):
         #Trying to work out why query returns only one value from the database when there is 3
         #pprint(dir(self.db.session.query(self.MoviesTable)))
         #print(self.db.session.query(self.MoviesTable).count())
-        if movieID==None:
-            pass
-        else:
+        if movieID!=None:
             return self.db.session.query(self.MoviesTable).filter_by(movieID=movieID).first()
 
         #returns all the data from the MoviesTable as an sqlalchemy object
@@ -159,3 +158,21 @@ class Models():
     def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
         title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title
+
+
+    #times that a movie is going to be screening at
+    #Takes a movie title and then outputs all screenings
+    def getScreeningTimeForMovie(self,title):
+        screeningInfo =  (
+            self.db.session.query(self.ScreeningTable.time, self.ScreeningTable.date)
+            .select_from(self.ScreeningTable)
+            .join(self.MoviesTable)
+            .filter_by(title = title)
+        )
+        return screeningInfo.all()
+
+    #return movie from the date that it is screening
+    #Returns all movies relating to the date asked for
+    def getMovieFromDate(self,date):
+        
+        pass
