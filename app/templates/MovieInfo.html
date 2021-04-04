@@ -34,35 +34,34 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
-  video {
-    max-width: 720px; display: block; margin: 20px auto;
-}
 </style>
 <body>
   <div class="paragraph">
     <div class="row" style="margin-top:30px;">
       <div class="column">
-        <img src="Power Rangers.png" alt="" width=330 height=450>
+        <img src="{{url_for('static', filename=row.imagePath)}}" alt="" width=330 height=450>
       </div>
       <div class="column">
-        <video controls poster="Power Rangers.png">
-        <source src="Sample.mp4" type="video/mp4">
-        </video>
+        <iframe width="720" height="345" src="{{row.trailerLink}}">
+        </iframe>
       </div>
     </div>
     <hr class="one">
-    <h3 style="text-align:center"> Power Rangers </h3>
+    <h3 style="text-align:center"> {{row.title}} </h3>
     <hr class="one">
-  <div class="row" style="margin-top:30px;">
-    <div class="column" style = "width:200px; font-size:15px; position:absolute;">
-      <h3> Director : Dean Israelite </h3>
-      <h3> Starring : Dacre Montgomery, Naomi Scott, RJ Cyler, Becky G, Ludi Lin, Bill Hader, Bryan Cranston, Elizabeth Banks </h3>
-      <h3> Running Time : 124 min </h3>
-      <h3> Language : Eng </h3>
-      <h3> Film Rating : G-Rated</h3>
+    <div class="row" style="margin-top:30px;">
+      <div class="column" style = "width:200px; font-size:15px; position:absolute;">
+        <h3> {{row.director}}</h3>
+        <h3> Starring : {{row.actorList}} </h3>
+        <h3> Running Time : 124 min </h3>
+        <h3> Language : Eng </h3>
+        <h3> Film Rating : {{row.certificate}}-Rated</h3>
+      </div>
+      <div class="column" style = "margin-left: 220px">
+        <h3> Synopsis </h3>
+        <p> {{row.blurb}} </p>
+        <button type="submit">Booking</button>
+      </div>
     </div>
-    <div class="column" style = "margin-left: 220px">
-      <h3> Synopsis </h3>
-      <p> Saban's Power Rangers follows five ordinary high school kids who must become something extraordinary when they learn that their small town of Angel Grove – and the world – is on the verge of being obliterated by an alien threat. Chosen by destiny, our heroes quickly discover that they are the only ones who can save the planet. But to do so they will have to overcome their real-life issues and band together as the Power Rangers before it is too late. </p>
-      <button type="submit">Booking</button>
+  </div>
 </html>
