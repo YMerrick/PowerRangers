@@ -171,7 +171,7 @@ class Models():
         )
         return screeningInfo.all()
 
-
+    #Returns movie query from genres
     def getMoviesFromGenre(self,query,genre):
         genreQuery = (
             query
