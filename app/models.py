@@ -208,6 +208,7 @@ class Models():
         self.password = generate_password_hash(password,method='sha256')
 
     def addMember(self,memberIn):
+        #print(type(memberIn.creditCard))
         self.db.session.add(memberIn)
         self.db.session.commit()
         return True
