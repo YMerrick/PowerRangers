@@ -118,6 +118,11 @@ def movieAdded():
     else:
         return index()
 
+@app.route('/members')
+def members():
+    members = dbmodel.getMemberTable()
+    return render_template('memberTable.html', all_members = members)
+
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -128,7 +133,7 @@ def register():
         pass1 = generate_password_hash(result.get('password'), method='sha256')
         pass2 = result.get('c_password')
         if(check_password_hash(pass1, pass2)):
-            new_member = memberTable(email=email,walletBalance=0,creditCard="",password=pass1)
+            new_member = memberTable(email=email,walletBalance=000.00,creditCard="",password=pass1)
             dbmodel.addMember(new_member)
             return render_template('memberTable.html', all_members = members)
         else:
