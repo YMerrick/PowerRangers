@@ -5,6 +5,7 @@ from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from .models import Models
+from werkzeug.security import generate_password_hash, check_password_hash
 
 dbmodel = Models()
 
@@ -119,5 +120,17 @@ def movieAdded():
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
-    #if request.method == 'POST':
-    return render_template('signup.html', users = users)
+    if request.method == 'POST':
+        result = request.form
+        memberTable = dbmodel.MemberTable
+        members = dbmodel.getMemberTable()
+        email = result.get('email')
+        pass1 = generate_password_hash(result.get('password'), method='sha256')
+        pass2 = result.get('c_password')
+        if(check_password_hash(pass1, pass2)):
+            new_member = memberTable(email=email,walletBalance=0,creditCard="",password=pass1)
+            dbmodel.addMember(new_member)
+            return render_template('memberTable.html', all_members = members)
+        else:
+            print("password dont match")
+    return render_template('signup.html')

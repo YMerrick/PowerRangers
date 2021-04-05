@@ -2,6 +2,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from flask import Flask
 from app import app
+
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 #This is only to print out the dir of objects in a pretty way
 from pprint import pprint
 
@@ -112,7 +115,9 @@ class Models():
     def getCustomerTable(self):
         return self.db.session.query(self.CustomerTable).all()
 
-    def getMemberTable(self):
+    def getMemberTable(self, memberID = None):
+        if memberID!=None:
+            return self.db.session.query(self.MemberTable).filter_by(memberID=memberID).first()
         return self.db.session.query(self.MemberTable).all()
 
     def getPaymentTable(self):
@@ -198,3 +203,11 @@ class Models():
         if date != None:
             movieInfo = self.getMovieFromDate(movieInfo,date)
         return movieInfo.order_by(self.MoviesTable.title.asc()).all()
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password,method='sha256')
+
+    def addMember(self,memberIn):
+        self.db.session.add(memberIn)
+        self.db.session.commit()
+        return True
