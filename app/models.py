@@ -3,6 +3,7 @@ from sqlalchemy.ext.automap import automap_base
 from flask import Flask
 from app import app
 from fpdf import FPDF
+import re
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -212,6 +213,10 @@ class Models():
         self.db.session.add(memberIn)
         self.db.session.commit()
         return True
+
+    #checks if userIn's email/credit card exist in the database, if exists, return false
+    def validate_member(self, userIn):
+        pass
 
     #Method to create the pdf for a ticket
     def makeTicketPdf(self,ticketId):

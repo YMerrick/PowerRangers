@@ -136,6 +136,7 @@ def register():
         pass1 = generate_password_hash(result.get('password'), method='sha256')
         pass2 = result.get('c_password')
         if(check_password_hash(pass1, pass2)):
+            
             new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
             dbmodel.addMember(new_member)
             return redirect(url_for('members'))
