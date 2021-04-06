@@ -217,19 +217,26 @@ class Models():
     def makeTicketPdf(self):
         location = 'app/static/'
         file = FPDF(orientation = 'L', format = (74,105))
+
         file.open()
         file.add_page()
+
         file.set_font('Times')
-        file.cell(file.epw,txt= 'Ticket',ln=1)
-        file.ln(file.font_size)
+        file.cell(file.epw,file.font_size,txt= 'Ticket',ln=file.font_size)
+
         file.set_font('Courier',size= 10)
         ticketInfo = self.getBookingInfoForTicket(0)
-        file.cell(file.epw,file.font_size,txt= 'Title: '+ticketInfo.title,ln=1)
+        file.cell(17,file.font_size,txt= 'Title: ')
+        file.multi_cell(0,file.font_size,txt= ticketInfo.title,ln=1,max_line_height=file.font_size)
         file.cell(file.epw,file.font_size,txt= 'Screen: '+ticketInfo.screenName,ln=1)
-        file.cell(file.epw,file.font_size,txt= 'Time: '+ticketInfo.time,ln=1)
-        file.cell(file.epw,file.font_size,txt= 'Date: '+ticketInfo.date,ln=1)
-        file.cell(file.epw,file.font_size,txt= 'Row: '+str(ticketInfo.rowNumber),ln=1)
-        file.cell(file.epw,file.font_size,txt= 'Seat Number: '+str(ticketInfo.seatNumber),ln=1)
+        file.cell(17,file.font_size,txt='Time: ')
+        file.cell(0,file.font_size,txt=ticketInfo.time,ln=1)
+        file.cell(17,file.font_size,txt='Date: ')
+        file.cell(0,file.font_size,txt=ticketInfo.date,ln=1)
+        file.cell(17,file.font_size,txt='Row: ')
+        file.cell(0,file.font_size,txt=str(ticketInfo.rowNumber),ln=1)
+        file.cell(17,file.font_size,txt='Seat: ')
+        file.cell(0,file.font_size,txt=str(ticketInfo.seatNumber),ln=1)
+
         file.output(name = location + 'test.pdf')
         file.close()
-        pass
