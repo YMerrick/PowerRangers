@@ -216,7 +216,20 @@ class Models():
     #Method to create the pdf for a ticket
     def makeTicketPdf(self):
         location = 'app/static/'
-        file = FPDF(orientation = 'P', unit = 'mm')
+        file = FPDF(orientation = 'L', format = (74,105))
+        file.open()
         file.add_page()
+        file.set_font('Times')
+        file.cell(file.epw,txt= 'Ticket',ln=1)
+        file.ln(file.font_size)
+        file.set_font('Courier',size= 10)
+        ticketInfo = self.getBookingInfoForTicket(0)
+        file.cell(file.epw,file.font_size,txt= 'Title: '+ticketInfo.title,ln=1)
+        file.cell(file.epw,file.font_size,txt= 'Screen: '+ticketInfo.screenName,ln=1)
+        file.cell(file.epw,file.font_size,txt= 'Time: '+ticketInfo.time,ln=1)
+        file.cell(file.epw,file.font_size,txt= 'Date: '+ticketInfo.date,ln=1)
+        file.cell(file.epw,file.font_size,txt= 'Row: '+str(ticketInfo.rowNumber),ln=1)
+        file.cell(file.epw,file.font_size,txt= 'Seat Number: '+str(ticketInfo.seatNumber),ln=1)
         file.output(name = location + 'test.pdf')
+        file.close()
         pass
