@@ -214,7 +214,7 @@ class Models():
         return True
 
     #Method to create the pdf for a ticket
-    def makeTicketPdf(self):
+    def makeTicketPdf(self,ticketId):
         location = 'app/static/'
         file = FPDF(orientation = 'L', format = (74,105))
 
@@ -225,7 +225,7 @@ class Models():
         file.cell(file.epw,file.font_size,txt= 'Ticket',ln=file.font_size)
 
         file.set_font('Courier',size= 10)
-        ticketInfo = self.getBookingInfoForTicket(0)
+        ticketInfo = self.getBookingInfoForTicket(ticketId)
         file.cell(17,file.font_size,txt= 'Title: ')
         file.multi_cell(0,file.font_size,txt= ticketInfo.title,ln=1,max_line_height=file.font_size)
         file.cell(file.epw,file.font_size,txt= 'Screen: '+ticketInfo.screenName,ln=1)
