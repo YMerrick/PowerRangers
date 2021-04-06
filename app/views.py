@@ -31,6 +31,7 @@ TicketTable = Base.classes.TicketTable'''
 #This just means we have to call the page again with a post this time
 @app.route('/')
 def index():
+    dbmodel.makeTicketPdf()
     movies = dbmodel.getMovieFromGenre()
     return render_template('movieList.html',
                            title='Movie List', all_movies = movies)

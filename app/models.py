@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from flask import Flask
 from app import app
+from fpdf import FPDF
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -211,3 +212,11 @@ class Models():
         self.db.session.add(memberIn)
         self.db.session.commit()
         return True
+
+    #Method to create the pdf for a ticket
+    def makeTicketPdf(self):
+        location = 'app/static/'
+        file = FPDF(orientation = 'P', unit = 'mm')
+        file.add_page()
+        file.output(name = location + 'test.pdf')
+        pass
