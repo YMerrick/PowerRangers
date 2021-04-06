@@ -126,6 +126,7 @@ def members():
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
+    # needs to add validation, to make sure no existing user register again/no same credit cards are used
     if request.method == 'POST':
         result = request.form
         memberTable = dbmodel.MemberTable
@@ -137,11 +138,9 @@ def register():
         if(check_password_hash(pass1, pass2)):
             new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
             dbmodel.addMember(new_member)
-            return render_template('memberTable.html', all_members = members)
+            return redirect(url_for('members'))
         else:
             print("password dont match")
+
     return render_template('signup.html')
 
-@app.route('/login', methods = ['GET', 'POST'])
-def register():
-    return render_template('signin.html')
