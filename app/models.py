@@ -245,3 +245,7 @@ class Models():
 
         file.output(name = location + 'test.pdf')
         file.close()
+
+    def updateMovieRecord(self,movieId):
+        self.db.session
+        pass
