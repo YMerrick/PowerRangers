@@ -67,6 +67,13 @@ def ticketTest():
     return render_template('ticket.html',
                            title = 'Test Ticket',ticket = ticketInfo)
 
+@app.route('/print')
+def print():
+    #ticket generator
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    return render_template('print.html',
+                           title = 'Test Ticket',ticket = ticketInfo)
+
 
 @app.route('/ticket')
 def ticket():
