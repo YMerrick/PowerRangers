@@ -161,8 +161,8 @@ def register():
 def login():
     if request.method == 'POST':
         result = request.form
-        memberTable = dbmodel.MemberTable
-        members = dbmodel.getMemberTable()
+        #memberTable = dbmodel.MemberTable
+        #members = dbmodel.getMemberTable()
         member = dbmodel.getUserFromEmail(result.get('email'))
         if member:
             if(check_password_hash(member.password, result.get('password'))):
@@ -171,7 +171,7 @@ def login():
                 flash("Successful login")
                 return render_template('index.html')
             else:
-                flash('Invalid password provided', 'error')
+                flash('Invalid password provided')
                 return render_template('signin.html')
         else:
             flash("User not found")
