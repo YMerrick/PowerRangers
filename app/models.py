@@ -243,8 +243,9 @@ class Models():
         return True
 
     #checks if userIn's email/credit card exist in the database, if exists, return false
-    def validate_member(self, userIn):
-        pass
+    def getUserFromEmail(self, emailIn):
+        member = self.db.session.query(self.MemberTable).filter_by(email = emailIn).first()
+        return member
 
     #Method to create the pdf for a ticket
     def makeTicketPdf(self,ticketId):

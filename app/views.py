@@ -137,7 +137,6 @@ def register():
     if request.method == 'POST':
         result = request.form
         memberTable = dbmodel.MemberTable
-        members = dbmodel.getMemberTable()
         email = result.get('email')
         card = result.get('card')
         pass1 = generate_password_hash(result.get('password'), method='sha256')
@@ -151,4 +150,18 @@ def register():
 
     return render_template('signup.html')
 
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        result = request.form
+        memberTable = dbmodel.MemberTable
+        members = dbmodel.getMemberTable()
+        member = dbmodel.getUserFromEmail(result.get('email'))
+        if member:
+            if(check_password_hash(member.password, result.get('password'))):
+                #print(member.email)
+                return redirect(url_for('members'))
+        else:
+            #print("Incorrect password")
+    return render_template('signin.html')
 
