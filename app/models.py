@@ -166,7 +166,34 @@ class Models():
         title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title
 
+    #Returns the screening dates in months
+    #Takes 
+    def dateExchange(self,dates):
 
+        def monthToNum(numMonth):   
+            return {
+                    '01' : 'JAN',
+                    '02' : 'FEB',
+                    '03' : 'MAR',
+                    '04' : 'APR',
+                    '05' : 'MAY',
+                    '06' : 'JUN',
+                    '07' : 'JUL',
+                    '08' : 'AUG',
+                    '09' : 'SEP', 
+                    '10' : 'OCT',
+                    '11' : 'NOV',
+                    '12' : 'DEC'
+            }[numMonth]
+
+        dateList = []
+        for d in dates:
+            date = d.date.split('-')
+            month = monthToNum(date[1])
+            x = (d.time,month + date[2])
+            dateList.append(x)  
+        return dateList
+        
     #times that a movie is going to be screening at
     #Takes a movie title and then outputs all screenings
     def getScreeningTimeForMovie(self,title):
@@ -176,7 +203,8 @@ class Models():
             .join(self.MoviesTable)
             .filter_by(title = title)
         )
-        return screeningInfo.all()
+        screeningList = self.dateExchange(screeningInfo.all())
+        return screeningList
 
     #Returns movie query from genres
     def getMoviesFromGenre(self,query,genre):
