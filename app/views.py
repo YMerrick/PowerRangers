@@ -1,5 +1,5 @@
 from flask import render_template
-from flask import Flask, request
+from flask import Flask, request, flash
 from flask import url_for, redirect
 from app import app
 from flask_sqlalchemy import SQLAlchemy
@@ -138,15 +138,20 @@ def register():
         result = request.form
         memberTable = dbmodel.MemberTable
         email = result.get('email')
-        card = result.get('card')
-        pass1 = generate_password_hash(result.get('password'), method='sha256')
-        pass2 = result.get('c_password')
-        if(check_password_hash(pass1, pass2)):
-            new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
-            dbmodel.addMember(new_member)
-            return redirect(url_for('members'))
+        member = dbmodel.getUserFromEmail(email)
+        if member:
+            #if a user with the same email is found, show error
+            render_template('signup.html')
         else:
-            print("password dont match")
+            card = result.get('card')
+            pass1 = generate_password_hash(result.get('password'), method='sha256')
+            pass2 = result.get('c_password')
+            if(check_password_hash(pass1, pass2)):
+                new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
+                dbmodel.addMember(new_member)
+                return redirect(url_for('members'))
+            else:
+                print("password dont match")
 
     return render_template('signup.html')
 
@@ -162,6 +167,7 @@ def login():
                 #print(member.email)
                 return redirect(url_for('members'))
         else:
+            render_template('signin.html')
             #print("Incorrect password")
     return render_template('signin.html')
 
