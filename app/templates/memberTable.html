@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+    <body>
+        <table>
+            <thead>
+                <td>Email</td>
+                <td>Wallet Balance</td>
+                <td>Password</td>
+            </thead>
+            {% for row in all_members %}
+            <tr>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["email"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["walletBalance"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["password"]}}</a></td>	
+            </tr>
+            {% endfor %}
+        </table>    
+    </body>
+</html>
