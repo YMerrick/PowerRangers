@@ -166,14 +166,27 @@ def login():
         member = dbmodel.getUserFromEmail(result.get('email'))
         if member:
             if(check_password_hash(member.password, result.get('password'))):
-                flash("Successfully login")
-                return render_template('signin.html')
+                session['logged_in'] = True
+                session['id'] = member.memberID
+                flash("Successful login")
+                return render_template('index.html')
             else:
-                flash("Incorrect password")
+                flash('Invalid password provided', 'error')
                 return render_template('signin.html')
         else:
             flash("User not found")
             return render_template('signin.html')
-            
     return render_template('signin.html')
+
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    session['id'] = None
+    return render_template('index.html')
+
+@app.route('/index')
+def indexTest():
+    if(session['logged_in'] == True):
+        flash(session['id'])
+    return render_template('index.html')
 
