@@ -9,7 +9,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 #This is only to print out the dir of objects in a pretty way
 from pprint import pprint
-
+app.secret_key = "secret key"
 
 #Models class for database querying and limiting it to just methods
 class Models():
@@ -66,7 +66,7 @@ class Models():
     #Gets the information for a specific movie title
     def getMovieInfo(self, title):
         return self.db.session.query(self.MoviesTable).filter_by(title = title).first_or_404()
-    
+
     #Gets all the genres in the db
     def getGenres(self):
         return self.db.session.query(self.GenreTable.genreDesc).order_by(self.GenreTable.genreDesc.asc()).all()
@@ -107,7 +107,7 @@ class Models():
         )
         return ticketInfo.first()
 
-    #Gets the ticket information from the customer ID 
+    #Gets the ticket information from the customer ID
     def getTicketInfo(self,ticketId):
         pass
 
@@ -161,16 +161,16 @@ class Models():
         self.db.session.commit()
         self.addGenreForMovie(genre,movieIn.title)
         return 0
-    
+
     def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
         title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title
 
     #Returns the screening dates in months
-    #Takes 
+    #Takes
     def dateExchange(self,dates):
 
-        def monthToNum(numMonth):   
+        def monthToNum(numMonth):
             return {
                     '01' : 'JAN',
                     '02' : 'FEB',
@@ -180,7 +180,7 @@ class Models():
                     '06' : 'JUN',
                     '07' : 'JUL',
                     '08' : 'AUG',
-                    '09' : 'SEP', 
+                    '09' : 'SEP',
                     '10' : 'OCT',
                     '11' : 'NOV',
                     '12' : 'DEC'
@@ -191,9 +191,9 @@ class Models():
             date = d.date.split('-')
             month = monthToNum(date[1])
             x = (d.time,month + date[2])
-            dateList.append(x)  
+            dateList.append(x)
         return dateList
-        
+
     #times that a movie is going to be screening at
     #Takes a movie title and then outputs all screenings
     def getScreeningTimeForMovie(self,title):
@@ -219,7 +219,7 @@ class Models():
     #return movies from the date that it is screening
     #Returns all movies relating to the date asked for
     def getMovieFromDate(self,query,date):
-        movieInfo = query.join(self.ScreeningTable).filter_by(date = date)            
+        movieInfo = query.join(self.ScreeningTable).filter_by(date = date)
         return movieInfo
 
     #Returns all movies filtered by date and genre if either are present or not
@@ -243,8 +243,9 @@ class Models():
         return True
 
     #checks if userIn's email/credit card exist in the database, if exists, return false
-    def validate_member(self, userIn):
-        pass
+    def getUserFromEmail(self, emailIn):
+        member = self.db.session.query(self.MemberTable).filter_by(email = emailIn).first()
+        return member
 
     #Method to create the pdf for a ticket
     def makeTicketPdf(self,ticketId):
