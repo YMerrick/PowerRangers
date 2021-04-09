@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <body>
+        <form action = "http://localhost:5000/memberList" method = "GET">
+        <table>
+            {% for row in all_member %}
+            <tr>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["email"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["creditCard"]}}</a></td>
+                <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["password"]}}</a></td>
+            </tr>
+            {% endfor %}
+        </table>    
+    </body>
+</html>

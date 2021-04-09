@@ -58,6 +58,26 @@ def ticket():
     return render_template('Printable Ticket.html',
                            title = 'The Ticket')
 
+@app.route('/addUser', methods = ['POST','GET'])
+def addMember():
+    members = dbmodel.getMemberTable()
+    if request.method == 'POST':
+        result = request.form
+        memberTable = dbmodel.MemberTable
+        email = result.get('email')
+        creditCard = int(result.get('creditCard'))
+        password = result.get ('password')
+        new_member = memberTable(walletBalance=0,email=email,creditCard=creditCard,password=password)
+        dbmodel.addMemberTableEntry(new_member)
+        return render_template('memberList.html',all_member = members)
+    else:
+        return render_template('addUser.html',all_member = members)
+
+@app.route('/memberList')
+def member():
+    members = dbmodel.getMemberTable()
+    return render_template('memberList.html',all_member = members)
+
 @app.route('/movieInfo/<title>')
 def movieInfo(title):
     movie = dbmodel.getMovieInfo(title)
@@ -100,3 +120,17 @@ def movieAdded():
         return render_template('movieList.html',all_movies = movies)
     else:
         return index()
+
+
+@app.route('/movieInfo/<int:movie_id>',methods = ['POST','GET'])
+def showScreening(movie_id):
+    screeningTable = dbmodel.ScreeningTable
+    movies = dbmodel.MoviesTable
+    movie = dbmodel.getAMovie(movie_id)
+    screenTable = dbmodel.ScreenTable
+    screenID = dbmodel.getScreenID(int(movie_id))
+    screen = dbmodel.getAScreen(screenID)
+    if request.method == 'POST':
+        result = request.form
+        print(list(request.form.listvalues()))
+    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie)

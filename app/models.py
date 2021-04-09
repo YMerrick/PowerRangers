@@ -133,3 +133,28 @@ class Models():
     def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
         title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title
+
+    def getScreenID(self,movie_id):
+        screenTable = self.ScreenTable
+        screeningTable = self.ScreeningTable
+        screenID = self.db.session.query(screeningTable.screenID).filter_by(movieID=movie_id).first().screenID
+        return screenID
+
+    def getAScreen(self,screenID):
+        screenTable = self.ScreenTable
+        screen = self.db.session.query(screenTable).get(screenID)
+        return screen
+
+    def getAMovie(self,movieID):
+        movieTable = self.MoviesTable
+        movie = self.db.session.query(movieTable).get(movieID)
+        return movie
+
+    #adding members into member
+    def addMemberTableEntry(self,memberIn):
+        memberTable = self.MemberTable
+        self.db.session.add(memberIn)
+        self.db.session.commit()
+        return 0
+
+    
