@@ -1,14 +1,13 @@
 from flask import render_template
 from flask import Flask, request
-from flask import url_for, redirect
+from flask import url_for, redirect, session
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from .models import Models
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import logging # for testing
 dbmodel = Models()
-
 #Moved this to models.py and created it as a class instead to get a working api
 '''app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movie.db'
 
@@ -48,31 +47,54 @@ def mainPage():
 
 @app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
+    genreList = dbmodel.getGenres()
     if request.method == "POST":
         genre = request.form.get("selectGenre")
+        date = request.form.get("date")
         movieID = request.form.get("movie")
         if genre == "":
+            if "genre" in session:
+                session.pop("genre", None)
             genre = None
         else:
-            genreList = dbmodel.getMovieFromGenre(genre)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = genreList)
+            session["genre"] = genre
+
+        if date == "":
+            session.pop("date", None)
+        elif date != None:
+            session["date"] = date
         if movieID != None:
             return redirect(url_for('movieInfo', movie=movieID))
+
+        if "genre" in session:
+            genre = session["genre"]
+            if "date" in session and session["date"] != "" and session["date"] != None:
+                date = session["date"]
+                movieList = dbmodel.getMovie(genre=genre,date=date)
+            else:
+                movieList = dbmodel.getMovie(genre=genre)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList)
+
+        if "date" in session and session["date"] != "" and session["date"] != None:
+            date = session["date"]
+            listFromDate = dbmodel.getMovie(date)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList)
+
     movies = dbmodel.getMovieFromGenre()
     return render_template('Movie Details.html',
-                           title = 'Movie Details',movies = movies)
+                           title = 'Movie Details',movies = movies, genreList = genreList)
 
 @app.route('/ticketTest')
 def ticketTest():
     #returns movie title, screen name, screening time and date, seat number and, row
-    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')
     return render_template('ticket.html',
                            title = 'Test Ticket',ticket = ticketInfo)
 
 @app.route('/print')
 def print():
     #ticket generator
-    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')
     return render_template('print.html',
                            title = 'Test Ticket',ticket = ticketInfo)
 
@@ -143,7 +165,7 @@ def register():
         pass1 = generate_password_hash(result.get('password'), method='sha256')
         pass2 = result.get('c_password')
         if(check_password_hash(pass1, pass2)):
-            
+
             new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
             dbmodel.addMember(new_member)
             return redirect(url_for('members'))
@@ -151,4 +173,3 @@ def register():
             print("password dont match")
 
     return render_template('signup.html')
-
