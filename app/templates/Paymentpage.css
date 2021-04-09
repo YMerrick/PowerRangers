@@ -1,0 +1,114 @@
+.paragraph {
+	margin-top: 100px;
+	margin: auto;
+	width: 1280px;
+	padding: 10px;
+	font-size: 17px;
+	font-family: sans-serif;
+	background: #f7f7f7;
+	line-height:24px;
+	height: 120vh;
+	border-radius: 20px 20px 20px 20px;
+	border: groove;"
+  }
+
+.main{
+	clear:both;
+	width:1240px;
+	margin:auto;
+	overflow:hidden;
+}
+
+
+.form-group{
+	width:590px;
+}
+
+.form-group .input-k{
+	clear:both;
+	width:100%;
+	overflow:hidden;
+	padding-top:25px;
+}
+
+.form-group .input-k span{
+	color:#333;
+	float:left;
+	width:80px;
+	height:32px;
+	display:block;
+	line-height:32px;
+	text-align:right;
+	font-size:14px;
+	FONT-FAMILY: "Microsoft Yahei";
+}
+
+.form-group .input-k .hyz{
+	float:left;
+	font-size:12px;
+	color:#468fa2;
+	margin-top:10px;
+	margin-left:5px;
+}
+
+.form-group .input-k input{
+	float:right;
+	width:410px;
+	height:30px;
+	display:block;
+	font-size:12px;
+	padding-left:10px;
+	line-height:30px;
+	border:#bebebe solid 1px;
+}
+
+
+.form-group .input-k .checkbox{
+	border:0;
+	width:auto;
+	height:32px;
+	padding-left:0px;
+	line-height:32px;
+}
+
+.form-group .input-k .jzzt{
+	color:#999;
+	width:auto;
+	font-size:12px;
+	padding-left:10px;
+}
+
+.form-group .input-k .jzzt a{
+	color:#999;
+}
+
+.form-group .input-k .jzzt a:hover{
+	color:#1d7ad9;
+	text-decoration:underline;
+}
+
+.form-group .input-k button{
+	border:0;
+	color:#FFF;
+	width:250px;
+	height:42px;
+	font-size:16px;
+	line-height:32px;
+	text-align:center;
+	background-color:#1d7ad9;
+	FONT-FAMILY: "Microsoft Yahei";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -13,7 +13,7 @@
   font-family: sans-serif;
   background: #f7f7f7;
   line-height:24px;
-  height: 120vh;
+  height: auto;
   border-radius: 20px 20px 20px 20px;
   border: groove;
 }
@@ -21,7 +21,7 @@
   display: flex;
 }
 .column {
-  margin-left:50px;
+  margin-left:80px;
   padding: 25px;
 }
 .wrapper {
@@ -46,90 +46,61 @@ height:20px;
 }
 </style>
 <body>
-  <div class="paragraph">
-      <div class="wrapper">
-        <select name="" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
-          <option value="">Choose Genre</option>
-          <option value="">Action</option>
-          <option value="">Mystery</option>
-          <option value="">Thriller</option>
-          <option value="">Horror</option>
-          <option value="">Romance</option>
-          <option value="">Fantasy</option>
-        </select>
+  <form method="POST">
+    <div class="paragraph">
+        <div class="wrapper">
+            <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+              <option value="">Choose Genre</option>
+              <option value="Action">Action</option>
+              <option value="Adventure">Adventure</option>
+              <option value="Sci">Sci-Fi</option>
+              <option value="Crime">Crime</option>
+              <option value="Drama">Drama</option>
+              <option value="Romance">Romance</option>
+              <option value="Comedy">Comedy</option>
+              <option value="War">War</option>
+              <option value="Animation">Animation</option>
+              <option value="Thriller">Thriller</option>
+            </select>
+            <button type="submit">Search</button>
+          </form>
+        </div>
+      <div class="center">
+        <button class="navitem">01 Mon</button>
+        <button class="navitem">02 Tus</button>
+        <button class="navitem">03 Wed</button>
+        <button class="navitem">04 Thur</button>
+        <button class="navitem">05 Fri</button>
+        <button class="navitem">06 Sat</button>
+        <button class="navitem">07 Sun</button>
+        <button class="navitem">08 Mon</button>
+        <button class="navitem">09 Tus</button>
       </div>
-    <div class="center">
-      <button class="navitem">01 Mon</button>
-      <button class="navitem">02 Tus</button>
-      <button class="navitem">03 Wed</button>
-      <button class="navitem">04 Thur</button>
-      <button class="navitem">05 Fri</button>
-      <button class="navitem">06 Sat</button>
-      <button class="navitem">07 Sun</button>
-      <button class="navitem">08 Mon</button>
-      <button class="navitem">09 Tus</button>
-    </div>
-    <div class="row" style="margin-top:30px;">
-      <div class="column">
-        <img src="Deadpool.png" alt="" width=300 height=300>
-          <h1>
-            Deadpool
-          </h1>
-          <h1 style="font-size: 20px;">
-          </h1>
-        <button type="submit">Booking</button>
+      <div class="row" style="margin-top:30px;">
+          {% for row in movies %}
+            {% if loop.index > 3 %}
+              {% if (loop.index % 3) == 1 %}
+                </div>
+                <hr style="width: 1280px;">
+                <div class="row" style="margin-top:30px;">
+              {% endif %}
+            {% endif %}
+            <script>
+             function myFunction(name)
+             {
+               var e = name.movieID;
+               return e;
+             }
+            </script>
+            <div class="column">
+              <button type="submit" name="movie" value={{row.movieID}} ><img src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300></button>
+             <!-- <button type="image" name="movie" id="movie"src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300 value="1"> -->
+             <h1 style="font-size: 20px;">{{row.title}}</h1>
+             <button type="submit">Booking</button>
+            </div>
+          {% endfor %}
       </div>
-    <div class="column">
-      <a href="MovieInfo.html">
-        <img src="Power Rangers.png" alt="" width=300 height=300>
-      </a>
-        <h1>
-          Power Rangers
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
-    </div>
-    <div class="column">
-      <img src="Eternal Sunshine.jpg" alt="" width=300 height=300>
-        <h1>
-          Eternal Sunshine
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
-    </div>
-  </div>
-  <hr style="width: 1280px;">
-  <div class="row" style="margin-top:30px;">
-    <div class="column" style = " margin-left: 50px">
-      <img src="saving private ryan.jpg" alt="" width=300 height=300>
-        <h1>
-          Saving Private Ryan
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
-    </div>
-    <div class="column">
-      <img src="titanic.jpg" alt="" width=300 height=300>
-      <h1>
-        Titanic
-      </h1>
-      <h1 style="font-size: 20px;">
-      </h1>
-      <button type="submit">Booking</button>
-    </div>
-    <div class="column">
-      <img src="Toy_Story_4.jpg" alt="" width=300 height=300>
-      <h1>
-        Toy Story 4
-      </h1>
-      <h1 style="font-size: 20px;">
-      </h1>
-      <button type="submit">Booking</button>
-    </div>
-  </div>
+    </form>
 </div>
 </body>
 </html>

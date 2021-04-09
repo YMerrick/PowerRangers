@@ -1,15 +1,14 @@
 <html>
-  <head>
-    {% if title %}
-    <title>{{ title }}</title>
-    {% else %}
-    <title>No title</title>
-    {% endif %}
-  </head>
   <body>
-      <h1>Hello, {{ user.name }}!</h1>
-      {% for c in all_movies %}
-        <p>{{ c.title }}</p>
-      {% endfor %}
+    {% if session.logged_in %}
+      <span>HI, {{session['id']}}</span>
+      <br>
+      <a href="/logout">LOG OUT</a>
+    {% else %}
+      <span>HI, NON-MEMBER</span>
+      <br>
+      <a href="/login">LOG IN</a>
+      <a href="/signup">SIGN UP</a>
+    {% endif %}
   </body>
 </html>

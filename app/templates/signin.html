@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <form action="" method="POST" name="login">
+            <div class="form-group mb-1">
+                <div class="">
+                    <input required="required" type="email" name="email" placeholder="Email" class="form-control" value="{{ request.form['email'] }}">
+                </div>
+            </div>
+            <br>
+            <div class="form-group mb-1">
+                <div class="">
+                    <input id="passInput" required="required" type="password" name="password" placeholder="Password" class="form-control" value="{{ request.form['password'] }}">
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <br>
+                    <span>{{ message }} </span>
+                    <br>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </body>
+</html>

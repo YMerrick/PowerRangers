@@ -1,9 +1,11 @@
 from flask import render_template
-from flask import Flask, request, url_for, redirect
+from flask import Flask, request, flash, session
+from flask import url_for, redirect
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
 from .models import Models
+from werkzeug.security import generate_password_hash, check_password_hash
 
 dbmodel = Models()
 
@@ -26,16 +28,17 @@ TicketTable = Base.classes.TicketTable'''
 
 #In order to get data from the database, need to query before hand and then pass the JSON data to it
 #If we want to do searches and sort by certain aspects of the database then we have to reload the page with a condition in the query to return the data with
-#This just means we have to call the page again with a post this time 
+#This just means we have to call the page again with a post this time
 @app.route('/')
 def index():
+    dbmodel.makeTicketPdf(0)
     movies = dbmodel.getMovieFromGenre()
     return render_template('movieList.html',
                            title='Movie List', all_movies = movies)
 
 @app.route('/cinemaSeats')
 def cinemaSeat():
-    return render_template('CinemaSeat.html', 
+    return render_template('CinemaSeat.html',
                            title = 'Pick your seats')
 
 @app.route('/MainPage')
@@ -43,15 +46,36 @@ def mainPage():
     return render_template('MainPage.html',
                            title = 'The Main Page')
 
-@app.route('/movieDetails')
+@app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
-    movieGenres = dbmodel.getGenres()
-    genre = request.args.get('genre')
-    if genre == "None":
-        genre = None
-    movies = dbmodel.getMovieFromGenre(genre)
-    return render_template('movieList.html', 
-                           title = 'Movie Details',all_movies = movies, genres = movieGenres)
+    if request.method == "POST":
+        genre = request.form.get("selectGenre")
+        movieID = request.form.get("movie")
+        if genre == "":
+            genre = None
+        else:
+            genreList = dbmodel.getMovieFromGenre(genre)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = genreList)
+        if movieID != None:
+            return redirect(url_for('movieInfo', movie=movieID))
+    movies = dbmodel.getMovieFromGenre()
+    return render_template('Movie Details.html',
+                           title = 'Movie Details',movies = movies)
+
+@app.route('/ticketTest')
+def ticketTest():
+    #returns movie title, screen name, screening time and date, seat number and, row
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    return render_template('ticket.html',
+                           title = 'Test Ticket',ticket = ticketInfo)
+
+@app.route('/print')
+def print():
+    #ticket generator
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    return render_template('print.html',
+                           title = 'Test Ticket',ticket = ticketInfo)
+
 
 @app.route('/ticket')
 def ticket():
@@ -78,11 +102,12 @@ def member():
     members = dbmodel.getMemberTable()
     return render_template('memberList.html',all_member = members)
 
-@app.route('/movieInfo/<title>')
-def movieInfo(title):
-    movie = dbmodel.getMovieInfo(title)
+@app.route('/movieInfo')
+def movieInfo():
+    movieId = request.args.get('movie')
+    movies = dbmodel.getMoviesTable(movieId)
     return render_template('MovieInfo.html',
-                           title = 'Movie Infos',movie = movie)
+                           title = 'Movie Info', row = movies)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
@@ -120,7 +145,7 @@ def movieAdded():
         return render_template('movieList.html',all_movies = movies)
     else:
         return index()
-
+        
 #shows the cinema to book a ticket
 @app.route('/movieInfo/<int:movie_id>',methods = ['POST','GET'])
 def showScreening(movie_id):
@@ -134,3 +159,68 @@ def showScreening(movie_id):
         result = request.form
         print(list(request.form.listvalues()))
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie)
+
+@app.route('/members')
+def members():
+    members = dbmodel.getMemberTable()
+    return render_template('memberTable.html', all_members = members)
+
+@app.route('/signup', methods = ['GET', 'POST'])
+def register():
+    # needs to add validation, to make sure no existing user register again/no same credit cards are used
+    if request.method == 'POST':
+        result = request.form
+        memberTable = dbmodel.MemberTable
+        email = result.get('email')
+        member = dbmodel.getUserFromEmail(email)
+        if member:
+            flash("User with the same email has been found.")
+            #if a user with the same email is found, show error
+            return render_template('signup.html')
+        else:
+            card = result.get('card')
+            pass1 = generate_password_hash(result.get('password'), method='sha256')
+            pass2 = result.get('c_password')
+            if(check_password_hash(pass1, pass2)):
+                new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
+                dbmodel.addMember(new_member)
+                return redirect(url_for('members'))
+            else:
+                flash("Password don't match")
+                return render_template('signup.html')
+
+    return render_template('signup.html')
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        result = request.form
+        #memberTable = dbmodel.MemberTable
+        #members = dbmodel.getMemberTable()
+        member = dbmodel.getUserFromEmail(result.get('email'))
+        if member:
+            if(check_password_hash(member.password, result.get('password'))):
+                session['logged_in'] = True
+                session['id'] = member.memberID
+                flash("Successful login")
+                return render_template('index.html')
+            else:
+                flash('Invalid password provided')
+                return render_template('signin.html')
+        else:
+            flash("User not found")
+            return render_template('signin.html')
+    return render_template('signin.html')
+
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    session['id'] = None
+    return render_template('index.html')
+
+@app.route('/index')
+def indexTest():
+    if(session['logged_in'] == True):
+        flash(session['id'])
+    return render_template('index.html')
+
