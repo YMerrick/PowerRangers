@@ -121,7 +121,7 @@ def movieAdded():
     else:
         return index()
 
-
+#shows the cinema to book a ticket
 @app.route('/movieInfo/<int:movie_id>',methods = ['POST','GET'])
 def showScreening(movie_id):
     screeningTable = dbmodel.ScreeningTable
