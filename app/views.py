@@ -192,6 +192,7 @@ def register():
             return render_template('signup.html')
         else:
             card = result.get('card')
+            print(type(card))
             pass1 = generate_password_hash(result.get('password'), method='sha256')
             pass2 = result.get('c_password')
             if(check_password_hash(pass1, pass2)):
