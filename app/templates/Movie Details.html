@@ -96,7 +96,7 @@ height:20px;
               <button type="submit" name="movie" value={{row.movieID}} ><img src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300></button>
              <!-- <button type="image" name="movie" id="movie"src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300 value="1"> -->
              <h1 style="font-size: 20px;">{{row.title}}</h1>
-             <button type="submit">Booking</button>
+             <a href="http://localhost:5000/movieInfo/{{row.movieID}}"><button type="submit">Booking</button></a>
             </div>
           {% endfor %}
       </div>

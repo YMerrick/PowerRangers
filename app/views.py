@@ -29,12 +29,12 @@ TicketTable = Base.classes.TicketTable'''
 #In order to get data from the database, need to query before hand and then pass the JSON data to it
 #If we want to do searches and sort by certain aspects of the database then we have to reload the page with a condition in the query to return the data with
 #This just means we have to call the page again with a post this time
-@app.route('/')
-def index():
-    dbmodel.makeTicketPdf(0)
-    movies = dbmodel.getMovieFromGenre()
-    return render_template('movieList.html',
-                           title='Movie List', all_movies = movies)
+#@app.route('/')
+#def index():
+#    dbmodel.makeTicketPdf(0)
+#    movies = dbmodel.getMovieFromGenre()
+#    return render_template('movieList.html',
+#                           title='Movie List', all_movies = movies)
 
 @app.route('/cinemaSeats')
 def cinemaSeat():
@@ -69,12 +69,13 @@ def ticketTest():
     return render_template('ticket.html',
                            title = 'Test Ticket',ticket = ticketInfo)
 
+
 @app.route('/print')
-def print():
+#def print():
     #ticket generator
-    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
-    return render_template('print.html',
-                           title = 'Test Ticket',ticket = ticketInfo)
+#    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+#    return render_template('print.html',
+#                           title = 'Test Ticket',ticket = ticketInfo)
 
 
 @app.route('/ticket')
@@ -147,18 +148,30 @@ def movieAdded():
         return index()
         
 #shows the cinema to book a ticket
+#this is a bete function just to make the website work
+#used screeningID as 1 as default
+#will populate screeningID and make it work with it
 @app.route('/movieInfo/<int:movie_id>',methods = ['POST','GET'])
 def showScreening(movie_id):
     screeningTable = dbmodel.ScreeningTable
-    movies = dbmodel.MoviesTable
+    all_bookings = dbmodel.getBookingTable()
     movie = dbmodel.getAMovie(movie_id)
     screenTable = dbmodel.ScreenTable
+    bookingTable = dbmodel.BookingTable
     screenID = dbmodel.getScreenID(int(movie_id))
     screen = dbmodel.getAScreen(screenID)
     if request.method == 'POST':
         result = request.form
-        print(list(request.form.listvalues()))
-    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie)
+        resultList = list(request.form.listvalues())
+        resultList = resultList[0]
+        resultList = resultList[0].split(",")
+        for row in resultList:
+            rowID = dbmodel.rowIDFinder(screenID,int(row))
+            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=1,seatStatus=1,row="")
+            dbmodel.addBooking(new_booking)
+        return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
+    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
+
 
 @app.route('/members')
 def members():

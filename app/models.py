@@ -171,7 +171,7 @@ class Models():
         screeningTable = self.ScreeningTable
         screenID = self.db.session.query(screeningTable.screenID).filter_by(movieID=movie_id).first().screenID
         return screenID
-
+ 
     def getAScreen(self,screenID):
         screenTable = self.ScreenTable
         screen = self.db.session.query(screenTable).get(screenID)
@@ -301,4 +301,18 @@ class Models():
 
     def updateMovieRecord(self,movieId):
         self.db.session
+        pass
+
+    def rowIDFinder(self,screenIDIn,row):
+        if(screenIDIn == 1):
+            return 0+row
+        elif(screenIDIn == 2):
+            return 60+row
+        elif(screenIDIn == 3):
+            return 108+row
+
+    def addBooking(self,bookingIn):
+        memberTable = self.BookingTable
+        self.db.session.add(bookingIn)
+        self.db.session.commit()
         pass
