@@ -128,7 +128,7 @@ def movieInfo():
     movieId = request.args.get('movie')
     movies = dbmodel.getMoviesTable(movieId)
     return render_template('MovieInfo.html',
-                           title = 'Movie Info', row = movies)
+                           title = 'Movie Info', movie = movies)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
@@ -166,7 +166,6 @@ def movieAdded():
         return render_template('movieList.html',all_movies = movies)
     else:
         return url_for(redirect('/'))
-        
 #shows the cinema to book a ticket
 #this is a bete function just to make the website work
 #used screeningID as 1 as default
