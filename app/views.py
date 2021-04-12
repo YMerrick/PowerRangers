@@ -71,11 +71,11 @@ def ticketTest():
 
 
 @app.route('/print')
-#def print():
+def printTicket():
     #ticket generator
-#    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
-#    return render_template('print.html',
-#                           title = 'Test Ticket',ticket = ticketInfo)
+    ticketInfo = dbmodel.getBookingInfoForTicket('0')    
+    return render_template('print.html',
+                           title = 'Test Ticket',ticket = ticketInfo)
 
 
 @app.route('/ticket')
@@ -237,3 +237,6 @@ def indexTest():
         flash(session['id'])
     return render_template('index.html')
 
+@app.route('/payment')
+def paymentPage():
+    return render_template('Paymentpage.html')

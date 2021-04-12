@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>PaymentPage</title>
 
-<link href="Paymentpage.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href = "{{ url_for('static',filename='Paymentpage.css') }}" />
 
 </head>
 
@@ -16,7 +16,7 @@
         	<div class="title"><h2>PAYMENT METHOD<span></span></h2></div>
             <div class="form-group">
                 <div class="input-k">
-                	<div class="logo"><img src="cardtype.png" width="300" /></div>
+                	<div class="logo"><img src="static/cardtype.png" width="300" /></div>
                 </div>
             	<div class="input-k">
                 	<span>Cardnumber:</span> <input type="text" />
