@@ -49,32 +49,28 @@ height:20px;
   <form method="POST">
     <div class="paragraph">
         <div class="wrapper">
-            <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+            <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=13;' onblur='this.size=1;' onchange='this.size=1; this.blur();' style="margin-left:-30px;">
+              <!-- this.form.submit(); -->
               <option value="">Choose Genre</option>
-              <option value="Action">Action</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Sci">Sci-Fi</option>
-              <option value="Crime">Crime</option>
-              <option value="Drama">Drama</option>
-              <option value="Romance">Romance</option>
-              <option value="Comedy">Comedy</option>
-              <option value="War">War</option>
-              <option value="Animation">Animation</option>
-              <option value="Thriller">Thriller</option>
+              {% for list in genreList %}
+                <option value={{list.genreDesc}}>{{list.genreDesc}}</option>
+              {% endfor %}
             </select>
-            <button type="submit">Search</button>
-          </form>
+          <button type="submit" style="position:absolute; margin-top:5px; margin-left:3px;">Search</button>
         </div>
       <div class="center">
-        <button class="navitem">01 Mon</button>
-        <button class="navitem">02 Tus</button>
-        <button class="navitem">03 Wed</button>
-        <button class="navitem">04 Thur</button>
-        <button class="navitem">05 Fri</button>
-        <button class="navitem">06 Sat</button>
-        <button class="navitem">07 Sun</button>
-        <button class="navitem">08 Mon</button>
-        <button class="navitem">09 Tus</button>
+        <h2>April</h2>
+      </div>
+      <div class="center">
+        <button class="navitem" name="date" value="2021-04-01">01 Mon</button>
+        <button class="navitem" name="date" value="">02 Tus</button>
+        <button class="navitem" name="date" value="">03 Wed</button>
+        <button class="navitem" name="date" value="">04 Thur</button>
+        <button class="navitem" name="date" value="">05 Fri</button>
+        <button class="navitem" name="date" value="">06 Sat</button>
+        <button class="navitem" name="date" value="">07 Sun</button>
+        <button class="navitem" name="date" value="">08 Mon</button>
+        <button class="navitem" name="date" value="">09 Tus</button>
       </div>
       <div class="row" style="margin-top:30px;">
           {% for row in movies %}
@@ -85,16 +81,8 @@ height:20px;
                 <div class="row" style="margin-top:30px;">
               {% endif %}
             {% endif %}
-            <script>
-             function myFunction(name)
-             {
-               var e = name.movieID;
-               return e;
-             }
-            </script>
             <div class="column">
               <button type="submit" name="movie" value={{row.movieID}} ><img src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300></button>
-             <!-- <button type="image" name="movie" id="movie"src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300 value="1"> -->
              <h1 style="font-size: 20px;">{{row.title}}</h1>
              <a href="http://localhost:5000/movieInfo/{{row.movieID}}"><button type="submit">Booking</button></a>
             </div>
