@@ -165,8 +165,7 @@ def movieAdded():
         dbmodel.addMoviesTableEntry(new_movie,genre)
         return render_template('movieList.html',all_movies = movies)
     else:
-        return index()
-
+        return url_for(redirect('/'))
 #shows the cinema to book a ticket
 #this is a bete function just to make the website work
 #used screeningID as 1 as default
