@@ -217,7 +217,8 @@ def register():
             if(check_password_hash(pass1, pass2)):
                 new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
                 dbmodel.addMember(new_member)
-                return redirect(url_for('members'))
+                flash("Successfully registered")
+                return render_template('signin.html')
             else:
                 flash("Password don't match")
                 return render_template('signup.html')
@@ -235,8 +236,9 @@ def login():
             if(check_password_hash(member.password, result.get('password'))):
                 session['logged_in'] = True
                 session['id'] = member.memberID
+                current_user = dbmodel.getUserFromID(session['id'])
                 flash("Successful login")
-                return render_template('index.html')
+                return render_template('index.html', current_user = current_user)
             else:
                 flash('Invalid password provided')
                 return render_template('signin.html')
@@ -254,8 +256,10 @@ def logout():
 @app.route('/index')
 def indexTest():
     if(session['logged_in'] == True):
-        flash(session['id'])
-    return render_template('index.html')
+        current_user = dbmodel.getUserFromID(session['id'])
+        return render_template('index.html', current_user = current_user)
+    else:
+        return render_template('index.html', current_user = None)
 
 @app.route('/payment')
 def paymentPage():

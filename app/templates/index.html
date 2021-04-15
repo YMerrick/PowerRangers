@@ -3,8 +3,9 @@
     {% for msg in get_flashed_messages()%}
       <strong>{{msg}}</strong>
     {% endfor %}
+    <br>
     {% if session.logged_in %}
-      <span>HI, {{session['id']}}</span>
+      <span>HI, {{current_user.email}}</span>
       <br>
       <a href="/logout">LOG OUT</a>
     {% else %}
