@@ -1,5 +1,8 @@
 <html>
   <body>
+    {% for msg in get_flashed_messages()%}
+      <strong>{{msg}}</strong>
+    {% endfor %}
     {% if session.logged_in %}
       <span>HI, {{session['id']}}</span>
       <br>

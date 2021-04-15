@@ -199,15 +199,15 @@ def members():
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
-    # needs to add validation, to make sure no existing user register again/no same credit cards are used
+    session.pop('_flashes', None)
     if request.method == 'POST':
         result = request.form
         memberTable = dbmodel.MemberTable
         email = result.get('email')
         member = dbmodel.getUserFromEmail(email)
         if member:
-            flash("User with the same email has been found.")
             #if a user with the same email is found, show error
+            flash("User with the same email has been found.")
             return render_template('signup.html')
         else:
             card = result.get('card')
@@ -225,6 +225,7 @@ def register():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    session.pop('_flashes', None)
     if request.method == 'POST':
         result = request.form
         #memberTable = dbmodel.MemberTable

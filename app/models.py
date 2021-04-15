@@ -266,6 +266,8 @@ class Models():
         self.db.session.commit()
         return True
 
+        
+
     #checks if userIn's email/credit card exist in the database, if exists, return false
     def getUserFromEmail(self, emailIn):
         member = self.db.session.query(self.MemberTable).filter_by(email = emailIn).first()
