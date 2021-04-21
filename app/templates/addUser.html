@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %} addUser {% endblock %}
+{% block content %}
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+  <div class="paragraph" style="height:100%; text-align: center;">
+    {% for msg in get_flashed_messages()%}
+        <h3>{{msg}}</h3>
+    {% endfor %}
+    <form action = "http://localhost:5000/addUser" method = "POST">
+      <div class="form-group mb-1" align="middle">
+        <input class="form-control" required="required" placeholder="Email" type = "text" name = "email" style="width:35%; margin-top: 40px; height:40px">
+      </div>
+      <div class="form-group mb-1" align="middle">
+        <input class="form-control" required="required" placeholder="creditCard" type = "text" name = "creditCard" style="width:35%; margin-top: 40px; height:40px">
+      </div>
+      <div class="form-group mb-1" align="middle">
+        <input class="form-control" required="required" placeholder="password" type = "text" name = "password" style="width:35%; margin-top: 40px; height:40px">
+      </div>
+        <p><input type = "submit" value = "submit" /></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

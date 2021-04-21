@@ -1,15 +1,18 @@
 <html>
-  <head>
-    {% if title %}
-    <title>{{ title }}</title>
-    {% else %}
-    <title>No title</title>
-    {% endif %}
-  </head>
   <body>
-      <h1>Hello, {{ user.name }}!</h1>
-      {% for c in all_movies %}
-        <p>{{ c.title }}</p>
-      {% endfor %}
+    {% for msg in get_flashed_messages()%}
+      <strong>{{msg}}</strong>
+    {% endfor %}
+    <br>
+    {% if session.logged_in %}
+      <span>HI, {{current_user.email}}</span>
+      <br>
+      <a href="/logout">LOG OUT</a>
+    {% else %}
+      <span>HI, NON-MEMBER</span>
+      <br>
+      <a href="/login">LOG IN</a>
+      <a href="/signup">SIGN UP</a>
+    {% endif %}
   </body>
 </html>

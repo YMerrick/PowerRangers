@@ -1,135 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>MoviesOnScreen</title>
-</head>
-<style>
-.paragraph {
-  margin-top: 100px;
-  margin: auto;
-  width: 1280px;
-  padding: 10px;
-  font-size: 17px;
-  font-family: sans-serif;
-  background: #f7f7f7;
-  line-height:24px;
-  height: 120vh;
-  border-radius: 20px 20px 20px 20px;
-  border: groove;
-}
-.row {
-  display: flex;
-}
-.column {
-  margin-left:50px;
-  padding: 25px;
-}
-.wrapper {
-width:200px;
-padding:20px;
-height:20px;
-}
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.navitem {
-  display: inline-block;
-  width: 70px;
-  height: 30px;
-  text-align: center;
-  background-color: #484a4a;
-  border-radius: 40px 40px 40px 40px;
-  color: #fff;
-  cursor: pointer;
-}
-</style>
-<body>
-  <div class="paragraph">
+{% extends "base.html" %}
+{% block title %} MoviesOnScreen {% endblock %}
+{% block content %}
+      {%for flag in flag%}
+        {%if flag == "0"%}
+         <li class="nav-item">
+           <a class="nav-link" href="login">Login</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="signup">Signup</a>
+         </li>
+        {% endif %}
+        {%if flag == "1"%}
+        <li class="nav-item">
+          <a class="nav-link" href="logout">Logout</a>
+        </li>
+        {%endif%}
+      {%endfor%}
+   </ul>
+ </div>
+</nav>
+<div class="container-fluid">
+  <form method="POST">
+    <div class="paragraph">
       <div class="wrapper">
-        <select name="" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+        <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=13;' onblur='this.size=1;' onchange='this.size=1; this.blur(); this.form.submit();' style="margin-left: 16px;">
           <option value="">Choose Genre</option>
-          <option value="">Action</option>
-          <option value="">Mystery</option>
-          <option value="">Thriller</option>
-          <option value="">Horror</option>
-          <option value="">Romance</option>
-          <option value="">Fantasy</option>
+          {% for list in genreList %}
+            <option value={{list.genreDesc}}>{{list.genreDesc}}</option>
+          {% endfor %}
         </select>
       </div>
     <div class="center">
-      <button class="navitem">01 Mon</button>
-      <button class="navitem">02 Tus</button>
-      <button class="navitem">03 Wed</button>
-      <button class="navitem">04 Thur</button>
-      <button class="navitem">05 Fri</button>
-      <button class="navitem">06 Sat</button>
-      <button class="navitem">07 Sun</button>
-      <button class="navitem">08 Mon</button>
-      <button class="navitem">09 Tus</button>
+      <h1 style ="font-family: 'Dotum', serif;">April</h1>
+    </div>
+    <div class="center" style = "margin-top: 20px;">
+      <button class="navitem" name="date" value="2021-04-01">01 Mon</button>
+      <button class="navitem" name="date" value="2021-04-02">02 Tus</button>
+      <button class="navitem" name="date" value="">03 Wed</button>
+      <button class="navitem" name="date" value="">04 Thur</button>
+      <button class="navitem" name="date" value="">05 Fri</button>
+      <button class="navitem" name="date" value="">06 Sat</button>
+      <button class="navitem" name="date" value="">07 Sun</button>
+      <button class="navitem" name="date" value="">08 Mon</button>
+      <button class="navitem" name="date" value="">09 Tus</button>
     </div>
     <div class="row" style="margin-top:30px;">
-      <div class="column">
-        <img src="Deadpool.png" alt="" width=300 height=300>
-          <h1>
-            Deadpool
-          </h1>
-          <h1 style="font-size: 20px;">
-          </h1>
-        <button type="submit">Booking</button>
-      </div>
-    <div class="column">
-      <a href="MovieInfo.html">
-        <img src="Power Rangers.png" alt="" width=300 height=300>
-      </a>
-        <h1>
-          Power Rangers
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
+        {% for row in movies %}
+          {% if loop.index > 3 %}
+            {% if (loop.index % 3) == 1 %}
+              </div>
+              <hr style="width: 1280px;border-width:5px; color:gray;">
+              <div class="row" style="margin-top:30px;">
+            {% endif %}
+          {% endif %}
+          <div class="column" style="text-align: left;">
+            <button type="submit" name="movie" value={{row.movieID}} style ="background-color:#ffffff; border: 1px solid black;"><img src="{{url_for('static', filename=row.imagePath)}}" width=300 height=300></button></br>
+           <p1 style="font-size: 22px;">{{row.title}}</p1></br></br>
+          </div>
+        <a href="http://localhost:5000/movieInfo/{{row.movieID}}"><button type="submit" class="btn btn-outline-secondary" type="submit"style= "color:black; border: 1px solid black; position:relative; margin-top: 400px; margin-left: -130px;">Booking</button></a>
+      {% endfor %}
     </div>
-    <div class="column">
-      <img src="Eternal Sunshine.jpg" alt="" width=300 height=300>
-        <h1>
-          Eternal Sunshine
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
-    </div>
-  </div>
-  <hr style="width: 1280px;">
-  <div class="row" style="margin-top:30px;">
-    <div class="column" style = " margin-left: 50px">
-      <img src="saving private ryan.jpg" alt="" width=300 height=300>
-        <h1>
-          Saving Private Ryan
-        </h1>
-        <h1 style="font-size: 20px;">
-        </h1>
-      <button type="submit">Booking</button>
-    </div>
-    <div class="column">
-      <img src="titanic.jpg" alt="" width=300 height=300>
-      <h1>
-        Titanic
-      </h1>
-      <h1 style="font-size: 20px;">
-      </h1>
-      <button type="submit">Booking</button>
-    </div>
-    <div class="column">
-      <img src="Toy_Story_4.jpg" alt="" width=300 height=300>
-      <h1>
-        Toy Story 4
-      </h1>
-      <h1 style="font-size: 20px;">
-      </h1>
-      <button type="submit">Booking</button>
-    </div>
-  </div>
+  </form>
 </div>
-</body>
-</html>
+</div>
+{% endblock %}

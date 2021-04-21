@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} memberList {% endblock %}
+{% block content %}
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+  <div class="paragraph" style="height:100%; text-align: center;">
+    <form action = "http://localhost:5000/memberList" method = "GET">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Credit Card</th>
+            <th scope="col">Password</th>
+          </tr>
+        </thead>
+        {% for row in all_member %}
+          <tr>
+            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{loop.index}}</a></td>
+            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["email"]}}</a></td>
+            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["creditCard"]}}</a></td>
+            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["password"]}}</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    </form>
+  </div>
+</div>
+{% endblock %}
