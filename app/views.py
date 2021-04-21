@@ -1,4 +1,5 @@
 from flask import render_template, Flask, request, flash, session, url_for, redirect
+from flask_qrcode import QRcode
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.automap import automap_base
@@ -6,6 +7,7 @@ from .models import Models
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging # for testing
 dbmodel = Models()
+QRcode(app)
 #Moved this to models.py and created it as a class instead to get a working api
 '''app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movie.db'
 
