@@ -4,18 +4,22 @@
       {%for flag in flag%}
         {%if flag == "0"%}
          <li class="nav-item">
-           <a class="nav-link" href="login">Login</a>
+           <a class="nav-link" href="login"><strong>Login</strong></a>
          </li>
          <li class="nav-item">
-           <a class="nav-link" href="signup">Sign up</a>
+           <a class="nav-link" href="signup"><strong>Signup</strong></a>
          </li>
         {% endif %}
         {%if flag == "1"%}
-        <li class="nav-item">
-          <a class="nav-link" href="logout">Logout</a>
-        </li>
-        {%endif%}
-      {%endfor%}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a class="dropdown-item" href="logout">Logout</a></li>
+              <!-- <li><hr class="dropdown-divider"></li> -->
+            </ul>
+          </li>
+        {% endif %}
+      {% endfor %}
    </ul>
  </div>
 </nav>

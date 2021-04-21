@@ -171,7 +171,7 @@ class Models():
         screeningTable = self.ScreeningTable
         screenID = self.db.session.query(screeningTable.screenID).filter_by(movieID=movie_id).first().screenID
         return screenID
- 
+
     def getAScreen(self,screenID):
         screenTable = self.ScreenTable
         screen = self.db.session.query(screenTable).get(screenID)
@@ -189,7 +189,7 @@ class Models():
         self.db.session.commit()
         return 0
 
-    
+
     #Returns the screening dates in months
     #Takes
     def dateExchange(self,dates):

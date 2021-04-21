@@ -44,10 +44,12 @@ def mainPage():
 
 @app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
-    if "logged_in" in session and session["logged_in"] == True: # tocheck if user is online then hide the menu login and signup
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         flag = "1"
+        name = dbmodel.getUserFromID(session["id"])
     else:
         flag = "0"
+        name = None
     genreList = dbmodel.getGenres()
     if request.method == "POST":
         genre = request.form.get("selectGenre")
@@ -74,16 +76,20 @@ def movieDetails():
                 movieList = dbmodel.getMovie(genre=genre,date=date)
             else:
                 movieList = dbmodel.getMovie(genre=genre)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList, flag = flag)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList, flag = flag, name = name)
 
         if "date" in session and session["date"] != "" and session["date"] != None:
             date = session["date"]
-            listFromDate = dbmodel.getMovie(date)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag)
+            if "genre" in session:
+                genre = session["genre"]
+                listFromDate = dbmodel.getMovie(genre=genre,date=date)
+            else:
+                listFromDate = dbmodel.getMovie(date)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag, name = name)
 
     movies = dbmodel.getMovieFromGenre()
     return render_template('Movie Details.html',
-                           title = 'Movie Details',movies = movies, genreList = genreList, flag = flag)
+                           title = 'Movie Details',movies = movies, genreList = genreList, flag = flag, name = name)
 
 @app.route('/ticketTest')
 def ticketTest():
@@ -108,6 +114,12 @@ def ticket():
 
 @app.route('/addUser', methods = ['POST','GET'])
 def addMember():
+    if "logged_in" in session and session["logged_in"] == True:
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        name = None
+        # flash("User not found or not admin")
+        # return render_template('signin.html') to check if user is not admin or online
     members = dbmodel.getMemberTable()
     if request.method == 'POST':
         result = request.form
@@ -117,28 +129,42 @@ def addMember():
         password = result.get ('password')
         new_member = memberTable(walletBalance=0,email=email,creditCard=creditCard,password=password)
         dbmodel.addMemberTableEntry(new_member)
-        return render_template('memberList.html',all_member = members)
+        return render_template('memberList.html',all_member = members, name = name)
     else:
-        return render_template('addUser.html',all_member = members)
+        return render_template('addUser.html',all_member = members, name = name)
 
 @app.route('/memberList')
 def member():
+    if "logged_in" in session and session["logged_in"] == True:
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        name = None
+        # flash("User not found")
+        # return render_template('signin.html')
     members = dbmodel.getMemberTable()
-    return render_template('memberList.html',all_member = members)
+    return render_template('memberList.html',all_member = members, name = name)
 
 @app.route('/movieInfo')
 def movieInfo():
     if "logged_in" in session and session["logged_in"] == True:
+        name = dbmodel.getUserFromID(session["id"])
         flag = "1"
     else:
+        name = None
         flag = "0"
     movieId = request.args.get('movie')
     movies = dbmodel.getMoviesTable(movieId)
     return render_template('MovieInfo.html',
-                           title = 'Movie Info', movie = movies, flag = flag)
+                           title = 'Movie Info', movie = movies, flag = flag, name = name)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
+    if "logged_in" in session and session["logged_in"] == True:
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        name = None
+        # flash("User not found")
+        # return render_template('signin.html')
     if request.method == 'POST':
         result = request.form
         genreTable = dbmodel.GenreTable
@@ -147,12 +173,18 @@ def genre():
         newGenre = genreTable(genreDesc = genreDesc)
         dbmodel.addGenre(newGenre)
     return render_template('genre.html',
-                           genres = dbmodel.getGenres())
+                           genres = dbmodel.getGenres(), name = name)
 
 @app.route('/addMovie')
 def addMovie():
+    if "logged_in" in session and session["logged_in"] == True:
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        # flash("User not found")
+        # return render_template('signin.html')
+        name = None
     return render_template('addMovie.html',
-                           genres = dbmodel.getGenres())
+                           genres = dbmodel.getGenres(), name = name)
 
 @app.route('/movieAdded', methods = ['POST','GET'])
 def movieAdded():
@@ -237,7 +269,7 @@ def register():
 def login():
     session.pop('_flashes', None)
     if request.method == 'POST':
-        result = request.form
+        #result = request.form
         #memberTable = dbmodel.MemberTable
         #members = dbmodel.getMemberTable()
         username= request.form.get('username')
@@ -245,9 +277,10 @@ def login():
         ID = str(username)+"@"+str(email)
         member = dbmodel.getUserFromEmail(ID)
         if member:
-            if(check_password_hash(member.password, result.get('password'))):
+            if(check_password_hash(member.password, request.form.get('password'))): # change result.get('password') to this as it causes error
                 session['logged_in'] = True
                 session['id'] = member.memberID
+                session['username'] = username
                 current_user = dbmodel.getUserFromID(session['id'])
                 flash("Successful login")
                 return render_template('index.html', current_user = current_user)
