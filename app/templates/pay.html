@@ -1,0 +1,10 @@
+<html>
+  <body>
+      <p>{{ userOut.walletBalance }}</p>
+      <form action = "http://localhost:5000/addFunds/{{ userOut.memberID }}/pay" method = "POST">
+        <p>Pay for ticket <input type = "text" name = "price" /></p>
+        <p><input type = "submit" value = "submit" /></p>
+    </form>
+    <p>{{ messageOut }}</p>
+</body>
+</html>
