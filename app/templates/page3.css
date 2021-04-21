@@ -1,7 +1,7 @@
 @charset "utf-8";
 .header{ width:972px; margin:0 auto;}
 .top_img{ height:100px;  margin-bottom:3px;} 
-.logo{ width:300px; height:80px;float:left; padding-top:15px; padding-bottom:5px; padding-left:10px; padding-right:5px;}
+
 .contenter{ width:972px; margin:0 auto; padding-top:10px;}
 .right{ width:730px; float:right; overflow:hidden}
 .left{ width:230px; float:left;overflow:hidden}
@@ -32,7 +32,12 @@
 
 #nav_content div{ line-height:28px;}
 
-.booknow{ width:100px; height:26px; border:none; background:url(dgbg.jpg) no-repeat center center; color:#fff; font-size:14px; cursor:pointer;}
+.booknow{  width:100px;
+		   height:26px;
+		   border:none;
+		   background:url(dgbg.jpg) no-repeat center center;
+		   color:rgb(0, 0, 0); font-size:14px; 
+		   cursor:pointer;}
 
 .paragraph {
 	margin-top: 100px;
@@ -45,5 +50,4 @@
 	line-height:24px;
 	height: 120vh;
 	border-radius: 20px 20px 20px 20px;
-	border: groove;"
-  }
+	border: groove;}
