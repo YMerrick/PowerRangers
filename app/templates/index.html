@@ -4,11 +4,13 @@
       <span>HI, {{session['id']}}</span>
       <br>
       <a href="/logout">LOG OUT</a>
+      <a href="http://localhost:5000/addFunds/{{session['id']}}"><button type="submit">Add funds</button></a>
     {% else %}
       <span>HI, NON-MEMBER</span>
       <br>
       <a href="/login">LOG IN</a>
       <a href="/signup">SIGN UP</a>
+      
     {% endif %}
   </body>
 </html>
