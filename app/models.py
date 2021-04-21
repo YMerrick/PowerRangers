@@ -166,21 +166,31 @@ class Models():
         title = self.db.session.query(self.MoviesTable).filter_by(title=title)
         return title.one().title
 
+    #getting screening ID by movie_id
     def getScreenID(self,movie_id):
         screenTable = self.ScreenTable
         screeningTable = self.ScreeningTable
         screenID = self.db.session.query(screeningTable.screenID).filter_by(movieID=movie_id).first().screenID
         return screenID
 
+
+    #getting screen by screenID
+
     def getAScreen(self,screenID):
         screenTable = self.ScreenTable
         screen = self.db.session.query(screenTable).get(screenID)
         return screen
 
+    #getting a movie ny id
     def getAMovie(self,movieID):
         movieTable = self.MoviesTable
         movie = self.db.session.query(movieTable).get(movieID)
         return movie
+
+    #getting tickets
+    #def getTickets(self,memberID):
+        bookingTable = self.BookingTable
+        tickets = self.db.session.query(bookingTable).filter_by()
 
     #adding members into member
     def addMemberTableEntry(self,memberIn):
@@ -189,6 +199,10 @@ class Models():
         self.db.session.commit()
         return 0
 
+    def getMember(self,memberID):
+        memberTable = self.MemberTable
+        member = self.db.session.query(memberTable).get(memberID)
+        return member
 
     #Returns the screening dates in months
     #Takes

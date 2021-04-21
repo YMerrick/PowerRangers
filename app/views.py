@@ -230,6 +230,38 @@ def showScreening(movie_id):
         return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
 
+@app.route('/addFunds/<int:id>',methods = ['POST','GET'])
+def addWallet(id):
+    all_members = dbmodel.getMemberTable()
+    user = dbmodel.getMember(id)
+    if request.method == 'POST':
+        result = request.form
+        balance = int(result.get('wallet'))
+        wallet = int(user.walletBalance)
+        wallet = balance + wallet
+        user.walletBalance = str(wallet)
+        dbmodel.db.session.commit()
+        return render_template("addFunds.html",userOut = user)
+    return render_template("addFunds.html",userOut = user)
+
+@app.route('/addFunds/<int:id>/pay',methods = ['POST','GET'])
+def payTickets(id):
+    user = dbmodel.getMember(id)
+    if request.method == 'POST':
+        result = request.form
+        price = int(result.get('price'))
+        balance = int(user.walletBalance)
+        if(int(user.walletBalance) < price):
+            message ="you don't have enough balance"
+        else:
+            balance = balance - price
+            user.walletBalance = str(balance)
+            message ="payment successful"
+            return render_template("pay.html",userOut = user,messageOut = message)
+        dbmodel.db.session.commit()
+        return render_template("pay.html",userOut = user,messageOut = message)
+    return render_template("pay.html",userOut = user)
+
 
 @app.route('/members')
 def members():
@@ -309,3 +341,8 @@ def indexTest():
 @app.route('/payment')
 def paymentPage():
     return render_template('Paymentpage.html')
+
+@app.route('/addFunds')
+def addFunds(member_id):
+    return render_template('addFunds.html')
+
