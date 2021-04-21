@@ -32,7 +32,6 @@ TicketTable = Base.classes.TicketTable'''
 #    movies = dbmodel.getMovieFromGenre()
 #    return render_template('movieList.html',
 #                           title='Movie List', all_movies = movies)
-
 @app.route('/cinemaSeats')
 def cinemaSeat():
     return render_template('CinemaSeat.html',
@@ -45,6 +44,10 @@ def mainPage():
 
 @app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
+    if "logged_in" in session and session["logged_in"] == True: # tocheck if user is online then hide the menu login and signup
+        flag = "1"
+    else:
+        flag = "0"
     genreList = dbmodel.getGenres()
     if request.method == "POST":
         genre = request.form.get("selectGenre")
@@ -71,16 +74,16 @@ def movieDetails():
                 movieList = dbmodel.getMovie(genre=genre,date=date)
             else:
                 movieList = dbmodel.getMovie(genre=genre)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList, flag = flag)
 
         if "date" in session and session["date"] != "" and session["date"] != None:
             date = session["date"]
             listFromDate = dbmodel.getMovie(date)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag)
 
     movies = dbmodel.getMovieFromGenre()
     return render_template('Movie Details.html',
-                           title = 'Movie Details',movies = movies, genreList = genreList)
+                           title = 'Movie Details',movies = movies, genreList = genreList, flag = flag)
 
 @app.route('/ticketTest')
 def ticketTest():
@@ -125,10 +128,14 @@ def member():
 
 @app.route('/movieInfo')
 def movieInfo():
+    if "logged_in" in session and session["logged_in"] == True:
+        flag = "1"
+    else:
+        flag = "0"
     movieId = request.args.get('movie')
     movies = dbmodel.getMoviesTable(movieId)
     return render_template('MovieInfo.html',
-                           title = 'Movie Info', movie = movies)
+                           title = 'Movie Info', movie = movies, flag = flag)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
@@ -203,8 +210,10 @@ def register():
     if request.method == 'POST':
         result = request.form
         memberTable = dbmodel.MemberTable
-        email = result.get('email')
-        member = dbmodel.getUserFromEmail(email)
+        username= request.form.get('username')
+        email = request.form.get('email')
+        ID = str(username)+"@"+str(email)
+        member = dbmodel.getUserFromEmail(ID)
         if member:
             #if a user with the same email is found, show error
             flash("User with the same email has been found.")
@@ -215,7 +224,7 @@ def register():
             pass1 = generate_password_hash(result.get('password'), method='sha256')
             pass2 = result.get('c_password')
             if(check_password_hash(pass1, pass2)):
-                new_member = memberTable(email=email,walletBalance=000.00,creditCard=card,password=pass1)
+                new_member = memberTable(email=ID,walletBalance=000.00,creditCard=card,password=pass1)
                 dbmodel.addMember(new_member)
                 flash("Successfully registered")
                 return render_template('signin.html')
@@ -231,7 +240,10 @@ def login():
         result = request.form
         #memberTable = dbmodel.MemberTable
         #members = dbmodel.getMemberTable()
-        member = dbmodel.getUserFromEmail(result.get('email'))
+        username= request.form.get('username')
+        email = request.form.get('email')
+        ID = str(username)+"@"+str(email)
+        member = dbmodel.getUserFromEmail(ID)
         if member:
             if(check_password_hash(member.password, result.get('password'))):
                 session['logged_in'] = True

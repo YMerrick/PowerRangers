@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <form method = "POST" action = "http://localhost:5000/genre">
-            <label for = "genre">Enter to add a genre: </label>
-            <input type = "text" name = "genre">
-            <input type="submit" value="Submit">
-        </form>
-        These are all the current genres present:<br>
+{% extends "base.html" %}
+{% block title %} memberList {% endblock %}
+{% block content %}
+</ul>
+</div>
+</nav>
+<div class="container-fluid">
+  <div class="paragraph" style="height:100%; text-align: center;">
+    <form method = "POST" action = "http://localhost:5000/genre">
+        <label for = "genre">Enter to add a genre: </label>
+        <input type = "text" name = "genre">
+        <input type="submit" value="Submit">
+    </form>
+    <h4>These are all the current genres present:</h4><br>
+    <table class="table table-bordered" style="width: 300px; margin-left: 540px;">
         {% for genre in genres %}
-        {{genre.genreDesc}}<br>
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{genre.genreDesc}}</td>
+          </tr>
         {% endfor %}
-    </body>
-</html>
+    </table>
+  </div>
+</div>
+{% endblock %}
