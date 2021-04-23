@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Profile {% endblock %}
+{% block content %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
+    <ul class="dropdown-menu" role="menu">
+        <li><a class="dropdown-item" href="logout">Logout</a></li>
+        <!-- <li><hr class="dropdown-divider"></li> -->
+    </ul>
+</li>
+</ul>
+</nav>
+{%if flag == "0"%}
+<div class="paragraph" style="height:960px; text-align: center;">
+    <label>Balance: {{name.walletBalance}}</label>
+    <a href="http://localhost:5000/addFunds/{{session['id']}}"><button type="submit">Add funds</button></a>
+</div>
+{% endif %}
+{%if flag == "1"%}
+<div class="paragraph" style="height:960px; text-align: center;">
+    <a href="http://localhost:5000/addUser"><button type="submit">Add User</button></a>
+</div>
+{% endif %}
+{% endblock %}

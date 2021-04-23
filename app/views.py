@@ -315,7 +315,8 @@ def login():
                 session['username'] = username
                 current_user = dbmodel.getUserFromID(session['id'])
                 flash("Successful login")
-                return render_template('index.html', current_user = current_user)
+                #return render_template('index.html', current_user = current_user)
+                return redirect(url_for('movieDetails'))
             else:
                 flash('Invalid password provided')
                 return render_template('signin.html')
@@ -340,14 +341,15 @@ def indexTest():
 
 @app.route('/profile')
 def profile():
+    current_user = dbmodel.getUserFromID(session['id'])
     if(session['username'] == "admin"):
-        current_user = dbmodel.getUserFromID(session['id'])
+        flag = "1"
         print("is admin")
-        return render_template('index.html', current_user = current_user)
-        
+        return render_template('settings.html', flag = flag, name = current_user)
     else:
+        flag = "0"
         print("is normal member")
-        return render_template('index.html', current_user = current_user)
+        return render_template('settings.html', flag = flag, name = current_user)
         
 
 @app.route('/payment')
