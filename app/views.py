@@ -338,6 +338,18 @@ def indexTest():
     else:
         return render_template('index.html', current_user = None)
 
+@app.route('/profile')
+def profile():
+    if(session['username'] == "admin"):
+        current_user = dbmodel.getUserFromID(session['id'])
+        print("is admin")
+        return render_template('index.html', current_user = current_user)
+        
+    else:
+        print("is normal member")
+        return render_template('index.html', current_user = current_user)
+        
+
 @app.route('/payment')
 def paymentPage():
     return render_template('Paymentpage.html')
