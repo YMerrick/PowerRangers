@@ -334,3 +334,30 @@ class Models():
         self.db.session.add(bookingIn)
         self.db.session.commit()
         pass
+
+    def getRowForScreening(self,screenId):
+        row = (
+            self.db.session.query(self.SeatTable)
+            .select_from(self.SeatTable).filter_by(screenID = screenId)
+            .join(self.ScreenTable, self.SeatTable.screenID == self.ScreenTable.screenID)
+            .join(self.ScreeningTable ,self.ScreenTable.screenID == self.ScreenTable.screenID)
+        )
+        return row.all()
+
+    def getBookingInfoForScreening(self,screeningID):
+        bookedSeats = (
+            self.db.session.query(self.BookingTable,self.SeatTable.rowNumber,self.SeatTable.seatCount)
+            .select_from(self.BookingTable)
+            .filter_by(screeningID=screeningID)
+            .join(self.SeatTable)
+        )
+        return bookedSeats.all()
+
+    def getMovieInfoFromScreening(self,screeningId):
+        movieInfo = (
+            self.db.session.query(self.MoviesTable)
+            .select_from(self.ScreeningTable)
+            .filter_by(screeningID = screeningId)
+            .join(self.MoviesTable)
+        )
+        return movieInfo.first()
