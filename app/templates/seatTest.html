@@ -74,7 +74,7 @@ input[type=checkbox]
   <div class="paragraph">
     <div class="screen">
       <h1 style="text-align: center;">
-        Screen
+        Screen {{screenOut.screenName}}
       </h1>
     </div>
     <table class="seat" style ="margin-top:100px;">
@@ -114,20 +114,20 @@ input[type=checkbox]
               <td></td>
             {% endif %}
             {% if row %12 == 0 and row < screenOut.seatNum and ns2.found==False %}
-              <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="{{ row }}"></td>
+              <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="{{ rowDict[ns.count-1] }}12"></td>
               <tr>
               <td style="font-weight:bold">{{ rowDict[ns.count] }}</td>
               {% set ns.count = ns.count+1 %}
             {% elif row %12 == 0 and row < screenOut.seatNum and ns2.found==True %}
-            <td>T</td>
+            <td><input type="checkbox" id="seat1" disabled checked></td>
             <tr>
             <td style="font-weight:bold">{{ rowDict[ns.count] }}</td>
             {% set ns.count = ns.count+1 %} 
            {% else %}
                 {% if ns2.found == False %}
-                <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="{{ row }}"></td>
+                <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="{{ rowDict[ns.count-1] }}{{ row%12 }}"></td>
                 {% else %}
-                <td>T</td>
+                <td><input type="checkbox" id="seat1" disabled checked></td>
                 {% endif %}
            {% endif %}
         {% endfor %}
