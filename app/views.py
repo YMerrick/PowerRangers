@@ -329,7 +329,7 @@ def login():
 def logout():
     session['logged_in'] = False
     session['id'] = None
-    return render_template('index.html')
+    return redirect(url_for('movieDetails'))
 
 @app.route('/index')
 def indexTest():
