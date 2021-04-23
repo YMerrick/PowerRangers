@@ -26,12 +26,17 @@ TicketTable = Base.classes.TicketTable'''
 #In order to get data from the database, need to query before hand and then pass the JSON data to it
 #If we want to do searches and sort by certain aspects of the database then we have to reload the page with a condition in the query to return the data with
 #This just means we have to call the page again with a post this time
-#@app.route('/')
-#def index():
-#    dbmodel.makeTicketPdf(0)
-#    movies = dbmodel.getMovieFromGenre()
-#    return render_template('movieList.html',
-#                           title='Movie List', all_movies = movies)
+@app.route('/')
+def index():
+    #dbmodel.makeTicketPdf(0)
+    movies = dbmodel.getMovie()
+    rows = dbmodel.getRowForScreening(1)
+    booked = dbmodel.getBookingInfoForScreening(3)
+    for seats in booked:
+        print(seats.rowNumber,seats.seatCount)
+    return render_template('movieList.html',
+                           title='Movie List', all_movies = movies)
+
 @app.route('/cinemaSeats')
 def cinemaSeat():
     return render_template('CinemaSeat.html',
@@ -209,14 +214,14 @@ def movieAdded():
 #this is a bete function just to make the website work
 #used screeningID as 1 as default
 #will populate screeningID and make it work with it
-@app.route('/movieInfo/<int:movie_id>',methods = ['POST','GET'])
-def showScreening(movie_id):
-    screeningTable = dbmodel.ScreeningTable
-    all_bookings = dbmodel.getBookingTable()
-    movie = dbmodel.getAMovie(movie_id)
+@app.route('/movieInfo/<int:screening_id>',methods = ['POST','GET'])
+def showScreening(screening_id):
+    #screeningTable = dbmodel.ScreeningTable
+    all_bookings = dbmodel.getBookingInfoForScreening(screening_id)
+    movie = dbmodel.getMovieInfoFromScreening(screening_id)
     screenTable = dbmodel.ScreenTable
     bookingTable = dbmodel.BookingTable
-    screenID = dbmodel.getScreenID(int(movie_id))
+    screenID = dbmodel.getScreenID(int(dbmodel.getMovieInfoFromScreening(screening_id).movieID))
     screen = dbmodel.getAScreen(screenID)
     if request.method == 'POST':
         result = request.form
