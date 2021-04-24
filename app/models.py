@@ -175,8 +175,15 @@ class Models():
 
     #get a time table by movie-id and date
     def getATime(self,movie_id,date):
-        screeningTable = self.ScreeningTable
-        timeTable = self.db.session.query(screeningTable).filter_by(movieID=movie_id,date=date).all()
+        screeningTable = (self.ScreeningTable.screenID,self.ScreeningTable.screeningID,self.ScreeningTable.movieID,self.ScreeningTable.date,self.ScreeningTable.time)
+        timeTable = self.db.session.query(
+            self.ScreeningTable.screenID,
+            self.ScreeningTable.screeningID,
+            self.ScreeningTable.movieID,
+            self.ScreeningTable.date,
+            self.ScreeningTable.time,
+            self.ScreenTable.screenName
+        ).select_from(self.ScreeningTable).filter_by(movieID=movie_id,date=date).join(self.ScreenTable, self.ScreeningTable.screenID == self.ScreenTable.screenID).all()
         return timeTable
 
     #get a ScreeningTable screeningID
