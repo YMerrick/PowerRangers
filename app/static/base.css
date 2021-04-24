@@ -32,7 +32,7 @@
 }
 .navitem {
   display: inline-block;
-  width: 70px;
+  width: 100px;
   height: 30px;
   text-align: center;
   background-color: #c9c7c7;
@@ -44,4 +44,42 @@
 .navitem:hover {
   background-color:#e0e0e0;
   color : #787878;
+}
+.screen {
+  margin: auto;
+  width: 500px;
+  padding: 10px;
+  font-size: 17px;
+  background: #f7f7f7;
+  line-height:24px;
+  border: groove;
+}
+/* .seat tbody tr td:not(:first-child) {
+  border: 1px solid black;
+  width: 1em;
+  height: 1em;
+} */
+.seat td {
+  padding: 20px;
+}
+.seat tr td:nth-child(5) {
+  border:none!important;
+}
+
+.seat tr td:nth-child(12) {
+  border:none!important;
+}
+.seat {
+  border-spacing: 1.5em;
+  padding:20px;
+  margin:auto;
+}
+/* .seat td:hover {
+  cursor: pointer;
+  background-color: #5568fa;
+} */
+input[type=checkbox]
+{
+  transform: scale(2);
+  padding: 10px;
 }

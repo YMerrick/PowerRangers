@@ -173,15 +173,30 @@ class Models():
         screenID = self.db.session.query(screeningTable.screenID).filter_by(movieID=movie_id).first().screenID
         return screenID
 
+    #get a time table by movie-id and date
+    def getATime(self,movie_id,date):
+        screeningTable = self.ScreeningTable
+        timeTable = self.db.session.query(screeningTable).filter_by(movieID=movie_id,date=date).all()
+        return timeTable
 
-    #getting screen by screenID
+    #get a ScreeningTable screeningID
+    def getScreeningID(self,screeningID):
+        screeningTable = self.ScreeningTable
+        screeningID = self.db.session.query(screeningTable).filter_by(screeningID=screeningID).first()
+        return screeningID
+        
+    #get a ScreeningTable screeningID
+    def getBookingbyScreeningID(self,screeningID):
+        screening = self.db.session.query(self.BookingTable).filter_by(screeningID=screeningID).all()
+        return screening
 
+        #getting screen by screenID
     def getAScreen(self,screenID):
         screenTable = self.ScreenTable
         screen = self.db.session.query(screenTable).get(screenID)
         return screen
 
-    #getting a movie ny id
+    #getting a movie by id
     def getAMovie(self,movieID):
         movieTable = self.MoviesTable
         movie = self.db.session.query(movieTable).get(movieID)

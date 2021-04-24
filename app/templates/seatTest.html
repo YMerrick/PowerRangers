@@ -1,85 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Ticket Generator Design</title>
-<script>
-function checkbox(){
-
-var checkboxes = document.getElementsByName('seats');
-var checkboxesChecked = [];
-// loop over them all
-for (var i=0; i<checkboxes.length; i++) {
-   // And stick the checked ones onto an array...
-   if (checkboxes[i].checked) {
-      checkboxesChecked.push(checkboxes[i].value);
-   }
-}
-document.getElementById("show").value = checkboxesChecked;
-
-}
-</script>
-</head>
-<style>
-.paragraph {
-  margin-top: 100px;
-  margin: auto;
-  width: 70%;
-  padding: 10px;
-  font-size: 17px;
-  background: #f7f7f7;
-  line-height:24px;
-  height: 90vh;
-  border-radius: 20px 20px 20px 20px;
-  border: groove;"
-}
-.screen {
-  margin: auto;
-  width: 500px;
-  padding: 10px;
-  font-size: 17px;
-  background: #f7f7f7;
-  line-height:24px;
-  border: groove;"
-}
-
-/* .seat tbody tr td:not(:first-child) {
-  border: 1px solid black;
-  width: 1em;
-  height: 1em;
-} */
-
-.seat tr td:nth-child(5) {
-  border:none!important;
-}
-
-.seat tr td:nth-child(12) {
-  border:none!important;
-}
-.seat {
-  border-spacing: 1.5em;
-  padding:20px;
-  margin:auto;
-}
-/* .seat td:hover {
-  cursor: pointer;
-  background-color: #5568fa;
-} */
-input[type=checkbox]
-{
-  transform: scale(2);
-  padding: 10px;
-}
-</style>
-<body>
-  <div class="paragraph">
+{% extends "base.html" %}
+{% block title %} MoviesOnScreen {% endblock %}
+{% block content %}
+      {%for flag in flag%}
+        {%if flag == "0"%}
+         <li class="nav-item">
+           <a class="nav-link" href="login"><strong>Login</strong></a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="signup"><strong>Signup</strong></a>
+         </li>
+        {% endif %}
+        {%if flag == "1"%}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a class="dropdown-item" href="logout">Logout</a></li>
+              <!-- <li><hr class="dropdown-divider"></li> -->
+            </ul>
+          </li>
+        {% endif %}
+      {% endfor %}
+   </ul>
+ </div>
+</nav>
+<div class="container-fluid">
+  <div class="paragraph" style="height:880px;">
+    <div class="center">
+      <h1 style ="font-family:serif;">Tick the available box</h1></br>
+      <p style="margin-top:13px; margin-left: 20px;">(T = taken)</p>
+    </div>
     <div class="screen">
       <h1 style="text-align: center;">
         Screen {{screenOut.screenName}}
       </h1>
     </div>
-    <table class="seat" style ="margin-top:100px;">
+    <div class="center">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width:300px; margin-top:100px; position:absolute">
+          <strong> {{ msg }} </strong>
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    </div>
+    <table class="seat" style ="margin-top:100px">
     <thead>
-      <tr style="font-weight:bold">
+      <tr style="font-weight:bold;">
         <td></td>
         <td>1</td>
         <td>2</td>
@@ -102,7 +71,7 @@ input[type=checkbox]
         {% set ns = namespace(count=0) %}
         {% set ns2 = namespace(found=False) %}
         <td style="font-weight:bold">{{ rowDict[ns.count] }}</td>
-        {% set ns.count = ns.count+1 %}  
+        {% set ns.count = ns.count+1 %}
         {% for row in range(1,screenOut.seatNum+1) %}
           {% set ns2.found = False %}
           {% for booking in bookings %}
@@ -114,7 +83,7 @@ input[type=checkbox]
               <td></td>
             {% endif %}
             {% if row %12 == 0 and row < screenOut.seatNum and ns2.found==False %}
-              <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="{{ rowDict[ns.count-1] }}12"></td>
+              <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox(); hiddenbox();" value="{{ row }}"></td>
               <tr>
               <td style="font-weight:bold">{{ rowDict[ns.count] }}</td>
               {% set ns.count = ns.count+1 %}
@@ -122,10 +91,10 @@ input[type=checkbox]
             <td><input type="checkbox" id="seat1" disabled checked></td>
             <tr>
             <td style="font-weight:bold">{{ rowDict[ns.count] }}</td>
-            {% set ns.count = ns.count+1 %} 
+            {% set ns.count = ns.count+1 %}
            {% else %}
                 {% if ns2.found == False %}
-                <td><input type="checkbox" id="seat1"name="seats" onclick="checkbox();" value="{{ rowDict[ns.count-1] }}{{ row%12 }}"></td>
+                <td><input type="checkbox" id="seat1" name="seats" onclick="checkbox(); hiddenbox();" value="{{ row }}"></td>
                 {% else %}
                 <td><input type="checkbox" id="seat1" disabled checked></td>
                 {% endif %}
@@ -133,13 +102,82 @@ input[type=checkbox]
         {% endfor %}
     </tbody>
     </table>
-    <form action = "http://localhost:5000/movieInfo/{{movie.movieID}}" method = "POST">
-     <input type="text" id="show" name="seats"><br> <!--will print seats selected -->
-     <p><input type = "submit" value = "submit" /></p>
+    <div class="input-group flex-nowrap" style="width:220px;margin:auto;">
+      <input type="text" class="form-control" id="show" name="seats" style="height:34px;"> <!--will print seats selected -->
+    </div>
+    <form action = "/seats" method = "POST" align="center">
+      <input type="hidden" id="showing" name="seats" style="height:34px;">
+     <button type ="submit" class="btn btn-outline-secondary" style="color:black; border: 1px solid black; padding:4px; margin-top:20px;">Booking</button>
     </form>
-    <p>tick the available box</p>
-    <p>T = taken</p>
   </div>
-</body>
+</div>
+<script>
+function checkbox(){
 
-</html>
+var checkboxes = document.getElementsByName('seats');
+var checkboxesChecked = [];
+var count = 0;
+var rowDict = ['A','B','C','D','E','F','G'];
+// loop over them all
+for (var i=0; i<checkboxes.length; i++) {
+   // And stick the checked ones onto an array...
+   if (checkboxes[i].checked)
+   {
+      if (checkboxes[i].value >= 13)
+      {
+        count = 1;
+        if (checkboxes[i].value >= 25)
+        {
+          count = 2;
+        }
+        if (checkboxes[i].value >= 37)
+        {
+          count = 3;
+        }
+        if (checkboxes[i].value >= 49)
+        {
+          count = 4;
+        }
+        if (checkboxes[i].value >= 61)
+        {
+          count = 5;
+        }
+        if (checkboxes[i].value >= 73)
+        {
+          count = 6;
+        }
+        var a = checkboxes[i].value % 12;
+        if (a == 0)
+        {
+          a = 12;
+        }
+        var str = rowDict[count] + a;
+        checkboxesChecked.push(str);
+      }
+      if (checkboxes[i].value <= 12)
+      {
+        var str = rowDict[0] + checkboxes[i].value;
+        checkboxesChecked.push(str);
+      }
+   }
+   document.getElementById("show").value = checkboxesChecked;
+}
+
+}
+function hiddenbox(){
+
+var checkboxes = document.getElementsByName('seats');
+var checkboxesChecked = [];
+// loop over them all
+for (var i=0; i<checkboxes.length; i++) {
+   // And stick the checked ones onto an array...
+   if (checkboxes[i].checked) {
+      checkboxesChecked.push(checkboxes[i].value);
+   }
+}
+document.getElementById("showing").value = checkboxesChecked;
+
+}
+
+</script>
+{% endblock %}

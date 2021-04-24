@@ -60,6 +60,7 @@ def movieDetails():
         genre = request.form.get("selectGenre")
         date = request.form.get("date")
         movieID = request.form.get("movie")
+        time = request.form.get('time')
         if genre == "":
             if "genre" in session:
                 session.pop("genre", None)
@@ -72,15 +73,19 @@ def movieDetails():
         elif date != None:
             session["date"] = date
         if movieID != None:
+            session["movie"] = movieID
             return redirect(url_for('movieInfo', movie=movieID))
-
+        if time != None:
+            if time != "" :
+                session["movie"] = time
+                return redirect(url_for('timeSelection'))
         if "genre" in session:
             genre = session["genre"]
             if "date" in session and session["date"] != "" and session["date"] != None:
                 date = session["date"]
                 movieList = dbmodel.getMovie(genre=genre,date=date)
             else:
-                movieList = dbmodel.getMovie(genre=genre)
+                movieList = dbmodel.getMovie(genre=genre,)
             return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList, flag = flag, name = name)
 
         if "date" in session and session["date"] != "" and session["date"] != None:
@@ -89,10 +94,11 @@ def movieDetails():
                 genre = session["genre"]
                 listFromDate = dbmodel.getMovie(genre=genre,date=date)
             else:
-                listFromDate = dbmodel.getMovie(date)
+                listFromDate = dbmodel.getMovie(date=date)
             return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag, name = name)
 
-    movies = dbmodel.getMovieFromGenre()
+    movies = dbmodel.getMovie(date="2021-04-01")
+    session["date"] = "2021-04-01"
     return render_template('Movie Details.html',
                            title = 'Movie Details',movies = movies, genreList = genreList, flag = flag, name = name)
 
@@ -149,7 +155,7 @@ def member():
     members = dbmodel.getMemberTable()
     return render_template('memberList.html',all_member = members, name = name)
 
-@app.route('/movieInfo')
+@app.route('/movieInfo', methods=['GET', 'POST'])
 def movieInfo():
     if "logged_in" in session and session["logged_in"] == True:
         name = dbmodel.getUserFromID(session["id"])
@@ -157,10 +163,31 @@ def movieInfo():
     else:
         name = None
         flag = "0"
-    movieId = request.args.get('movie')
+    if request.method == 'POST':
+        movieID = request.form.get("movie")
+        session["movie"] = movieID
+        return redirect(url_for('timeSelection'))
+    movieId = session["movie"]
     movies = dbmodel.getMoviesTable(movieId)
     return render_template('MovieInfo.html',
                            title = 'Movie Info', movie = movies, flag = flag, name = name)
+
+@app.route('/timeSelection',  methods=['GET', 'POST'])
+def timeSelection():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    time = dbmodel.getATime(session["movie"],session["date"]) # get timetable by movieID and date
+    if request.method == 'POST':
+        screeningID = request.form.get("movie")
+        session["screeningID"] = screeningID # save screeningID
+        if screeningID != None:
+            return redirect(url_for('seats'))
+
+    return render_template("timeSelection.html", flag = flag, name = name, time = time)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
@@ -214,26 +241,41 @@ def movieAdded():
 #this is a bete function just to make the website work
 #used screeningID as 1 as default
 #will populate screeningID and make it work with it
-@app.route('/movieInfo/<int:screening_id>',methods = ['POST','GET'])
-def showScreening(screening_id):
-    #screeningTable = dbmodel.ScreeningTable
-    all_bookings = dbmodel.getBookingInfoForScreening(screening_id)
-    movie = dbmodel.getMovieInfoFromScreening(screening_id)
+@app.route('/seats',methods = ['POST','GET'])
+def seats():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        flag = "1" # when online
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        flag = "0" # when offline
+        name = None
+    screeningTable = dbmodel.ScreeningTable
     screenTable = dbmodel.ScreenTable
     bookingTable = dbmodel.BookingTable
-    screenID = dbmodel.getScreenID(int(dbmodel.getMovieInfoFromScreening(screening_id).movieID))
-    screen = dbmodel.getAScreen(screenID)
+
+    screening_id = session["screeningID"] # from timeSelection.html
+    screeningID = dbmodel.getScreeningID(screening_id) # 181th line in models.py, used for getting other data (seamNum,screenID,bookingTable)
+    movie = dbmodel.getMovieInfoFromScreening(screening_id) #368th line in models.py
+    screenID = dbmodel.getScreenID(int(dbmodel.getMovieInfoFromScreening(screening_id).movieID)) #to find rowID
+    screen = dbmodel.getAScreen(screeningID.screenID) # for seatNum
+    all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
+
     if request.method == 'POST':
+        check = request.form.get("seats")
         result = request.form
         resultList = list(request.form.listvalues())
         resultList = resultList[0]
         resultList = resultList[0].split(",")
         for row in resultList:
+            if row == '':
+                flash("You didn't select any seats")
+                break
             rowID = dbmodel.rowIDFinder(screenID,int(row))
-            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=1,seatStatus=1,row="")
-            dbmodel.addBooking(new_booking)
-        return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
-    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
+            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=screening_id,seatStatus=1,row="")
+            dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
+            all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
+        return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
@@ -350,4 +392,3 @@ def paymentPage():
 @app.route('/addFunds')
 def addFunds(member_id):
     return render_template('addFunds.html')
-
