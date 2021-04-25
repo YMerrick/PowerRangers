@@ -10,13 +10,13 @@
 </li>
 </ul>
 </nav>
-{%if flag == "0"%}
+{%if admin == "0"%}
 <div class="paragraph" style="height:960px; text-align: center;">
     <label>Balance: {{name.walletBalance}}</label>
     <a href="http://localhost:5000/addFunds/{{session['id']}}"><button type="submit">Add funds</button></a>
 </div>
 {% endif %}
-{%if flag == "1"%}
+{%if admin == "1"%}
 <div class="paragraph" style="height:960px; text-align: center;">
     <a href="http://localhost:5000/addUser"><button type="submit">Add User</button></a>
 </div>

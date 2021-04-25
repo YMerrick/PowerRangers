@@ -115,12 +115,12 @@ def ticket():
 @app.route('/addUser', methods = ['POST','GET'])
 def addMember():
     session.pop('_flashes', None)
-    if "logged_in" in session and session["logged_in"] == True:
+    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
     else:
         name = None
         flash("User not found or not admin")
-        return redirect(url_for('login')) #to check if user is not admin or online
+        return redirect(url_for('movieDetails')) 
     members = dbmodel.getMemberTable()
     if request.method == 'POST':
         result = request.form
@@ -136,12 +136,12 @@ def addMember():
 
 @app.route('/memberList')
 def member():
-    if "logged_in" in session and session["logged_in"] == True:
+    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
     else:
         name = None
-        # flash("User not found")
-        # return render_template('signin.html')
+        flash("User not found or not admin")
+        return redirect(url_for('movieDetails')) 
     members = dbmodel.getMemberTable()
     return render_template('memberList.html',all_member = members, name = name)
 
@@ -160,12 +160,12 @@ def movieInfo():
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
-    if "logged_in" in session and session["logged_in"] == True:
+    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
     else:
         name = None
-        # flash("User not found")
-        # return render_template('signin.html')
+        flash("User not found or not admin")
+        return redirect(url_for('movieDetails')) 
     if request.method == 'POST':
         result = request.form
         genreTable = dbmodel.GenreTable
@@ -178,7 +178,7 @@ def genre():
 
 @app.route('/addMovie')
 def addMovie():
-    if "logged_in" in session and session["logged_in"] == True:
+    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
     else:
         # flash("User not found")
@@ -219,17 +219,28 @@ def showScreening(movie_id):
     bookingTable = dbmodel.BookingTable
     screenID = dbmodel.getScreenID(int(movie_id))
     screen = dbmodel.getAScreen(screenID)
-    if request.method == 'POST':
-        result = request.form
-        resultList = list(request.form.listvalues())
-        resultList = resultList[0]
-        resultList = resultList[0].split(",")
-        for row in resultList:
-            rowID = dbmodel.rowIDFinder(screenID,int(row))
-            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=1,seatStatus=1,row="")
-            dbmodel.addBooking(new_booking)
-        return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
-    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
+    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
+        if request.method == 'POST':
+            result = request.form
+            movie.title = result.get('title')
+            movie.blurb = result.get('blurb')
+            movie.director = result.get('directors')
+            movie.actorList = result.get('actors')
+            movie.certificate = result.get('rating')
+            dbmodel.db.session.commit()
+            return redirect(url_for('movieDetails'))
+    else:
+        if request.method == 'POST':
+            result = request.form
+            resultList = list(request.form.listvalues())
+            resultList = resultList[0]
+            resultList = resultList[0].split(",")
+            for row in resultList:
+                rowID = dbmodel.rowIDFinder(screenID,int(row))
+                new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=1,seatStatus=1,row="")
+                dbmodel.addBooking(new_booking)
+            return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
+    return redirect(url_for('movieDetails'))
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
@@ -344,13 +355,13 @@ def indexTest():
 def profile():
     current_user = dbmodel.getUserFromID(session['id'])
     if(session['username'] == "admin"):
-        flag = "1"
+        admin = "1"
         print("is admin")
-        return render_template('settings.html', flag = flag, name = current_user)
+        return render_template('settings.html', admin = admin, name = current_user)
     else:
-        flag = "0"
+        admin = "0"
         print("is normal member")
-        return render_template('settings.html', flag = flag, name = current_user)
+        return render_template('settings.html', admin = admin, name = current_user)
         
 
 @app.route('/payment')
