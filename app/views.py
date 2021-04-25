@@ -243,7 +243,7 @@ def showScreening(movie_id):
                 new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=1,seatStatus=1,row="")
                 dbmodel.addBooking(new_booking)
             return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
-    return redirect(url_for('movieDetails'))
+    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie=movie,bookings=all_bookings)
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
