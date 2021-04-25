@@ -114,12 +114,13 @@ def ticket():
 
 @app.route('/addUser', methods = ['POST','GET'])
 def addMember():
+    session.pop('_flashes', None)
     if "logged_in" in session and session["logged_in"] == True:
         name = dbmodel.getUserFromID(session["id"])
     else:
         name = None
-        # flash("User not found or not admin")
-        # return render_template('signin.html') to check if user is not admin or online
+        flash("User not found or not admin")
+        return redirect(url_for('login')) #to check if user is not admin or online
     members = dbmodel.getMemberTable()
     if request.method == 'POST':
         result = request.form
