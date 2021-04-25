@@ -44,6 +44,7 @@ def mainPage():
 
 @app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
+    session.pop('_flashes', None)
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         flag = "1"
         name = dbmodel.getUserFromID(session["id"])
@@ -181,9 +182,9 @@ def addMovie():
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
     else:
-        # flash("User not found")
-        # return render_template('signin.html')
         name = None
+        flash("User not found or not admin")
+        return redirect(url_for('movieDetails')) 
     return render_template('addMovie.html',
                            genres = dbmodel.getGenres(), name = name)
 
@@ -220,6 +221,7 @@ def showScreening(movie_id):
     screenID = dbmodel.getScreenID(int(movie_id))
     screen = dbmodel.getAScreen(screenID)
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
+        #IF ADMIN, SHOWS DIFFERENT INTERFACE, ALLOWS ADMIN TO UPDATE THE MOVIE DETAILS
         if request.method == 'POST':
             result = request.form
             movie.title = result.get('title')
@@ -228,6 +230,7 @@ def showScreening(movie_id):
             movie.actorList = result.get('actors')
             movie.certificate = result.get('rating')
             dbmodel.db.session.commit()
+            flash("Movie Updated...")
             return redirect(url_for('movieDetails'))
     else:
         if request.method == 'POST':
@@ -273,12 +276,6 @@ def payTickets(id):
         dbmodel.db.session.commit()
         return render_template("pay.html",userOut = user,messageOut = message)
     return render_template("pay.html",userOut = user)
-
-
-@app.route('/members')
-def members():
-    members = dbmodel.getMemberTable()
-    return render_template('memberTable.html', all_members = members)
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
