@@ -181,13 +181,13 @@ def timeSelection():
         name = None
         flag = "0"
     time = dbmodel.getATime(session["movie"],session["date"]) # get timetable by movieID and date
+    all_bookings = dbmodel.getBookingTable()
     if request.method == 'POST':
         screeningID = request.form.get("movie")
         session["screeningID"] = screeningID # save screeningID
         if screeningID != None:
             return redirect(url_for('seats'))
-
-    return render_template("timeSelection.html", flag = flag, name = name, time = time)
+    return render_template("timeSelection.html", flag = flag, name = name, time = time, bookings = all_bookings)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():

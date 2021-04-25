@@ -74,12 +74,8 @@
   padding:20px;
   margin:auto;
 }
+
 /* .seat td:hover {
   cursor: pointer;
   background-color: #5568fa;
 } */
-input[type=checkbox]
-{
-  transform: scale(2);
-  padding: 10px;
-}

@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 {% block title %} MoviesOnScreen {% endblock %}
 {% block content %}
-      {%for flag in flag%}
-        {%if flag == "0"%}
-         <li class="nav-item">
-           <a class="nav-link" href="login"><strong>Login</strong></a>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link" href="signup"><strong>Signup</strong></a>
-         </li>
-        {% endif %}
-        {%if flag == "1"%}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a class="dropdown-item" href="logout">Logout</a></li>
-              <!-- <li><hr class="dropdown-divider"></li> -->
-            </ul>
-          </li>
-        {% endif %}
-      {% endfor %}
+    {%for flag in flag%}
+      {%if flag == "0"%}
+       <li class="nav-item">
+         <a class="nav-link" href="login"><strong>Login</strong></a>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link" href="signup"><strong>Signup</strong></a>
+       </li>
+      {% endif %}
+      {%if flag == "1"%}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a class="dropdown-item" href="">Setting</a><li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="logout">Logout</a></li>
+          </ul>
+        </li>
+      {% endif %}
+    {% endfor %}
    </ul>
  </div>
 </nav>
@@ -28,24 +29,45 @@
     <form method = "POST" action = "">
       <h4>Time Selection</h4><br>
       <h4>{{ad}}</h4><br>
-      <table class="table table-bordered" style="width: 300px; margin-left: 540px;">
+      <table class="table table-bordered" align="center">
+      <thead>
+        <tr>
+          <th scope="col">MovieID</th>
+          <th scope="col">screeningID</th>
+          <th scope="col">screenID</th>
+          <th scope="col">Time</th>
+          <th scope="col">Available Seats</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
           {% for time in time %}
+          {% set seats = namespace(count=0) %}
+          {% set availableSeat = namespace(count=0) %}
+            {% for booking in bookings%}
+             {% if time.screeningID == booking.screeningID %}
+              {% set seats.count = seats.count + 1%}
+             {% endif %}
+            {% endfor %}
+            {% if time.screenID == 1%}
+              {% set availableSeat.count = 60 - seats.count%}
+            {% endif %}
+            {% if time.screenID == 2%}
+              {% set availableSeat.count = 48 - seats.count%}
+            {% endif %}
+            {% if time.screenID == 3%}
+              {% set availableSeat.count = 72 - seats.count%}
+            {% endif %}
             <tr>
-              <td>movieID: {{time.movieID}}</td>
-              <td>screeningID: {{time.screeningID}}</td>
-              <td>screenID: {{time.screenID}}</td>
+              <td>{{time.movieID}}</td>
+              <td>{{time.screeningID}}</td>
+              <td>{{time.screenID}}</td>
               <td>{{time.time}}</td>
+              <td>{{availableSeat.count}} </td>
               <td><button type="submit" name="movie"value={{time.screeningID}} class="btn btn-outline-secondary" style="color:black; border: 1px solid black; padding:4px;">Booking</button></td>
             </tr>
           {% endfor %}
       </table>
     </form>
-    <script>
-      function show(val)
-      {
-          document.getElementById('showing').value = val;
-      }
-    </script>
     </div>
   </div>
 {% endblock %}
