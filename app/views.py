@@ -291,9 +291,10 @@ def seats():
                 flash("You didn't select any seats")
                 break
             rowID = dbmodel.rowIDFinder(screenID,int(row))
-            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=screening_id,seatStatus=1,row="")
+            print(rowID)
+            new_booking = bookingTable(rowID=rowID,screeningID=screening_id,seatStatus=1)
             dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
-            all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
+            all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
         return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
 
@@ -435,7 +436,7 @@ def showInterface():
 #adding an interface for an employee
 @app.route('/interface/<int:screeningID>',methods = ['POST','GET'])
 def showSeating(screeningID):
-    all_bookings = dbmodel.getBookingTable()
+    all_bookings = dbmodel.getBookingInfoForScreening(screeningID)
     bookingTable = dbmodel.BookingTable
     screening = dbmodel.getAScreening(int(screeningID))
     screenID = dbmodel.getScreenID(screening.movieID)

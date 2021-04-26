@@ -84,7 +84,11 @@ input[type=checkbox]
         {% for row in range(1,screenOut.seatNum+1) %}
           {% set ns2.found = False %}
           {% for booking in bookings %}
-            {% if row == booking.seatNumber and booking.screeningID == screeningIDOut %}
+            {% set ns4 = namespace(seatNo=row%12) %}
+            {% if ns4.seatNo == 0 %}
+              {% set ns4.seatNo = 12 %}
+            {% endif %}
+            {% if rowDict[ns.count-1] == booking.rowNumber and ns4.seatNo == booking.seatCount and booking.screeningID == screeningIDOut %}
               {% set ns2.found = True %}
             {% endif %}
           {% endfor %}
