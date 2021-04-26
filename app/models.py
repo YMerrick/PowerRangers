@@ -97,7 +97,7 @@ class Models():
     #Gets the booking information from the ticket ID
     def getBookingInfoForTicket(self,ticketId):
         ticketInfo = (
-            self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date,self.SeatTable.rowNumber, self.BookingTable.seatNumber)
+            self.db.session.query(self.MoviesTable.title,self.ScreenTable.screenName,self.ScreeningTable.time,self.ScreeningTable.date,self.SeatTable.rowNumber, self.BookingTable.seatNumber, self.TicketTable.ticketID)
             .select_from(self.TicketTable).filter_by(ticketID = ticketId)
             .join(self.ScreenTable, self.ScreeningTable.screenID == self.ScreenTable.screenID)
             .join(self.SeatTable, self.BookingTable.rowID == self.SeatTable.rowID)
