@@ -262,7 +262,7 @@ def seats():
     movie = dbmodel.getMovieInfoFromScreening(screening_id) #368th line in models.py
     screenID = dbmodel.getScreenID(int(dbmodel.getMovieInfoFromScreening(screening_id).movieID)) #to find rowID
     screen = dbmodel.getAScreen(screeningID.screenID) # for seatNum
-    all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
+    all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
 
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         #IF ADMIN, SHOWS DIFFERENT INTERFACE, ALLOWS ADMIN TO UPDATE THE MOVIE DETAILS
@@ -291,8 +291,8 @@ def seats():
                 new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=screening_id,seatStatus=1,row="")
                 dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
                 all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
-            return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
-    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+            return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag,screeningIDOut = screeningID)
+    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag,screeningIDOut = screeningID)
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
