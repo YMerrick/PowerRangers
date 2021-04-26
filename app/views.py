@@ -278,7 +278,7 @@ def seats():
     movie = dbmodel.getMovieInfoFromScreening(screening_id) #368th line in models.py
     screenID = dbmodel.getScreenID(int(dbmodel.getMovieInfoFromScreening(screening_id).movieID)) #to find rowID
     screen = dbmodel.getAScreen(screeningID.screenID) # for seatNum
-    all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
+    all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
 
     if request.method == 'POST':
         check = request.form.get("seats")
