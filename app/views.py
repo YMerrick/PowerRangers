@@ -387,6 +387,7 @@ def login():
 def logout():
     session['logged_in'] = False
     session['id'] = None
+    session['username'] = None
     return redirect(url_for('movieDetails'))
 
 @app.route('/index')
