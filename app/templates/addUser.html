@@ -17,6 +17,7 @@
     {% for msg in get_flashed_messages()%}
         <h3>{{msg}}</h3>
     {% endfor %}
+    <h3>Add a New Member</h3>
     <form action = "http://localhost:5000/addUser" method = "POST">
       <div class="form-group mb-1" align="middle">
         <input class="form-control" required="required" placeholder="Email" type = "text" name = "email" style="width:35%; margin-top: 200px; height:40px">

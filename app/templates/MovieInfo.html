@@ -24,6 +24,44 @@
    </ul>
  </div>
 </nav>
+{%if session['username'] == "admin"%}
+<div class="container-fluid">
+  <div class="paragraph">
+    <div class="row" style="margin-top:30px;">
+      <div class="column">
+        <img src="{{url_for('static', filename=movie.imagePath)}}" alt="" width=330 height=450 style = "border: 1px solid black;">
+      </div>
+      <div class="column">
+        <iframe width="720" height="345" src="{{movie.trailerLink}}">
+        </iframe>
+      </div>
+    </div>
+    <form action="http://localhost:5000/movieInfo/{{movie.movieID}}" method="POST" name="edit_movie">
+      <hr class="one">
+      <h3 style="text-align:center"><input required type="text" name="title" value="{{movie.title}}" style="width: 1000px"></h3>
+      <hr class="one">
+      <div class="row" style="margin-top:30px;">
+        <div class="column" style="font-size:20px; text-align: left;">
+          <p>Directors :</p>
+          <textarea required type="text" name="directors" value=""style="resize: none;">{{movie.director}}</textarea>
+          <p>Starring :</p>
+          <textarea required type="text" name="actors" value=""style="resize: none;">{{movie.actorList}}</textarea>
+          <input disabled type="text" name="runtime" value="Running Time : 124 min">
+          <input disabled type="text" name="language" value="Language : English">
+          <p>Film Rating :</p>
+          <input required type="text" name="rating" value="{{movie.certificate}}">
+        </div>
+        <div class="vl" style="margin-top:-20px; border-left: 1px solid gray;"></div>
+        <div class="column" style = "margin-left: 70px; width: 60%; font-size:18px;">
+          <h3> Synopsis </h3>
+          <textarea required type="text" name="blurb" value="" rows="12" cols="100" style="text-align: left; resize: none;">{{movie.blurb}}</textarea>
+          <button class="btn btn-outline-secondary" type="submit" value="update" style="color:black; border: 1px solid black;">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% else %}
 <div class="container-fluid">
   <div class="paragraph">
     <div class="row" style="margin-top:30px;">
@@ -57,4 +95,5 @@
     </div>
   </div>
 </div>
+{% endif %}
 {% endblock %}
