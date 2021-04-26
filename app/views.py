@@ -176,6 +176,22 @@ def movieInfo():
     return render_template('MovieInfo.html',
                            title = 'Movie Info', movie = movies, flag = flag, name = name)
 
+@app.route('/movieInfo/<int:movie_id>',methods = ['POST','GET'])
+def showScreening(movie_id):
+    movie = dbmodel.getAMovie(movie_id)
+    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
+        #IF ADMIN, SHOWS DIFFERENT INTERFACE, ALLOWS ADMIN TO UPDATE THE MOVIE DETAILS
+        if request.method == 'POST':
+            result = request.form
+            movie.title = result.get('title')
+            movie.blurb = result.get('blurb')
+            movie.director = result.get('directors')
+            movie.actorList = result.get('actors')
+            movie.certificate = result.get('rating')
+            dbmodel.db.session.commit()
+            flash("Movie Updated...")
+            return redirect(url_for('movieDetails'))
+
 @app.route('/timeSelection',  methods=['GET', 'POST'])
 def timeSelection():
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
@@ -264,34 +280,21 @@ def seats():
     screen = dbmodel.getAScreen(screeningID.screenID) # for seatNum
     all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
 
-    if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
-        #IF ADMIN, SHOWS DIFFERENT INTERFACE, ALLOWS ADMIN TO UPDATE THE MOVIE DETAILS
-        if request.method == 'POST':
-            result = request.form
-            movie.title = result.get('title')
-            movie.blurb = result.get('blurb')
-            movie.director = result.get('directors')
-            movie.actorList = result.get('actors')
-            movie.certificate = result.get('rating')
-            dbmodel.db.session.commit()
-            flash("Movie Updated...")
-            return redirect(url_for('movieDetails'))
-    else:
-        if request.method == 'POST':
-            check = request.form.get("seats")
-            result = request.form
-            resultList = list(request.form.listvalues())
-            resultList = resultList[0]
-            resultList = resultList[0].split(",")
-            for row in resultList:
-                if row == '':
-                    flash("You didn't select any seats")
-                    break
-                rowID = dbmodel.rowIDFinder(screenID,int(row))
-                new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=screening_id,seatStatus=1,row="")
-                dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
-                all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
-            return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+    if request.method == 'POST':
+        check = request.form.get("seats")
+        result = request.form
+        resultList = list(request.form.listvalues())
+        resultList = resultList[0]
+        resultList = resultList[0].split(",")
+        for row in resultList:
+            if row == '':
+                flash("You didn't select any seats")
+                break
+            rowID = dbmodel.rowIDFinder(screenID,int(row))
+            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=screening_id,seatStatus=1,row="")
+            dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
+            all_bookings = dbmodel.getBookingbyScreeningID(screening_id) # for checking booking table
+        return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
