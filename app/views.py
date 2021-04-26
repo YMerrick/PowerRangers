@@ -346,3 +346,33 @@ def paymentPage():
 def addFunds(member_id):
     return render_template('addFunds.html')
 
+@app.route('/interface')
+def showInterface():
+    screeningTable = dbmodel.getScreeningTable()
+    movieTable = dbmodel.getMoviesTable()
+    screenTable = dbmodel.getScreenTable() 
+    return render_template("employeeInterface.html",
+                            screeningTableOut = screeningTable,
+                            movieTableOut = movieTable,
+                            screenTableOut = screenTable)
+
+#adding an interface for an employee
+@app.route('/interface/<int:screeningID>',methods = ['POST','GET'])
+def showSeating(screeningID):
+    all_bookings = dbmodel.getBookingTable()
+    bookingTable = dbmodel.BookingTable
+    screening = dbmodel.getAScreening(int(screeningID))
+    screenID = dbmodel.getScreenID(screening.movieID)
+    screen = dbmodel.getAScreen(screening.screenID)
+    movie = dbmodel.getAMovie(screening.movieID)
+    if request.method == 'POST':
+        resultList = list(request.form.listvalues())
+        resultList = resultList[0]
+        resultList = resultList[0].split(",")
+        for row in resultList:
+            rowID = dbmodel.rowIDFinder(screenID,int(row))
+            new_booking = bookingTable(seatNumber=row,rowID=rowID,screeningID=screeningID,seatStatus=1,row="")
+            dbmodel.addBooking(new_booking)
+        redirect('/interface/<int:screeningID>')
+        return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],bookings=all_bookings,screeningOut=screening,screeningIDOut = screeningID,movieOut=movie)
+    return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],bookings=all_bookings,screeningOut=screening,screeningIDOut = screeningID,movieOut=movie)

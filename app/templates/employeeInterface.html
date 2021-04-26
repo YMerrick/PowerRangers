@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Employee Interface</title>
+        <link rel="stylesheet" type="text/css" href = "{{ url_for('static',filename='Paymentpage.css') }}" />
+    </head>
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+        </style>
+    <body>
+        <table class="screening" style ="margin-top:100px;">
+            <thead>
+                <tr style="font-weight:bold"></tr>
+                    <th>Screening ID</th>
+                    <th>Screen name</th>
+                    <th>Movie name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+                {% for screening in screeningTableOut %}
+                <tr>
+                    <td><a href="http://localhost:5000/interface/{{screening.screeningID}}"><p>{{ screening.screeningID }}</p></a></td>
+                    {% for screen in screenTableOut %}
+                        {% if screen.screenID == screening.screenID %}
+                            <td><p>{{ screen.screenName }}</p></td>
+                        {% endif %}
+                    {% endfor %}
+                    {% for movie in movieTableOut %}
+                        {% if movie.movieID == screening.movieID %}
+                            <td><p>{{ movie.title }}</p></td>
+                        {% endif %}
+                    {% endfor %}
+                    <td><p>{{ screening.date }}</p></td>
+                    <td><p>{{ screening.time }}</p></td>
+                </tr>
+                {% endfor %}
+            
+        </table>
+    </body>
+</html>

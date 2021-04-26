@@ -175,17 +175,22 @@ class Models():
 
 
     #getting screen by screenID
-
     def getAScreen(self,screenID):
         screenTable = self.ScreenTable
         screen = self.db.session.query(screenTable).get(screenID)
         return screen
 
-    #getting a movie ny id
+    #getting a movie by id
     def getAMovie(self,movieID):
         movieTable = self.MoviesTable
         movie = self.db.session.query(movieTable).get(movieID)
         return movie
+
+    #getting a screening by screeningID
+    def getAScreening(self,screeningID):
+        screeningTable = self.ScreeningTable
+        screening = self.db.session.query(screeningTable).get(screeningID)
+        return screening
 
     #getting tickets
     #def getTickets(self,memberID):
@@ -321,6 +326,7 @@ class Models():
         self.db.session
         pass
 
+    #find the seat number
     def rowIDFinder(self,screenIDIn,row):
         if(screenIDIn == 1):
             return 0+row
@@ -329,8 +335,10 @@ class Models():
         elif(screenIDIn == 3):
             return 108+row
 
+    #add booking to the database
     def addBooking(self,bookingIn):
         memberTable = self.BookingTable
         self.db.session.add(bookingIn)
         self.db.session.commit()
         pass
+    
