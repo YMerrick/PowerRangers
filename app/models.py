@@ -175,6 +175,33 @@ class Models():
 
 
     #getting screen by screenID
+
+    #get a time table by movie-id and date
+    def getATime(self,movie_id,date):
+        screeningTable = (self.ScreeningTable.screenID,self.ScreeningTable.screeningID,self.ScreeningTable.movieID,self.ScreeningTable.date,self.ScreeningTable.time)
+        timeTable = self.db.session.query(
+            self.ScreeningTable.screenID,
+            self.ScreeningTable.screeningID,
+            self.ScreeningTable.movieID,
+            self.ScreeningTable.date,
+            self.ScreeningTable.time,
+            self.ScreenTable.screenName
+        ).select_from(self.ScreeningTable).filter_by(movieID=movie_id,date=date).join(self.ScreenTable, self.ScreeningTable.screenID == self.ScreenTable.screenID).all()
+        return timeTable
+
+    #get a ScreeningTable screeningID
+    def getScreeningID(self,screeningID):
+        screeningTable = self.ScreeningTable
+        screeningID = self.db.session.query(screeningTable).filter_by(screeningID=screeningID).first()
+        return screeningID
+        
+    #get a ScreeningTable screeningID
+    def getBookingbyScreeningID(self,screeningID):
+        screening = self.db.session.query(self.BookingTable).filter_by(screeningID=screeningID).all()
+        return screening
+
+        #getting screen by screenID
+
     def getAScreen(self,screenID):
         screenTable = self.ScreenTable
         screen = self.db.session.query(screenTable).get(screenID)
@@ -341,4 +368,31 @@ class Models():
         self.db.session.add(bookingIn)
         self.db.session.commit()
         pass
-    
+
+    def getRowForScreening(self,screenId):
+        row = (
+            self.db.session.query(self.SeatTable)
+            .select_from(self.SeatTable).filter_by(screenID = screenId)
+            .join(self.ScreenTable, self.SeatTable.screenID == self.ScreenTable.screenID)
+            .join(self.ScreeningTable ,self.ScreenTable.screenID == self.ScreenTable.screenID)
+        )
+        return row.all()
+
+    def getBookingInfoForScreening(self,screeningID):
+        bookedSeats = (
+            self.db.session.query(self.BookingTable,self.SeatTable.rowNumber,self.SeatTable.seatCount)
+            .select_from(self.BookingTable)
+            .filter_by(screeningID=screeningID)
+            .join(self.SeatTable)
+        )
+        return bookedSeats.all()
+
+    def getMovieInfoFromScreening(self,screeningId):
+        movieInfo = (
+            self.db.session.query(self.MoviesTable)
+            .select_from(self.ScreeningTable)
+            .filter_by(screeningID = screeningId)
+            .join(self.MoviesTable)
+        )
+        return movieInfo.first()
+
