@@ -1,29 +1,6 @@
 {% extends "base.html" %}
 {% block title %} MoviesOnScreen {% endblock %}
 {% block content %}
-    {%for flag in flag%}
-      {%if flag == "0"%}
-       <li class="nav-item">
-         <a class="nav-link" href="login"><strong>Login</strong></a>
-       </li>
-       <li class="nav-item">
-         <a class="nav-link" href="signup"><strong>Signup</strong></a>
-       </li>
-      {% endif %}
-      {%if flag == "1"%}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a class="dropdown-item" href="profile">Setting</a><li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="logout">Logout</a></li>
-          </ul>
-        </li>
-      {% endif %}
-    {% endfor %}
-   </ul>
- </div>
-</nav>
 {%if session['username'] == "admin"%}
 <div class="container-fluid">
   <div class="paragraph">
@@ -42,8 +19,10 @@
       <hr class="one">
       <div class="row" style="margin-top:30px;">
         <div class="column" style="font-size:20px; text-align: left;">
-          <p>Directors :</p>
-          <textarea required type="text" name="directors" value=""style="resize: none;">{{movie.director}}</textarea>
+          <div class="form-floating">
+            <label for="floatingInputGrid">Directors</label>
+            <textarea class="form-control" id="floatingInputGrid" required type="text" name="directors" value=""style="resize: none;">{{movie.director}}</textarea>
+          </div>
           <p>Starring :</p>
           <textarea required type="text" name="actors" value=""style="resize: none;">{{movie.actorList}}</textarea>
           <input disabled type="text" name="runtime" value="Running Time : 124 min">
@@ -54,7 +33,7 @@
         <div class="vl" style="margin-top:-20px; border-left: 1px solid gray;"></div>
         <div class="column" style = "margin-left: 70px; width: 60%; font-size:18px;">
           <h3> Synopsis </h3>
-          <textarea required type="text" name="blurb" value="" rows="12" cols="100" style="text-align: left; resize: none;">{{movie.blurb}}</textarea>
+          <textarea required type="text" name="blurb" value="" rows="4" cols="100" style="text-align: left; resize: none;">{{movie.blurb}}</textarea>
           <button class="btn btn-outline-secondary" type="submit" value="update" style="color:black; border: 1px solid black;">Update</button>
         </div>
       </form>

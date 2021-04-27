@@ -100,7 +100,7 @@ def movieDetails():
                 listFromDate = dbmodel.getMovie(date=date)
             return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag, name = name)
 
-    movies = dbmodel.getMovie(date="2021-04-01")
+    movies = dbmodel.getMovie(date="2021-04-01") # assume today is 2021-04-01
     session["date"] = "2021-04-01"
     return render_template('Movie Details.html',
                            title = 'Movie Details',movies = movies, genreList = genreList, flag = flag, name = name)
@@ -131,10 +131,11 @@ def addMember():
     session.pop('_flashes', None)
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
     else:
         name = None
         flash("User not found or not admin")
-        return redirect(url_for('movieDetails')) 
+        return redirect(url_for('movieDetails'))
     members = dbmodel.getMemberTable()
     if request.method == 'POST':
         result = request.form
@@ -144,20 +145,22 @@ def addMember():
         password = result.get ('password')
         new_member = memberTable(walletBalance=0,email=email,creditCard=creditCard,password=password)
         dbmodel.addMemberTableEntry(new_member)
-        return render_template('memberList.html',all_member = members, name = name)
+        return render_template('memberList.html',all_member = members, name = name, flag = flag)
     else:
-        return render_template('addUser.html',all_member = members, name = name)
+        return render_template('addUser.html',all_member = members, name = name, flag = flag)
 
 @app.route('/memberList')
 def member():
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
     else:
+        flag = "0"
         name = None
         flash("User not found or not admin")
-        return redirect(url_for('movieDetails')) 
+        return redirect(url_for('movieDetails'))
     members = dbmodel.getMemberTable()
-    return render_template('memberList.html',all_member = members, name = name)
+    return render_template('memberList.html',all_member = members, name = name, flag = flag)
 
 @app.route('/movieInfo', methods=['GET', 'POST'])
 def movieInfo():
@@ -213,10 +216,12 @@ def timeSelection():
 def genre():
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
     else:
+        flag = "0"
         name = None
         flash("User not found or not admin")
-        return redirect(url_for('movieDetails')) 
+        return redirect(url_for('movieDetails'))
     if request.method == 'POST':
         result = request.form
         genreTable = dbmodel.GenreTable
@@ -225,18 +230,20 @@ def genre():
         newGenre = genreTable(genreDesc = genreDesc)
         dbmodel.addGenre(newGenre)
     return render_template('genre.html',
-                           genres = dbmodel.getGenres(), name = name)
+                           genres = dbmodel.getGenres(), name = name, flag = flag)
 
 @app.route('/addMovie')
 def addMovie():
     if "logged_in" in session and session["logged_in"] == True and session['username'] == "admin":
         name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
     else:
+        flag = "0"
         name = None
         flash("User not found or not admin")
-        return redirect(url_for('movieDetails')) 
+        return redirect(url_for('movieDetails'))
     return render_template('addMovie.html',
-                           genres = dbmodel.getGenres(), name = name)
+                           genres = dbmodel.getGenres(), name = name, flag = flag)
 
 @app.route('/movieAdded', methods = ['POST','GET'])
 def movieAdded():
@@ -332,6 +339,8 @@ def payTickets(id):
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
+    flag = "0"
+    name = None
     session.pop('_flashes', None)
     if request.method == 'POST':
         result = request.form
@@ -343,7 +352,7 @@ def register():
         if member:
             #if a user with the same email is found, show error
             flash("User with the same email has been found.")
-            return render_template('signup.html')
+            return render_template('signup.html', flag = flag)
         else:
             card = result.get('card')
             print(type(card))
@@ -353,14 +362,16 @@ def register():
                 new_member = memberTable(email=ID,walletBalance=000.00,creditCard=card,password=pass1)
                 dbmodel.addMember(new_member)
                 flash("Successfully registered")
-                return render_template('signin.html')
+                return render_template('signin.html', flag = flag, name = name)
             else:
                 flash("Password don't match")
-                return render_template('signup.html')
-    return render_template('signup.html')
+                return render_template('signup.html', flag = flag, name = name)
+    return render_template('signup.html', flag = flag, name = name)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    flag = "0"
+    name = None
     session.pop('_flashes', None)
     if request.method == 'POST':
         #result = request.form
@@ -381,11 +392,11 @@ def login():
                 return redirect(url_for('movieDetails'))
             else:
                 flash('Invalid password provided')
-                return render_template('signin.html')
+                return render_template('signin.html', flag = flag, name = name)
         else:
             flash("User not found")
-            return render_template('signin.html')
-    return render_template('signin.html')
+            return render_template('signin.html', flag = flag, name = name)
+    return render_template('signin.html' , flag = flag, name = name)
 
 @app.route('/logout')
 def logout():
@@ -413,7 +424,7 @@ def profile():
         admin = "0"
         print("is normal member")
         return render_template('settings.html', admin = admin, name = current_user)
-        
+
 
 @app.route('/payment')
 def paymentPage():
@@ -427,7 +438,7 @@ def addFunds(member_id):
 def showInterface():
     screeningTable = dbmodel.getScreeningTable()
     movieTable = dbmodel.getMoviesTable()
-    screenTable = dbmodel.getScreenTable() 
+    screenTable = dbmodel.getScreenTable()
     return render_template("employeeInterface.html",
                             screeningTableOut = screeningTable,
                             movieTableOut = movieTable,
