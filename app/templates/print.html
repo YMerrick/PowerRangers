@@ -72,12 +72,12 @@
                 <div class="sideDiv" style="width: 20%;float: left;">
                     <div class="atts" style="float: left;width: 100%;">
                         <div class="photo" style="width: 115px;height: 150px;float: right;">
-                            
+                            <div><img src = "{{qrcode(ticket.ticketID)}}" style="width: 90px;height: 90px;></div>
                         </div>
                         <!---secure prortect-->
                         <div class="sign"
                             style="position: absolute;bottom: 0;right: 0;border-top: 1px dashed #000;left: 80%;text-align: right;">
-                            <small>ID-0132211231234123</small>
+                            
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
 }); 
 </script>
 
-<div><img src = "{{qrcode(ticket.ticketID)}}"></div>
+
 
 </html>
 
