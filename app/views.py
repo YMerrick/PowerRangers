@@ -164,6 +164,7 @@ def member():
 
 @app.route('/movieInfo', methods=['GET', 'POST'])
 def movieInfo():
+    print(session)
     if "logged_in" in session and session["logged_in"] == True:
         name = dbmodel.getUserFromID(session["id"])
         flag = "1"
@@ -194,6 +195,8 @@ def showScreening(movie_id):
             dbmodel.db.session.commit()
             flash("Movie Updated...")
             return redirect(url_for('movieDetails'))
+    return render_template('MovieInfo.html',
+                           title = 'Movie Info', movie = movies, flag = flag, name = name)
 
 @app.route('/timeSelection',  methods=['GET', 'POST'])
 def timeSelection():
@@ -431,7 +434,13 @@ def profile():
 
 @app.route('/payment')
 def paymentPage():
-    return render_template('Paymentpage.html')
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        flag = "1" # when online
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        flag = "0" # when offline
+        name = None
+    return render_template('Paymentpage.html', flag = flag, name = name)
 
 @app.route('/addFunds')
 def addFunds(member_id):
