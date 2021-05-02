@@ -205,12 +205,13 @@ def timeSelection():
         flag = "0"
     time = dbmodel.getATime(session["movie"],session["date"]) # get timetable by movieID and date
     all_bookings = dbmodel.getBookingTable()
+    movie = movies = dbmodel.getMoviesTable(session["movie"])
     if request.method == 'POST':
         screeningID = request.form.get("movie")
         session["screeningID"] = screeningID # save screeningID
         if screeningID != None:
             return redirect(url_for('seats'))
-    return render_template("timeSelection.html", flag = flag, name = name, time = time, bookings = all_bookings)
+    return render_template("timeSelection.html", movie = movie,flag = flag, name = name, time = time, bookings = all_bookings)
 
 @app.route('/genre', methods = ['POST','GET'])
 def genre():
@@ -309,6 +310,7 @@ def seats():
 def addWallet(id):
     all_members = dbmodel.getMemberTable()
     user = dbmodel.getMember(id)
+    name = dbmodel.getUserFromID(id)
     if request.method == 'POST':
         result = request.form
         balance = int(result.get('wallet'))
@@ -316,12 +318,13 @@ def addWallet(id):
         wallet = balance + wallet
         user.walletBalance = str(wallet)
         dbmodel.db.session.commit()
-        return render_template("addFunds.html",userOut = user)
-    return render_template("addFunds.html",userOut = user)
+        return render_template("addFunds.html",userOut = user, name = name, flag = "1")
+    return render_template("addFunds.html",userOut = user, name = name, flag = "1")
 
 @app.route('/addFunds/<int:id>/pay',methods = ['POST','GET'])
 def payTickets(id):
     user = dbmodel.getMember(id)
+    name = dbmodel.getUserFromID(id)
     if request.method == 'POST':
         result = request.form
         price = int(result.get('price'))
@@ -332,10 +335,10 @@ def payTickets(id):
             balance = balance - price
             user.walletBalance = str(balance)
             message ="payment successful"
-            return render_template("pay.html",userOut = user,messageOut = message)
+            return render_template("pay.html",userOut = user,messageOut = message, name=name,flag = "1")
         dbmodel.db.session.commit()
-        return render_template("pay.html",userOut = user,messageOut = message)
-    return render_template("pay.html",userOut = user)
+        return render_template("pay.html",userOut = user,messageOut = message, name=name, flag = "1")
+    return render_template("pay.html",userOut = user, name=name, flag = "1")
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
@@ -419,11 +422,11 @@ def profile():
     if(session['username'] == "admin"):
         admin = "1"
         print("is admin")
-        return render_template('settings.html', admin = admin, name = current_user)
+        return render_template('settings.html', admin = admin, name = current_user, flag = "1")
     else:
         admin = "0"
         print("is normal member")
-        return render_template('settings.html', admin = admin, name = current_user)
+        return render_template('settings.html', admin = admin, name = current_user, flag = "1")
 
 
 @app.route('/payment')
