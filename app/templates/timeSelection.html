@@ -5,13 +5,11 @@
   <div class="paragraph" style="height:930px; text-align: center;">
     <form method = "POST" action = "">
       <h4>Time Selection</h4><br>
-      <h4>{{ad}}</h4><br>
       <table class="table table-bordered" align="center">
       <thead>
         <tr>
-          <th scope="col">MovieID</th>
-          <th scope="col">screeningID</th>
-          <th scope="col">screenID</th>
+          <th scope="col">Movie Title</th>
+          <th scope="col">Screen</th>
           <th scope="col">Time</th>
           <th scope="col">Available Seats</th>
           <th scope="col"></th>
@@ -35,9 +33,16 @@
               {% set availableSeat.count = 72 - seats.count%}
             {% endif %}
             <tr>
-              <td>{{time.movieID}}</td>
-              <td>{{time.screeningID}}</td>
-              <td>{{time.screenID}}</td>
+              <td>{{movie.title}}</td>
+              {% if time.screenID == 1 %}
+                <td>A</td>
+              {% endif %}
+              {% if time.screenID == 2 %}
+                <td>B</td>
+              {% endif %}
+              {% if time.screenID == 3 %}
+                <td>C</td>
+              {% endif %}
               <td>{{time.time}}</td>
               <td>{{availableSeat.count}} </td>
               <td><button type="submit" name="movie"value={{time.screeningID}} class="btn btn-outline-secondary" style="color:black; border: 1px solid black; padding:4px;">Booking</button></td>
