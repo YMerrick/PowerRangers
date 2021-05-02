@@ -194,9 +194,7 @@ def showScreening(movie_id):
             movie.certificate = result.get('rating')
             dbmodel.db.session.commit()
             flash("Movie Updated...")
-            return redirect(url_for('movieDetails'))
-    return render_template('MovieInfo.html',
-                           title = 'Movie Info', movie = movies, flag = flag, name = name)
+    return redirect(url_for('movieDetails'))
 
 @app.route('/timeSelection',  methods=['GET', 'POST'])
 def timeSelection():
