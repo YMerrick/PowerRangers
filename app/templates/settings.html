@@ -1,27 +1,18 @@
 {% extends "base.html" %}
 {% block title %} Profile {% endblock %}
 {% block content %}
-<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
-    <ul class="dropdown-menu" role="menu">
-        <li><a class="dropdown-item" href="logout">Logout</a></li>
-        <!-- <li><hr class="dropdown-divider"></li> -->
-    </ul>
-</li>
-</ul>
-</nav>
 {%if admin == "0"%}
 <div class="paragraph" style="height:960px; text-align: center;">
     <label>Balance: {{name.walletBalance}}</label>
-    <a href="http://localhost:5000/addFunds/{{session['id']}}"><button type="submit">Add funds</button></a>
+    <a href="http://localhost:5000/addFunds/{{session['id']}}"><button class="btn btn-outline-secondary" type="submit" style="color:black; border: 1px solid black;">Add funds</button></a>
 </div>
 {% endif %}
 {%if admin == "1"%}
 <div class="paragraph" style="height:960px; text-align: center;">
-    <a href="http://localhost:5000/addUser"><button type="submit">Add User</button></a>
-    <a href="http://localhost:5000/genre"><button type="submit">Add Genre</button></a>
-    <a href="http://localhost:5000/addMovie"><button type="submit">Add Movie</button></a>
-    <a href="http://localhost:5000/memberList"><button type="submit">Member List</button></a>
+    <a href="http://localhost:5000/addUser"><button class="btn btn-outline-secondary" type="submit" style="color:black; border: 1px solid black;">Add User</button></a>
+    <a href="http://localhost:5000/genre"><button class="btn btn-outline-secondary" type="submit" style="color:black; border: 1px solid black;">Add Genre</button></a>
+    <a href="http://localhost:5000/addMovie"><button class="btn btn-outline-secondary" type="submit" style="color:black; border: 1px solid black;">Add Movie</button></a>
+    <a href="http://localhost:5000/memberList"><button class="btn btn-outline-secondary" type="submit" style="color:black; border: 1px solid black;">Member List</button></a>
 </div>
 {% endif %}
 {% endblock %}

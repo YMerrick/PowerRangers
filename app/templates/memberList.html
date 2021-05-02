@@ -1,17 +1,6 @@
 {% extends "base.html" %}
 {% block title %} memberList {% endblock %}
 {% block content %}
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false"><strong>{{name.email}}</strong></a>
-  <ul class="dropdown-menu" role="menu">
-    <li><a class="dropdown-item" href="">Setting</a><li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="logout">Logout</a></li>
-  </ul>
-</li>
-</ul>
-</div>
-</nav>
 <div class="container-fluid">
   <div class="paragraph" style="height:100%; text-align: center;">
     <form action = "http://localhost:5000/memberList" method = "GET">
@@ -26,10 +15,10 @@
         </thead>
         {% for row in all_member %}
           <tr>
-            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{loop.index}}</a></td>
-            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["email"]}}</a></td>
-            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["creditCard"]}}</a></td>
-            <td><a href = "http://localhost:5000/movieInfo/{{row.title}}">{{row["password"]}}</a></td>
+            <td><a>{{loop.index}}</a></td>
+            <td><a>{{row["email"]}}</a></td>
+            <td><a>{{row["creditCard"]}}</a></td>
+            <td><a>{{row["password"]}}</a></td>
           </tr>
         {% endfor %}
       </table>
