@@ -8,7 +8,7 @@
           <h3>{{msg}}</h3>
       {% endfor %}
       <div class="wrapper">
-        <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=6;' onblur='this.size=1;' onchange='this.size=1; this.blur(); this.form.submit();' style="margin-left: 16px;">
+        <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=6;' onblur='this.size=1;' onchange='this.size=1; this.blur(); this.form.submit();' style="margin-left: 16px; background-color:#c9c7c7;">
           <option value="">Choose Genre</option>
           {% for list in genreList %}
             <option value={{list.genreDesc}}>{{list.genreDesc}}</option>
@@ -39,10 +39,10 @@
             {% endif %}
           {% endif %}
           <div class="column" style="text-align: left; font-size: 22px; line-height:150%;">
-            <button type="hidden" name="movie" value={{movie.movieID}} style ="background-color:#ffffff; border: 1px solid black;"><img src="{{url_for('static', filename=movie.imagePath)}}" width=320 height=300></button><br>
+            <button type="hidden" name="movie" value={{movie.movieID}} style ="background-color:#ffffff; border: 1px solid black;background-color:black;"><img src="{{url_for('static', filename=movie.imagePath)}}" width=320 height=300></button><br>
            <p1>{{movie.title}}</p1></br></br>
           </div>
-          <button class="btn btn-outline-secondary" onclick="show(this.value);"data-toggle="modal" data-target="#myModal" type="button" value = {{movie.movieID}} style= "color:black; border: 1px solid black; position:relative; margin-top: 400px; margin-left: -100px; height:40px;">Booking</button>
+          <button class="btn btn-outline-secondary push" onclick="show(this.value);"data-toggle="modal" data-target="#myModal" type="button" value = {{movie.movieID}} style= "position:relative; margin-top: 400px; margin-left: -100px; height:40px;">Booking</button>
           <script>
             function show(val)
             {
@@ -52,16 +52,16 @@
           <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="color:black;">
                   <p>Notice</p>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="color:black;">
                   <p>Are you sure you want to book this movie?</p>
                 </div>
                 <div class="modal-footer">
                   <input type="hidden" id="showing" name="time" style="height:34px;"></input>
-                  <button type="submit" value={{movie.movieID}} class="btn btn-outline-secondary" style= "color:black; border: 1px solid black;">Booking</button>
-                  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" align = "right"style= "color:black; border: 1px solid black;">Close</button>
+                  <button type="submit" value={{movie.movieID}} class="btn btn-outline-secondary">Booking</button>
+                  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" align = "right">Close</button>
                 </div>
               </div>
             </div>
