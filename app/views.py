@@ -1,4 +1,4 @@
-from flask import render_template, Flask, request, flash, session, url_for, redirect
+from flask import render_template, Flask, request, flash, session, url_for, redirect, jsonify
 from flask_qrcode import QRcode
 from app import app
 from flask_sqlalchemy import SQLAlchemy
@@ -6,8 +6,16 @@ from sqlalchemy.ext.automap import automap_base
 from .models import Models
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging # for testing
+import os
+import stripe
 dbmodel = Models()
 QRcode(app)
+stripeKeys = {
+    "secretKey": os.environ["STRIPE_SECRET_KEY"],
+    "publishableKey": os.environ["STRIPE_PUBLISHABLE_KEY"],
+}
+stripe.api_key = stripeKeys["secretKey"]
+
 #Moved this to models.py and created it as a class instead to get a working api
 '''app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movie.db'
 
@@ -429,16 +437,41 @@ def profile():
         print("is normal member")
         return render_template('settings.html', admin = admin, name = current_user, flag = "1")
 
+@app.route('/config')
+def getKey():
+    stripeConfig = {
+        "publicKey" : stripeKeys["publishableKey"]
+    }
+    return jsonify(stripeConfig)
 
 @app.route('/payment')
 def paymentPage():
+    stripeConfig = {
+        "publicKey" : stripeKeys["publishableKey"]
+    }
+    domain = "http://localhost:5000/"
+    checkoutSession = stripe.checkout.Session.create(
+        success_url = domain,
+        cancel_url = domain,
+        line_items = [
+            {
+                "name": "Cinema Ticket",
+                "currency": "gbp",
+                "quantity": 1,
+                "amount": 1200
+            }
+        ],
+        mode = 'payment',
+        payment_method_types = ['card'],
+        stripe_account = 'acct_1ImqEtIzSP7ZCoe9'
+    )
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         flag = "1" # when online
         name = dbmodel.getUserFromID(session["id"])
     else:
         flag = "0" # when offline
         name = None
-    return render_template('Paymentpage.html', flag = flag, name = name)
+    return render_template('payment.html', flag = flag, name = name,publicKey = stripeConfig,checkoutSesh = checkoutSession)
 
 @app.route('/addFunds')
 def addFunds(member_id):
