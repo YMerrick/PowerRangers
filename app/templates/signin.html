@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-fluid">
   <form action="" method="POST" name="login">
-    <div class="paragraph" style="height:920px;">
+    <div class="paragraph" style="height:920px; width:920px;">
       {% for msg in get_flashed_messages()%}
           <h3>{{msg}}</h3>
       {% endfor %}
@@ -18,7 +18,7 @@
         </div>
       <br>
       <div align="middle">
-        <button class="btn btn-outline-secondary" type="submit"style= "color:black; border: 1px solid black;">Login</button>
+        <button class="btn btn-outline-secondary push" type="submit">Login</button>
       </div>
     </div>
   </form>
