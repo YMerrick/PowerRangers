@@ -320,9 +320,21 @@ def seats():
             else:
                 flag = "0" # when offline
                 name = None
-            return redirect(url_for('payment'))
+            return redirect(url_for('paymentmethod'))
             
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+
+@app.route('/paymentmethod',  methods=['GET', 'POST'])# if choose to pay by cash will create a unpaid ticket which will skip over the online paymentpage
+def paymentmethod():
+    paymentTable = dbmodel.PaymentTable
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    
+    return render_template("paymentmethod.html", flag = flag, name = name)
 
 @app.route('/payment',  methods=['GET', 'POST'])
 def payment():
