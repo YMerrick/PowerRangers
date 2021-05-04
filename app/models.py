@@ -220,9 +220,10 @@ class Models():
         return screening
 
     #getting tickets
-    #def getTickets(self,memberID):
-        bookingTable = self.BookingTable
-        tickets = self.db.session.query(bookingTable).filter_by()
+    def getTickets(self,memberIDIn):
+        ticketsTable = self.TicketTable
+        tickets = self.db.session.query(ticketsTable).filter_by(memberID="9").all()
+        return tickets
 
     #adding members into member
     def addMemberTableEntry(self,memberIn):

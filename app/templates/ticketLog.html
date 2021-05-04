@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %} Profile {% endblock %}
+{% block content %}
+<div class="paragraph" style="height:960px; text-align: center;">
+    <a href="http://localhost:5000/addFunds/{{session['id']}}"><button class="btn btn-outline-secondary push" type="submit">Add funds</button></a>
+    <p>{{ userOut.email }}</p>
+    <table>
+        <tr>
+            <th>Booking ID</th>
+            <th>Title</th>
+            <th>Screening Date</th>
+            <th>Screening Time</th>
+        </tr>
+    
+        {% for ticket in ticketsOut %}
+        <tr>
+            <td>{{ ticket.bookingID }}</td>
+            {% for booking in bookingsOut %}
+                {% if ticket.bookingID == booking.bookingID %}
+                    {% for screening in screeningsOut %}
+                        {% if screening.screeningID == booking.screeningID %}
+                            {% for movie in moviesOut %}
+                                {%if screening.movieID == movie.movieID %}
+                                    <td>{{ movie.title }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            <td>{{ screening.date }}</td>
+                            <td>{{ screening.time }}</td>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% endblock %}
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+</style>

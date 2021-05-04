@@ -459,7 +459,7 @@ def indexTest():
     else:
         return render_template('index.html', current_user = None)
 
-@app.route('/profile')
+@app.route('/profile',methods = ['POST','GET'])
 def profile():
     current_user = dbmodel.getUserFromID(session['id'])
     if(session['username'] == "admin"):
@@ -507,3 +507,13 @@ def showSeating(screeningID):
         redirect('/interface/<int:screeningID>')
         return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],bookings=all_bookings,screeningOut=screening,screeningIDOut = screeningID,movieOut=movie)
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],bookings=all_bookings,screeningOut=screening,screeningIDOut = screeningID,movieOut=movie)
+
+#showing the ticket history log
+@app.route('/ticketsHistory/<int:memberID>',methods = ['POST','GET'])
+def showTickets(memberID):
+    current_user = dbmodel.getUserFromID(memberID)
+    tickets = dbmodel.getTickets(memberID)
+    bookings = dbmodel.getBookingTable()
+    screening = dbmodel.getScreeningTable()
+    movies = dbmodel.getMoviesTable()
+    return render_template("ticketLog.html",flag="1",name=current_user,moviesOut = movies,screeningsOut = screening,ticketsOut=tickets,userOut = current_user,bookingsOut = bookings)
