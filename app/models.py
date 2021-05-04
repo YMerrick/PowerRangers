@@ -32,6 +32,7 @@ class Models():
         self.TicketTable     =   Base.classes.TicketTable
         self.MovieGenreTable =   Base.classes.MovieGenreTable
         self.GenreTable      =   Base.classes.GenreTable
+        self.CustomerType    =   Base.classes.CustomerType
 
     #Gets all the infromation from MoviesTable and dumps it in a list
     #If an id is passed then it returns the row corresponding to the id
@@ -220,9 +221,10 @@ class Models():
         return screening
 
     #getting tickets
-    #def getTickets(self,memberID):
-        bookingTable = self.BookingTable
-        tickets = self.db.session.query(bookingTable).filter_by()
+    def getTickets(self,memberIDIn):
+        ticketsTable = self.TicketTable
+        tickets = self.db.session.query(ticketsTable).filter_by(memberID=str(memberIDIn)).all()
+        return tickets
 
     #adding members into member
     def addMemberTableEntry(self,memberIn):
@@ -311,6 +313,41 @@ class Models():
         self.db.session.add(memberIn)
         self.db.session.commit()
         return True
+
+    def addTotalprice(self,totalPrice):
+        self.db.session.add(totalPrice)
+        self.db.session.commit()
+        return True
+
+    def getPriceFromPaymentID(self,paymentID):
+        price = (
+            self.db.session.query(self.PaymentTable.totalprice)
+            .filter_by(paymentID = paymentID)
+        )
+        return price.first()
+    
+    def getPayment(self,paymentId):
+        payment = (
+            self.db.session.query(self.PaymentTable).get(paymentId)
+        )
+        return payment
+
+    def updatePayment(self,paymentId,paymentMethod=None,chargeId=None):
+        paymentRecord = self.getPayment(paymentId)
+        paymentRecord.paymentMethod = paymentMethod
+        paymentRecord.chargeID = chargeId
+        self.db.session.commit()
+
+    def getPriceOfTickets(self):
+        prices = (
+            self.db.session.query(self.CustomerType)
+        ).all()
+        priceDict = {
+            "Under16":int(prices[0].price),
+            "Adult":int(prices[1].price),
+            "Senior":int(prices[2].price)
+        }
+        return priceDict
 
     def getUserFromID(self, memberID):
         member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()

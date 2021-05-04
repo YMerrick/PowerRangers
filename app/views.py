@@ -289,6 +289,7 @@ def seats():
     screeningTable = dbmodel.ScreeningTable
     screenTable = dbmodel.ScreenTable
     bookingTable = dbmodel.BookingTable
+    paymentTable = dbmodel.PaymentTable
 
     screening_id = session["screeningID"] # from timeSelection.html
     screeningID = dbmodel.getScreeningID(screening_id) # 181th line in models.py, used for getting other data (seamNum,screenID,bookingTable)
@@ -317,9 +318,43 @@ def seats():
             print(rowID)
             new_booking = bookingTable(rowID=rowID,screeningID=screening_id,seatStatus=1)
             dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
+            prices = dbmodel.getPriceOfTickets()
+            totalprice = int(child)*prices["Under16"] + int(adult)*prices["Adult"] + int(elder)*prices["Senior"]
+            new_totalprice = paymentTable(totalprice=totalprice) # count the total pirce
+            dbmodel.addTotalprice(new_totalprice) # count the total pirce
             all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
-        return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+            if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+                flag = "1" # when online
+                name = dbmodel.getUserFromID(session["id"])
+            else:
+                flag = "0" # when offline
+                name = None
+            return redirect(url_for('paymentmethod'))
+            
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+
+@app.route('/paymentmethod',  methods=['GET', 'POST'])# if choose to pay by cash will create a unpaid ticket which will skip over the online paymentpage
+def paymentmethod():
+    paymentTable = dbmodel.PaymentTable
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    
+    return render_template("paymentmethod.html", flag = flag, name = name)
+
+@app.route('/payment',  methods=['GET', 'POST'])
+def payment():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    return render_template("paymentpage.html", flag = flag, name = name)
+    
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
@@ -354,6 +389,8 @@ def payTickets(id):
         dbmodel.db.session.commit()
         return render_template("pay.html",userOut = user,messageOut = message, name=name, flag = "1")
     return render_template("pay.html",userOut = user, name=name, flag = "1")
+
+
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
@@ -431,7 +468,7 @@ def indexTest():
     else:
         return render_template('index.html', current_user = None)
 
-@app.route('/profile')
+@app.route('/profile',methods = ['POST','GET'])
 def profile():
     current_user = dbmodel.getUserFromID(session['id'])
     if(session['username'] == "admin"):
@@ -538,3 +575,13 @@ def showSeating(screeningID):
         redirect('/interface/<int:screeningID>')
         return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],bookings=all_bookings,screeningOut=screening,screeningIDOut = screeningID,movieOut=movie)
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],bookings=all_bookings,screeningOut=screening,screeningIDOut = screeningID,movieOut=movie)
+
+#showing the ticket history log
+@app.route('/ticketsHistory/<int:memberID>',methods = ['POST','GET'])
+def showTickets(memberID):
+    current_user = dbmodel.getUserFromID(memberID)
+    tickets = dbmodel.getTickets(memberID)
+    bookings = dbmodel.getBookingTable()
+    screening = dbmodel.getScreeningTable()
+    movies = dbmodel.getMoviesTable()
+    return render_template("ticketLog.html",flag="1",name=current_user,moviesOut = movies,screeningsOut = screening,ticketsOut=tickets,userOut = current_user,bookingsOut = bookings)
