@@ -311,7 +311,7 @@ def seats():
             new_booking = bookingTable(rowID=rowID,screeningID=screening_id,seatStatus=1)
             dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
             prices = dbmodel.getPriceOfTickets()
-            totalprice = int(child)*prices["Under16"] + int(adult)*prices["Adult"] + int(elder)*prices["Senior"]
+            totalprice = int(child)*10 + int(adult)*15 + int(elder)*12
             new_totalprice = paymentTable(totalprice=totalprice) # count the total pirce
             dbmodel.addTotalprice(new_totalprice) # count the total pirce
             all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
