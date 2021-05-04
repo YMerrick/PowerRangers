@@ -281,6 +281,7 @@ def seats():
     screeningTable = dbmodel.ScreeningTable
     screenTable = dbmodel.ScreenTable
     bookingTable = dbmodel.BookingTable
+    paymentTable = dbmodel.PaymentTable
 
     screening_id = session["screeningID"] # from timeSelection.html
     screeningID = dbmodel.getScreeningID(screening_id) # 181th line in models.py, used for getting other data (seamNum,screenID,bookingTable)
@@ -309,9 +310,22 @@ def seats():
             print(rowID)
             new_booking = bookingTable(rowID=rowID,screeningID=screening_id,seatStatus=1)
             dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
+            totalprice = int(child)*10 + int(adult)*15 + int(elder)*12
+            new_totalprice = paymentTable(totalprice=totalprice) # count the total pirce
+            dbmodel.addTotalprice(new_totalprice) # count the total pirce
             all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
-        return render_template("seatTest.html",screeningID = screeningID, screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+            if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+                flag = "1" # when online
+                name = dbmodel.getUserFromID(session["id"])
+            else:
+                flag = "0" # when offline
+                name = None
+            return render_template('Paymentpage.html', flag = flag, name = name)
+            
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+
+
+    
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
@@ -346,6 +360,8 @@ def payTickets(id):
         dbmodel.db.session.commit()
         return render_template("pay.html",userOut = user,messageOut = message, name=name, flag = "1")
     return render_template("pay.html",userOut = user, name=name, flag = "1")
+
+
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def register():
@@ -436,15 +452,6 @@ def profile():
         return render_template('settings.html', admin = admin, name = current_user, flag = "1")
 
 
-@app.route('/payment')
-def paymentPage():
-    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
-        flag = "1" # when online
-        name = dbmodel.getUserFromID(session["id"])
-    else:
-        flag = "0" # when offline
-        name = None
-    return render_template('Paymentpage.html', flag = flag, name = name)
 
 @app.route('/addFunds')
 def addFunds(member_id):
