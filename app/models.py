@@ -312,6 +312,11 @@ class Models():
         self.db.session.commit()
         return True
 
+    def addTotalprice(self,totalPrice):
+        self.db.session.add(totalPrice)
+        self.db.session.commit()
+        return True
+
     def getUserFromID(self, memberID):
         member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
         return member
