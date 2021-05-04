@@ -310,6 +310,7 @@ def seats():
         if (int(child) + int(adult) + int(elder)) != len(resultList):
             flash("Need to select the number of seats correctly")
             return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
+        bookingList = []
         for row in resultList:
             if row == '':
                 flash("You didn't select any seats")
@@ -317,11 +318,8 @@ def seats():
             rowID = dbmodel.rowIDFinder(screenID,int(row))
             print(rowID)
             new_booking = bookingTable(rowID=rowID,screeningID=screening_id,seatStatus=1)
-            dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
-            prices = dbmodel.getPriceOfTickets()
-            totalprice = int(child)*prices["Under16"] + int(adult)*prices["Adult"] + int(elder)*prices["Senior"]
-            new_totalprice = paymentTable(totalprice=totalprice) # count the total pirce
-            dbmodel.addTotalprice(new_totalprice) # count the total pirce
+            bookingList.append(new_booking)
+            #dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
             all_bookings = dbmodel.getBookingInfoForScreening(screening_id) # for checking booking table
             if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
                 flag = "1" # when online
@@ -329,7 +327,34 @@ def seats():
             else:
                 flag = "0" # when offline
                 name = None
-            return redirect(url_for('paymentmethod'))
+        
+        bookingIDList = dbmodel.addBookingList(bookingList)
+        if 'bookingIDList' in session:
+            session['bookingIDList'] = bookingIDList
+            session.modified = True
+        else:
+            session['bookingIDList'] = bookingIDList
+        #Makes the ticket entries here
+        if 'logged_in' in session and session['logged_in'] == True:
+            ticketIDList = dbmodel.insertTicket(bookingIDList,int(child),int(adult),int(elder),session['id'])
+        else:
+            ticketIDList = dbmodel.insertTicket(bookingIDList,int(child),int(adult),int(elder))
+        if 'ticketIDList' in session:
+            session['ticketIDList'] = ticketIDList
+            session.modified = True
+        else:
+            session['ticketIDList'] = ticketIDList
+        #Inserts the total price of tickets
+        prices = dbmodel.getPriceOfTickets()
+        totalprice = int(child)*prices["Under16"] + int(adult)*prices["Adult"] + int(elder)*prices["Senior"]
+        new_totalprice = paymentTable(totalprice=totalprice) # count the total pirce
+        dbmodel.addTotalprice(new_totalprice) # count the total pirce
+        if 'paymentID' in session:
+            session['paymentID'] = dbmodel.getPaymentIDfromLastPrice(totalprice)
+            session.modified = True
+        else:
+            session['paymentID'] = dbmodel.getPaymentIDfromLastPrice(totalprice)
+        return redirect(url_for('paymentmethod'))
             
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
 
@@ -355,7 +380,6 @@ def payment():
         flag = "0"
     return render_template("paymentpage.html", flag = flag, name = name)
     
-
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
     all_members = dbmodel.getMemberTable()
@@ -507,16 +531,6 @@ def createCheckoutSession():
     except Exception as e:
         return jsonify(error=str(e)), 403
 
-@app.route('/payment')
-def payment():
-    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
-        flag = "1" # when online
-        name = dbmodel.getUserFromID(session["id"])
-    else:
-        flag = "0" # when offline
-        name = None
-    return render_template('Paymentpage.html', flag = flag, name = name)
-
 @app.route('/stripepayment')
 def paymentPage():
     stripeConfig = {
@@ -533,12 +547,19 @@ def paymentPage():
 
 @app.route('/cancel')
 def cancel():
-
+    bookings = session['bookingIDList']
+    for booking in bookings:
+        dbmodel.updateBookingTable(booking,seatStatus=0)
+    #delete the ticket entries
+    dbmodel.deleteTickets(session['ticketIDList'])
+    #delete the payment entry
+    dbmodel.deletePayment(session['paymentID'])
     return redirect(url_for('movieDetails'))
 
 @app.route('/success')
 def success():
-    
+    #Adds the payment to customer table and the tickets associated with that payment
+    dbmodel.insertCustomers(session['ticketIDList'],session['paymentID'])
     return redirect(url_for('movieDetails'))
 
 @app.route('/addFunds')
