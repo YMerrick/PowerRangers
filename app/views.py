@@ -452,14 +452,11 @@ def getKey():
 
 @app.route('/create-checkout-session')
 def createCheckoutSession():
-    stripeConfig = {
-        "publicKey" : stripeKeys["publishableKey"]
-    }
     domain = "http://localhost:5000/"
     try:
         checkoutSession = stripe.checkout.Session.create(
-            success_url = domain,
-            cancel_url = domain,
+            success_url = domain + '/success',
+            cancel_url = domain + '/cancel',
             line_items = [
                 {
                     "price": "price_1ImqtcIzSP7ZCoe9JeB7rEH6",
@@ -474,6 +471,16 @@ def createCheckoutSession():
         return jsonify(error=str(e)), 403
 
 @app.route('/payment')
+def payment():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        flag = "1" # when online
+        name = dbmodel.getUserFromID(session["id"])
+    else:
+        flag = "0" # when offline
+        name = None
+    return render_template('Paymentpage.html', flag = flag, name = name)
+
+@app.route('/stripepayment')
 def paymentPage():
     stripeConfig = {
         "publicKey" : stripeKeys["publishableKey"]
@@ -485,16 +492,17 @@ def paymentPage():
     else:
         flag = "0" # when offline
         name = None
-    return render_template('payment.html', flag = flag, name = name,publicKey = stripeConfig,checkoutSesh = checkoutSession)
+    return render_template('payment.html', flag = flag, name = name,publicKey = stripeConfig)
 
 @app.route('/cancel')
 def cancel():
 
-    pass
+    return redirect(url_for('movieDetails'))
 
 @app.route('/success')
 def success():
-    pass
+    
+    return redirect(url_for('movieDetails'))
 
 @app.route('/addFunds')
 def addFunds(member_id):
