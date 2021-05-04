@@ -299,10 +299,16 @@ def seats():
 
     if request.method == 'POST':
         check = request.form.get("seats")
+        child = request.form.get("child")
+        adult = request.form.get("adult")
+        elder = request.form.get("elder")
         result = request.form
         resultList = list(request.form.listvalues())
         resultList = resultList[0]
         resultList = resultList[0].split(",")
+        if (int(child) + int(adult) + int(elder)) != len(resultList):
+            flash("Need to select the number of seats correctly")
+            return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
         for row in resultList:
             if row == '':
                 flash("You didn't select any seats")

@@ -9,7 +9,7 @@ input[type=checkbox]
 }
 </style>
 <div class="container-fluid">
-  <div class="paragraph" style="height:880px;">
+  <div class="paragraph" style="height:960px;">
     <div class="center">
       <h1 style ="font-family:serif;">Tick the available box</h1></br>
     </div>
@@ -94,13 +94,122 @@ input[type=checkbox]
     <div class="input-group flex-nowrap" style="width:220px;margin:auto;">
       <input type="text" class="form-control" id="show" name="seats" style="height:34px;"> <!--will print seats selected -->
     </div>
+      <table class="table table-borderless" style="width:300px;" align="center">
+        <thead>
+          <tr>
+            <th scope="col" style="color:white;">&nbsp;&nbsp;Child</th>
+            <th scope="col" style="color:white;">&nbsp;&nbsp;Adult</th>
+            <th scope="col" style="color:white;">&nbsp;&nbsp;Older</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td scope="row">
+              {% if movie.movieID == 14 %}
+                <button class="btn btn-outline-secondary" onclick="clicked1(-1); change1_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;" disabled checked>-</button>
+                <span id="test1" style="color:white;">--</span>
+                <button class="btn btn-outline-secondary" onclick="clicked1(1); change1_up();" style= "margin-left:5px; color:white; padding:2px; border: 1px solid white;" disabled checked>+</button>
+              {% else %}
+                <button class="btn btn-outline-secondary" onclick="clicked1(-1); change1_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;">-</button>
+                <span id="test1" style="color:white;">--</span>
+                <button class="btn btn-outline-secondary" onclick="clicked1(1); change1_up();" style= "margin-left:5px; color:white; padding:2px; border: 1px solid white;">+</button>
+              {% endif %}
+           </td>
+           <td>
+             <button class="btn btn-outline-secondary" onclick="clicked2(-1); change2_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;">-</button>
+             <span id="test2" style="color:white;">--</span>
+             <button class="btn btn-outline-secondary" onclick="clicked2(1); change2_up();" style= "margin-left:5px; color:white; padding:2px; border: 1px solid white;">+</button>
+           </td>
+           <td>
+             <button class="btn btn-outline-secondary" onclick="clicked3(-1); change3_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;">-</button>
+             <span id="test3" style="color:white;">--</span>
+             <button class="btn btn-outline-secondary" onclick="clicked3(1); change3_up();" style= "margin-left:5px; color:white;padding:2px;  border: 1px solid white;">+</button>
+           </td>
+         </tr>
+      </tbody>
+    </table>
     <form action = "/seats" method = "POST" align="center">
-      <input type="hidden" id="showing" name="seats" style="height:34px;">
-     <button type ="submit" class="btn btn-outline-secondary" style="color:black; border: 1px solid black; padding:4px; margin-top:20px;">Booking</button>
+      <input type="hidden" id="showing" name="seats" style="">
+      <input type="hidden" id="child" name="child" value="0">
+      <input type="hidden" id="adult" name="adult" value="0">
+      <input type="hidden" id="elder" name="elder" value="0">
+     <button type ="submit" class="btn btn-outline-secondary" style="color:white; border: 1px solid white; padding:4px; margin-top:20px;">Booking</button>
     </form>
   </div>
 </div>
 <script>
+var count1 = 0;
+var count2 = 0;
+var count3 = 0;
+function clicked1(n) {
+    var test = document.getElementById("test1");
+    count1 = count1 + n;
+    if (count1 <= 0)
+    {
+      count1 = 0;
+    }
+    test.innerHTML = count1;
+}
+function clicked2(n) {
+    var test = document.getElementById("test2");
+    count2 = count2 + n;
+    if (count2 <= 0)
+    {
+      count2 = 0;
+    }
+    test.innerHTML = count2;
+}
+function clicked3(n) {
+    var test = document.getElementById("test3");
+    count3 = count3 + n;
+    if (count3 <= 0)
+    {
+      count3 = 0;
+    }
+    test.innerHTML = count3;
+}
+function change1_up() {
+    var child = document.getElementById('child');
+    var i = parseInt(child.value, 10);
+    child.value = ++i;
+}
+function change1_down() {
+    var child = document.getElementById('child');
+    var i = parseInt(child.value, 10);
+    if (child.value == 0)
+    {
+      return;
+    }
+    child.value = --i;
+}
+function change2_up() {
+    var adult = document.getElementById('adult');
+    var i = parseInt(adult.value, 10);
+    adult.value = ++i;
+}
+function change2_down() {
+    var adult = document.getElementById('adult');
+    var i = parseInt(adult.value, 10);
+    if (adult.value == 0)
+    {
+      return;
+    }
+    adult.value = --i;
+}
+function change3_up() {
+    var elder = document.getElementById('elder');
+    var i = parseInt(elder.value, 10);
+    elder.value = ++i;
+}
+function change3_down() {
+    var elder = document.getElementById('elder');
+    var i = parseInt(elder.value, 10);
+    if (elder.value == 0)
+    {
+      return;
+    }
+    elder.value = --i;
+}
 function checkbox(){
 
 var checkboxes = document.getElementsByName('seats');
