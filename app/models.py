@@ -317,6 +317,24 @@ class Models():
         self.db.session.commit()
         return True
 
+    def getPriceFromPaymentID(self,paymentID):
+        price = (
+            self.db.session.query(self.PaymentTable.totalprice)
+            .filter_by(paymentID = paymentID)
+        )
+        return price.first()
+
+    def getPriceOfTickets(self):
+        prices = (
+            self.db.session.query(self.CustomerType)
+        ).all()
+        priceDict = {
+            "Under16":prices[0].price,
+            "Adult":prices[1].price,
+            "Senior":prices[2].price
+        }
+        return priceDict
+
     def getUserFromID(self, memberID):
         member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
         return member
