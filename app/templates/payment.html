@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <head>  
     <title>Checkout</title>
-    <script src="https://js.stripe.com/v3/"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://js.stripe.com/v3/"></script>  <!-- new -->
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
 </head>
 <body>
     <section class="section">
@@ -16,20 +19,20 @@ fetch("/config")
 .then((result) => { return result.json(); })
 .then((data) => {
   // Initialize Stripe.js
-  const stripe = Stripe(data.publicKey);
-});
+  const stripe = Stripe("{{publicKey.publicKey}}");
 
-document.querySelector("#submitBtn").addEventListener("click", () => {
+  document.querySelector("#submitBtn").addEventListener("click", () => {
     // Get Checkout Session ID
     fetch("/create-checkout-session")
     .then((result) => { return result.json(); })
     .then((data) => {
       console.log(data);
       // Redirect to Stripe Checkout
-      return stripe.redirectToCheckout({sessionId: data.sessionId})
+      return stripe.redirectToCheckout({sessionId: data.sessionID})
     })
     .then((res) => {
       console.log(res);
     });
   });
+});
 </script>

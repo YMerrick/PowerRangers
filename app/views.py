@@ -444,27 +444,35 @@ def getKey():
     }
     return jsonify(stripeConfig)
 
+@app.route('/create-checkout-session')
+def createCheckoutSession():
+    stripeConfig = {
+        "publicKey" : stripeKeys["publishableKey"]
+    }
+    domain = "http://localhost:5000/"
+    try:
+        checkoutSession = stripe.checkout.Session.create(
+            success_url = domain,
+            cancel_url = domain,
+            line_items = [
+                {
+                    "price": "price_1ImqtcIzSP7ZCoe9JeB7rEH6",
+                    "quantity": 1,
+                }
+            ],
+            mode = 'payment',
+            payment_method_types = ['card'],
+        )
+        return jsonify({"sessionID":checkoutSession["id"]})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
 @app.route('/payment')
 def paymentPage():
     stripeConfig = {
         "publicKey" : stripeKeys["publishableKey"]
     }
     domain = "http://localhost:5000/"
-    checkoutSession = stripe.checkout.Session.create(
-        success_url = domain,
-        cancel_url = domain,
-        line_items = [
-            {
-                "name": "Cinema Ticket",
-                "currency": "gbp",
-                "quantity": 1,
-                "amount": 1200
-            }
-        ],
-        mode = 'payment',
-        payment_method_types = ['card'],
-        stripe_account = 'acct_1ImqEtIzSP7ZCoe9'
-    )
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         flag = "1" # when online
         name = dbmodel.getUserFromID(session["id"])
@@ -472,6 +480,15 @@ def paymentPage():
         flag = "0" # when offline
         name = None
     return render_template('payment.html', flag = flag, name = name,publicKey = stripeConfig,checkoutSesh = checkoutSession)
+
+@app.route('/cancel')
+def cancel():
+
+    pass
+
+@app.route('/success')
+def success():
+    pass
 
 @app.route('/addFunds')
 def addFunds(member_id):
