@@ -319,6 +319,55 @@ class Models():
         self.db.session.commit()
         return True
 
+    def insertTicket(self,bookingIDList,child=0,adult=0,senior=0,memberId = None):
+        childCount = child
+        adultCount = adult
+        seniorCount = senior
+        ticketIDList = []
+        for booking in bookingIDList:
+            if childCount > 0:
+                #add child ticket here
+                ticketIDList.append(self.addTicket(booking,1,memberId))
+                childCount -= 1
+                continue
+            if adultCount > 0:
+                #add adult ticket here
+                ticketIDList.append(self.addTicket(booking,2,memberId))
+                adultCount -= 1
+                continue
+            if seniorCount > 0:
+                #add senior ticket here
+                ticketIDList.append(self.addTicket(booking,3,memberId))
+                seniorCount -= 1
+                continue
+        return ticketIDList
+
+    def addTicket(self,bookingId,customerTypeId,memberId=None):
+        if memberId != None:
+            ticket = self.TicketTable(bookingID=bookingId,customerTypeID=customerTypeId,memberID = memberId)
+        else:
+            ticket = self.TicketTable(bookingID=bookingId,customerTypeID=customerTypeId)
+        self.db.session.add(ticket)
+        self.db.session.commit()
+        ticketId = self.db.session.query(self.TicketTable.ticketID).order_by(self.TicketTable.ticketID.desc()).first().ticketID
+        return ticketId
+
+    def deleteTickets(self,ticketIDList):
+        for ticket in ticketIDList:
+            self.deleteTicket(ticket)
+
+    def deleteTicket(self,ticketId):
+        self.db.session.query(self.TicketTable).filter_by(ticketID = ticketId).delete()
+        self.db.session.commit()
+        pass
+
+    def deletePayment(self,paymentId):
+        self.db.session.query(self.PaymentTable).filter_by(paymentID = paymentId).delete()
+        self.db.session.commit()
+
+    def getPaymentIDfromLastPrice(self,totalPrice):
+        return self.db.session.query(self.PaymentTable.paymentID).order_by(self.PaymentTable.paymentID.desc()).filter_by(totalprice = totalPrice).first().paymentID
+
     def getPriceFromPaymentID(self,paymentID):
         price = (
             self.db.session.query(self.PaymentTable.totalprice)
@@ -334,9 +383,23 @@ class Models():
 
     def updatePayment(self,paymentId,paymentMethod=None,chargeId=None):
         paymentRecord = self.getPayment(paymentId)
-        paymentRecord.paymentMethod = paymentMethod
-        paymentRecord.chargeID = chargeId
+        if paymentMethod != None:
+            paymentRecord.paymentMethod = paymentMethod
+        if chargeId != None:
+            paymentRecord.chargeID = chargeId
         self.db.session.commit()
+
+    def updateBookingTable(self,bookingId,seatStatus=None):
+        booking = self.db.session.query(self.BookingTable).get(bookingId)
+        if seatStatus != None:
+            booking.seatStatus = seatStatus
+        self.db.session.commit()
+
+    def insertCustomers(self,ticketIdList,paymentId):
+        for ticket in ticketIdList:
+            customer = self.CustomerTable(ticketID=ticket,paymentID=paymentId)
+            self.db.session.add(customer)
+            self.db.session.commit()
 
     def getPriceOfTickets(self):
         prices = (
@@ -399,12 +462,22 @@ class Models():
         elif(screenIDIn == 3):
             return 108+row
 
+    def addBookingList(self,bookingList):
+        if (type(bookingList) == list):
+            bookingIDs = []
+            for booking in bookingList:
+                self.addBooking(booking)
+                newID = self.db.session.query(self.BookingTable.bookingID).filter_by(rowID = booking.rowID,screeningID = booking.screeningID).first()
+                bookingIDs.append(newID.bookingID)
+            return bookingIDs
+        else:
+            return None
+
     #add booking to the database
     def addBooking(self,bookingIn):
         memberTable = self.BookingTable
         self.db.session.add(bookingIn)
         self.db.session.commit()
-        pass
 
     def getRowForScreening(self,screenId):
         row = (
