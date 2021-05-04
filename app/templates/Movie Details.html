@@ -39,10 +39,10 @@
             {% endif %}
           {% endif %}
           <div class="column" style="text-align: left; font-size: 22px; line-height:150%;">
-            <button type="hidden" name="movie" value={{movie.movieID}} style ="background-color:#ffffff; border: 1px solid black;background-color:black;"><img src="{{url_for('static', filename=movie.imagePath)}}" width=320 height=300></button><br>
+            <button type="hidden" name="movie" value={{movie.movieID}} style ="background-color:#ffffff; border: 1px solid black;background-color:black;"><img src="{{url_for('static', filename=movie.imagePath)}}" width=320 height=400></button><br>
            <p1>{{movie.title}}</p1></br></br>
           </div>
-          <button class="btn btn-outline-secondary push" onclick="show(this.value);"data-toggle="modal" data-target="#myModal" type="button" value = {{movie.movieID}} style= "position:relative; margin-top: 400px; margin-left: -100px; height:40px;">Booking</button>
+          <button class="btn btn-outline-secondary push" onclick="show(this.value);"data-toggle="modal" data-target="#myModal" type="button" value = {{movie.movieID}} style= "position:relative; margin-top: 500px; margin-left: -100px; height:40px;">Booking</button>
           <script>
             function show(val)
             {
