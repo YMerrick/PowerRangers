@@ -17,7 +17,7 @@
       <hr class="one">
       <input class="form-control" required type="text" name="title" value="{{movie.title}}" style="margin:auto; width: 1000px; font-size: 18px;">
       <hr class="one">
-      <div class="row" style="margin-top:30px;">
+      <div class="row">
         <div class="column" style="font-size:20px; text-align: left;">
           <div class="form-floating">
             <label for="floatingInputGrid">Directors</label>
@@ -34,7 +34,7 @@
         <div class="column" style = "margin-left: 70px; width: 60%; font-size:18px;">
           <h3> Synopsis </h3>
           <textarea class="form-control" required type="text" name="blurb" value="" rows="4" cols="100" style="margin-top: 30px; text-align: left; resize: none;">{{movie.blurb}}</textarea>
-          <button class="btn btn-outline-secondary" type="submit" value="update" style="margin-top: 20px;color:black; border: 1px solid black;">Update</button>
+          <button class="btn btn-outline-secondary push" type="submit" value="update" style="margin-top: 20px;">Update</button>
         </div>
       </form>
     </div>
@@ -68,7 +68,7 @@
         <h3> Synopsis </h3>
         <p style="text-align: left;"> {{movie.blurb}} </p>
         <form method="POST">
-          <button class="btn btn-outline-secondary" type="submit" value = "{{movie.movieID}}" name = "movie" style="color:black; border: 1px solid black;">Booking</button>
+          <button class="btn btn-outline-secondary push" type="submit" value = "{{movie.movieID}}" name = "movie">Booking</button>
         </form>
       </div>
     </div>

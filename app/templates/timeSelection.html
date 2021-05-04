@@ -5,7 +5,7 @@
   <div class="paragraph" style="height:930px; text-align: center;">
     <form method = "POST" action = "">
       <h4>Time Selection</h4><br>
-      <table class="table table-bordered" align="center">
+      <table class="table table-bordered" align="center" style="color:white;">
       <thead>
         <tr>
           <th scope="col">Movie Title</th>
@@ -45,7 +45,7 @@
               {% endif %}
               <td>{{time.time}}</td>
               <td>{{availableSeat.count}} </td>
-              <td><button type="submit" name="movie"value={{time.screeningID}} class="btn btn-outline-secondary" style="color:black; border: 1px solid black; padding:4px;">Booking</button></td>
+              <td><button type="submit" name="movie"value={{time.screeningID}} class="btn btn-outline-secondary push" style="padding:4px;">Booking</button></td>
             </tr>
           {% endfor %}
       </table>

@@ -5,11 +5,11 @@
   <div class="paragraph" style="height:100%; text-align: center;">
     <form method = "POST" action = "http://localhost:5000/genre">
         <label for = "genre">Enter to add a genre: </label>
-        <input type = "text" name = "genre">
-        <input type="submit" value="Submit">
+        <input class="form-control" type = "text" name = "genre" style="width:200px; margin:auto;">
+        <button class="btn btn-outline-secondary push" type = "submit" value = "submit" style="margin-top: 20px;">Submit</button>
     </form>
     <h4>These are all the current genres present:</h4><br>
-    <table class="table table-bordered" style="width: 300px; margin-left: 540px;">
+    <table class="table table-bordered" style="width: 300px; margin-left: 540px; color: white">
         {% for genre in genres %}
           <tr>
             <td>{{loop.index}}</td>

@@ -9,7 +9,7 @@ input[type=checkbox]
 }
 </style>
 <div class="container-fluid">
-  <div class="paragraph" style="height:900px;">
+  <div class="paragraph" style="height:960px;">
     <div class="center">
       <h1 style ="font-family:serif;">Tick the available box</h1></br>
     </div>
@@ -94,46 +94,46 @@ input[type=checkbox]
     <div class="input-group flex-nowrap" style="width:220px;margin:auto;">
       <input type="text" class="form-control" id="show" name="seats" style="height:34px;"> <!--will print seats selected -->
     </div>
-      <table class="table table-borderless" style="width:400px;" align="center">
+      <table class="table table-borderless" style="width:300px;" align="center">
         <thead>
           <tr>
-            <th scope="col">Child</th>
-            <th scope="col">Adult</th>
-            <th scope="col">Older</th>
+            <th scope="col" style="color:white;">&nbsp;&nbsp;Child</th>
+            <th scope="col" style="color:white;">&nbsp;&nbsp;Adult</th>
+            <th scope="col" style="color:white;">&nbsp;&nbsp;Older</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td scope="row">
               {% if movie.movieID == 14 %}
-                <button class="btn btn-outline-secondary" onclick="clicked1(-1); change1_down();" style= "margin-right:5px; color:black; padding:2px; border: 1px solid black;" disabled checked>-</button>
-                <span id="test1">--</span>
-                <button class="btn btn-outline-secondary" onclick="clicked1(1); change1_up();" style= "margin-left:5px; color:black; padding:2px; border: 1px solid black;" disabled checked>+</button>
+                <button class="btn btn-outline-secondary" onclick="clicked1(-1); change1_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;" disabled checked>-</button>
+                <span id="test1" style="color:white;">--</span>
+                <button class="btn btn-outline-secondary" onclick="clicked1(1); change1_up();" style= "margin-left:5px; color:white; padding:2px; border: 1px solid white;" disabled checked>+</button>
               {% else %}
-                <button class="btn btn-outline-secondary" onclick="clicked1(-1); change1_down();" style= "margin-right:5px; color:black; padding:2px; border: 1px solid black;">-</button>
-                <span id="test1">--</span>
-                <button class="btn btn-outline-secondary" onclick="clicked1(1); change1_up();" style= "margin-left:5px; color:black; padding:2px; border: 1px solid black;">+</button>
+                <button class="btn btn-outline-secondary" onclick="clicked1(-1); change1_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;">-</button>
+                <span id="test1" style="color:white;">--</span>
+                <button class="btn btn-outline-secondary" onclick="clicked1(1); change1_up();" style= "margin-left:5px; color:white; padding:2px; border: 1px solid white;">+</button>
               {% endif %}
            </td>
            <td>
-             <button class="btn btn-outline-secondary" onclick="clicked2(-1); change2_down();" style= "margin-right:5px; color:black; padding:2px; border: 1px solid black;">-</button>
-             <span id="test2">--</span>
-             <button class="btn btn-outline-secondary" onclick="clicked2(1); change2_up();" style= "margin-left:5px; color:black; padding:2px; border: 1px solid black;">+</button>
+             <button class="btn btn-outline-secondary" onclick="clicked2(-1); change2_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;">-</button>
+             <span id="test2" style="color:white;">--</span>
+             <button class="btn btn-outline-secondary" onclick="clicked2(1); change2_up();" style= "margin-left:5px; color:white; padding:2px; border: 1px solid white;">+</button>
            </td>
            <td>
-             <button class="btn btn-outline-secondary" onclick="clicked3(-1); change3_down();" style= "margin-right:5px; color:black; padding:2px; border: 1px solid black;">-</button>
-             <span id="test3">--</span>
-             <button class="btn btn-outline-secondary" onclick="clicked3(1); change3_up();" style= "margin-left:5px; color:black;padding:2px;  border: 1px solid black;">+</button>
+             <button class="btn btn-outline-secondary" onclick="clicked3(-1); change3_down();" style= "margin-right:5px; color:white; padding:2px; border: 1px solid white;">-</button>
+             <span id="test3" style="color:white;">--</span>
+             <button class="btn btn-outline-secondary" onclick="clicked3(1); change3_up();" style= "margin-left:5px; color:white;padding:2px;  border: 1px solid white;">+</button>
            </td>
          </tr>
       </tbody>
     </table>
     <form action = "/seats" method = "POST" align="center">
-      <input type="hidden" id="showing" name="seats">
+      <input type="hidden" id="showing" name="seats" style="">
       <input type="hidden" id="child" name="child" value="0">
       <input type="hidden" id="adult" name="adult" value="0">
       <input type="hidden" id="elder" name="elder" value="0">
-     <button type ="submit" class="btn btn-outline-secondary" style="color:black; border: 1px solid black; padding:4px; margin-top:20px;">Booking</button>
+     <button type ="submit" class="btn btn-outline-secondary" style="color:white; border: 1px solid white; padding:4px; margin-top:20px;">Booking</button>
     </form>
   </div>
 </div>
