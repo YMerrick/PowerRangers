@@ -320,11 +320,19 @@ def seats():
             else:
                 flag = "0" # when offline
                 name = None
-            return render_template('Paymentpage.html', flag = flag, name = name)
+            return redirect(url_for('payment'))
             
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
 
-
+@app.route('/payment',  methods=['GET', 'POST'])
+def payment():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    return render_template("paymentpage.html", flag = flag, name = name)
     
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
