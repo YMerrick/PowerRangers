@@ -32,6 +32,7 @@ class Models():
         self.TicketTable     =   Base.classes.TicketTable
         self.MovieGenreTable =   Base.classes.MovieGenreTable
         self.GenreTable      =   Base.classes.GenreTable
+        self.CustomerType    =   Base.classes.CustomerType
 
     #Gets all the infromation from MoviesTable and dumps it in a list
     #If an id is passed then it returns the row corresponding to the id
@@ -324,15 +325,27 @@ class Models():
             .filter_by(paymentID = paymentID)
         )
         return price.first()
+    
+    def getPayment(self,paymentId):
+        payment = (
+            self.db.session.query(self.PaymentTable).get(paymentId)
+        )
+        return payment
+
+    def updatePayment(self,paymentId,paymentMethod=None,chargeId=None):
+        paymentRecord = self.getPayment(paymentId)
+        paymentRecord.paymentMethod = paymentMethod
+        paymentRecord.chargeID = chargeId
+        self.db.session.commit()
 
     def getPriceOfTickets(self):
         prices = (
             self.db.session.query(self.CustomerType)
         ).all()
         priceDict = {
-            "Under16":prices[0].price,
-            "Adult":prices[1].price,
-            "Senior":prices[2].price
+            "Under16":int(prices[0].price),
+            "Adult":int(prices[1].price),
+            "Senior":int(prices[2].price)
         }
         return priceDict
 
