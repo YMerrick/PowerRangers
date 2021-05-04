@@ -28,7 +28,11 @@ TicketTable = Base.classes.TicketTable'''
 #In order to get data from the database, need to query before hand and then pass the JSON data to it
 #If we want to do searches and sort by certain aspects of the database then we have to reload the page with a condition in the query to return the data with
 #This just means we have to call the page again with a post this time
-@app.route('/')
+@app.route("/")
+def home():
+  return redirect(url_for('movieDetails'))
+  
+@app.route('/testing')
 def index():
     #dbmodel.makeTicketPdf(0)
     movies = dbmodel.getMovie()
@@ -322,7 +326,7 @@ def seats():
                 flag = "0" # when offline
                 name = None
             return redirect(url_for('paymentmethod'))
-            
+
     return render_template("seatTest.html",screenOut = screen,rowDict = ['A','B','C','D','E','F','G'],movie = movie, bookings=all_bookings, name = name, flag = flag)
 
 @app.route('/paymentmethod',  methods=['GET', 'POST'])# if choose to pay by cash will create a unpaid ticket which will skip over the online paymentpage
@@ -334,7 +338,7 @@ def paymentmethod():
     else:
         name = None
         flag = "0"
-    
+
     return render_template("paymentmethod.html", flag = flag, name = name)
 
 @app.route('/payment',  methods=['GET', 'POST'])
@@ -346,7 +350,7 @@ def payment():
         name = None
         flag = "0"
     return render_template("paymentpage.html", flag = flag, name = name)
-    
+
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
