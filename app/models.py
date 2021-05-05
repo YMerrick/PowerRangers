@@ -226,7 +226,7 @@ class Models():
     #getting tickets
     def getTickets(self,memberIDIn):
         ticketsTable = self.TicketTable
-        tickets = self.db.session.query(ticketsTable).filter_by(memberID=str(memberIDIn)).all()
+        tickets = self.db.session.query(ticketsTable).filter_by(memberID=int(memberIDIn)).all()
         return tickets
 
     #adding members into member
