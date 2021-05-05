@@ -390,11 +390,14 @@ def paymentmethod():
         name = None
         flag = "0"
     if request.method == 'POST':
-        return redirect(url_for('paymentsuccess'),flag = flag, name = name)
-        # else:
-        #     flash("YOU DONT HAVE ENOUGH FUND!")
-            # return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)    
+        if (name.walletBalance < payment.totalprice):
+            number = float(payment.totalprice)-float(name.walletBalance)
+            flash("no enough funds")
 
+            return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+        else:
+            name.walletBalance = float(name.walletBalance) - float(payment.totalprice)
+            return redirect(url_for('paymentsuccess'))
     return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
