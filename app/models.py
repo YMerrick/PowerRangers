@@ -142,6 +142,7 @@ class Models():
     def addGenre(self,genreIn):
         self.db.session.add(genreIn)
         self.db.session.commit()
+        self.db.session.close()
         return True
 
     #returns True if genres have been added to movie and false otherwise
@@ -154,6 +155,7 @@ class Models():
                 newGenreForMovie = genreTable(movieID=movieId,genreID=genreId)
                 self.db.session.add(newGenreForMovie)
             self.db.session.commit()
+            self.db.session.close()
             return True
         return False
 
@@ -161,6 +163,7 @@ class Models():
         self.db.session.add(movieIn)
         self.db.session.commit()
         self.addGenreForMovie(genre,movieIn.title)
+        self.db.session.close()
         return 0
 
     def getTitle(self, title = "Demon Slayer: Kimetsu no Yaiba the Movie: Mugen Train"):
@@ -231,6 +234,7 @@ class Models():
         memberTable = self.MemberTable
         self.db.session.add(memberIn)
         self.db.session.commit()
+        self.db.session.close()
         return 0
 
     def getMember(self,memberID):
@@ -312,11 +316,13 @@ class Models():
     def addMember(self,memberIn):
         self.db.session.add(memberIn)
         self.db.session.commit()
+        self.db.session.close()
         return True
 
     def addTotalprice(self,totalPrice):
         self.db.session.add(totalPrice)
         self.db.session.commit()
+        self.db.session.close()
         return True
 
     def insertTicket(self,bookingIDList,child=0,adult=0,senior=0,memberId = None):
@@ -350,6 +356,7 @@ class Models():
         self.db.session.add(ticket)
         self.db.session.commit()
         ticketId = self.db.session.query(self.TicketTable.ticketID).order_by(self.TicketTable.ticketID.desc()).first().ticketID
+        self.db.session.close()
         return ticketId
 
     def deleteTickets(self,ticketIDList):
@@ -359,11 +366,12 @@ class Models():
     def deleteTicket(self,ticketId):
         self.db.session.query(self.TicketTable).filter_by(ticketID = ticketId).delete()
         self.db.session.commit()
-        pass
+        self.db.session.close()
 
     def deletePayment(self,paymentId):
         self.db.session.query(self.PaymentTable).filter_by(paymentID = paymentId).delete()
         self.db.session.commit()
+        self.db.session.close()
 
     def getPaymentIDfromLastPrice(self,totalPrice):
         return self.db.session.query(self.PaymentTable.paymentID).order_by(self.PaymentTable.paymentID.desc()).filter_by(totalprice = totalPrice).first().paymentID
@@ -388,18 +396,21 @@ class Models():
         if chargeId != None:
             paymentRecord.chargeID = chargeId
         self.db.session.commit()
+        self.db.session.close()
 
     def updateBookingTable(self,bookingId,seatStatus=None):
         booking = self.db.session.query(self.BookingTable).get(bookingId)
         if seatStatus != None:
             booking.seatStatus = seatStatus
         self.db.session.commit()
+        self.db.session.close()
 
     def insertCustomers(self,ticketIdList,paymentId):
         for ticket in ticketIdList:
-            customer = self.CustomerTable(ticketID=ticket,paymentID=paymentId)
+            customer = self.CustomerTable(ticketID=int(ticket),paymentID=paymentId)
             self.db.session.add(customer)
             self.db.session.commit()
+            self.db.session.close()
 
     def getPriceOfTickets(self):
         prices = (
@@ -413,6 +424,7 @@ class Models():
         return priceDict
 
     def getUserFromID(self, memberID):
+        print(type(memberID),memberID)
         member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
         return member
 
@@ -449,6 +461,9 @@ class Models():
         file.output(name = location + 'test.pdf')
         file.close()
 
+    def checkBooking(self,rowId,screeningId):
+        return self.db.session.query(self.BookingTable).filter_by(rowID = rowId,screeningID=screeningId).first()
+
     def updateMovieRecord(self,movieId):
         self.db.session
         pass
@@ -466,9 +481,14 @@ class Models():
         if (type(bookingList) == list):
             bookingIDs = []
             for booking in bookingList:
-                self.addBooking(booking)
-                newID = self.db.session.query(self.BookingTable.bookingID).filter_by(rowID = booking.rowID,screeningID = booking.screeningID).first()
-                bookingIDs.append(newID.bookingID)
+                checkBookingID = self.checkBooking(booking.rowID,booking.bookingID)
+                if(checkBookingID != None):
+                    self.updateBookingTable(checkBookingID.bookingID,1)
+                    bookingIDs.append(checkBookingID.bookingID)
+                else:
+                    self.addBooking(booking)
+                    newID = self.db.session.query(self.BookingTable.bookingID).filter_by(rowID = booking.rowID,screeningID = booking.screeningID).first()
+                    bookingIDs.append(newID.bookingID)
             return bookingIDs
         else:
             return None

@@ -60,6 +60,7 @@ def mainPage():
 @app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
     session.pop('_flashes', None)
+    print(session)
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         flag = "1"
         name = dbmodel.getUserFromID(session["id"])
@@ -303,6 +304,16 @@ def seats():
         child = request.form.get("child")
         adult = request.form.get("adult")
         elder = request.form.get("elder")
+        ageTicketNum = {
+            "child":child,
+            "adult":adult,
+            "senior":elder
+        }
+        if 'ageTicketNum' in session:
+            session['ageTicketNum'] = ageTicketNum
+            session.modified = True
+        else:
+            session['ageTicketNum'] = ageTicketNum
         result = request.form
         resultList = list(request.form.listvalues())
         resultList = resultList[0]
@@ -453,12 +464,14 @@ def login():
     name = None
     session.pop('_flashes', None)
     if request.method == 'POST':
+        print(session)
         #result = request.form
         #memberTable = dbmodel.MemberTable
         #members = dbmodel.getMemberTable()
         username= request.form.get('username')
         email = request.form.get('email')
         ID = str(username)+"@"+str(email)
+        print(ID,type(ID))
         member = dbmodel.getUserFromEmail(ID)
         if member:
             if(check_password_hash(member.password, request.form.get('password'))): # change result.get('password') to this as it causes error
@@ -514,25 +527,41 @@ def getKey():
 @app.route('/create-checkout-session')
 def createCheckoutSession():
     domain = "http://localhost:5000/"
+    i = session["ageTicketNum"]
+    lineItems = []
+    if int(i["child"]) > 0:
+        lineItems.append({"price":"price_1InUrNIzSP7ZCoe9VbVVZMEJ","quantity":int(i["child"])})
+    if int(i["adult"]) > 0:
+        lineItems.append({"price":"price_1InUr3IzSP7ZCoe95TQXGcy1","quantity":int(i["adult"])})
+    if int(i["senior"]) > 0:
+        lineItems.append({"price":"price_1ImqtcIzSP7ZCoe9JeB7rEH6","quantity":int(i["senior"])})
+    print(lineItems)
     try:
-        checkoutSession = stripe.checkout.Session.create(
-            success_url = domain + '/success',
-            cancel_url = domain + '/cancel',
-            line_items = [
-                {
-                    "price": "price_1ImqtcIzSP7ZCoe9JeB7rEH6",
-                    "quantity": 1,
-                }
-            ],
-            mode = 'payment',
-            payment_method_types = ['card'],
-        )
+        if "logged_in" in session and session["logged_in"] == True:
+            member = dbmodel.getMember(int(session['id']))
+            checkoutSession = stripe.checkout.Session.create(
+                success_url = domain + '/success',
+                cancel_url = domain + '/cancel',
+                line_items = lineItems,
+                mode = 'payment',
+                payment_method_types = ['card'],
+                customer = member.stripeCustomerID
+            )
+        else:
+            checkoutSession = stripe.checkout.Session.create(
+                success_url = domain + '/success',
+                cancel_url = domain + '/cancel',
+                line_items = lineItems,
+                mode = 'payment',
+                payment_method_types = ['card'],
+            )
+        session['checkout'] = checkoutSession
         return jsonify({"sessionID":checkoutSession["id"]})
     except Exception as e:
         return jsonify(error=str(e)), 403
 
 @app.route('/stripepayment')
-def paymentPage():
+def paymentPage():  
     stripeConfig = {
         "publicKey" : stripeKeys["publishableKey"]
     }
@@ -558,8 +587,10 @@ def cancel():
 
 @app.route('/success')
 def success():
+    #Send the tickets to the email of the customer
     #Adds the payment to customer table and the tickets associated with that payment
-    dbmodel.insertCustomers(session['ticketIDList'],session['paymentID'])
+    dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
+    dbmodel.updatePayment(int(session['paymentID']),'card',session['checkout']['payment_intent'])
     return redirect(url_for('movieDetails'))
 
 @app.route('/addFunds')

@@ -64,7 +64,7 @@ input[type=checkbox]
             {% if ns4.seatNo == 0 %}
               {% set ns4.seatNo = 12 %}
             {% endif %}
-            {% if rowDict[ns.count-1] == booking.rowNumber and ns4.seatNo == booking.seatCount and booking.screeningID == screeningIDOut %}
+            {% if rowDict[ns.count-1] == booking.rowNumber and ns4.seatNo == booking.seatCount and booking.screeningID == screeningIDOut and booking.BookingTable.seatStatus == True %}
               {% set ns2.found = True %}
             {% endif %}
           {% endfor %}
