@@ -36,7 +36,11 @@ TicketTable = Base.classes.TicketTable'''
 #In order to get data from the database, need to query before hand and then pass the JSON data to it
 #If we want to do searches and sort by certain aspects of the database then we have to reload the page with a condition in the query to return the data with
 #This just means we have to call the page again with a post this time
-@app.route('/')
+@app.route("/")
+def home():
+  return redirect(url_for('movieDetails'))
+
+@app.route('/testing')
 def index():
     #dbmodel.makeTicketPdf(0)
     movies = dbmodel.getMovie()
@@ -173,7 +177,6 @@ def member():
 
 @app.route('/movieInfo', methods=['GET', 'POST'])
 def movieInfo():
-    print(session)
     if "logged_in" in session and session["logged_in"] == True:
         name = dbmodel.getUserFromID(session["id"])
         flag = "1"
@@ -237,7 +240,6 @@ def genre():
         result = request.form
         genreTable = dbmodel.GenreTable
         genreDesc = result.get('genre')
-        print(genreDesc)
         newGenre = genreTable(genreDesc = genreDesc)
         dbmodel.addGenre(newGenre)
     return render_template('genre.html',
@@ -327,7 +329,6 @@ def seats():
                 flash("You didn't select any seats")
                 break
             rowID = dbmodel.rowIDFinder(screenID,int(row))
-            print(rowID)
             new_booking = bookingTable(rowID=rowID,screeningID=screening_id,seatStatus=1)
             bookingList.append(new_booking)
             #dbmodel.addBooking(new_booking) # works so it needs to be implemented after payment
@@ -378,7 +379,7 @@ def paymentmethod():
     else:
         name = None
         flag = "0"
-    
+
     return render_template("paymentmethod.html", flag = flag, name = name)
 
 @app.route('/payment',  methods=['GET', 'POST'])
@@ -390,7 +391,7 @@ def payment():
         name = None
         flag = "0"
     return render_template("paymentpage.html", flag = flag, name = name)
-    
+
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
     all_members = dbmodel.getMemberTable()
@@ -445,7 +446,6 @@ def register():
             return render_template('signup.html', flag = flag)
         else:
             card = result.get('card')
-            print(type(card))
             pass1 = generate_password_hash(result.get('password'), method='sha256')
             pass2 = result.get('c_password')
             if(check_password_hash(pass1, pass2)):

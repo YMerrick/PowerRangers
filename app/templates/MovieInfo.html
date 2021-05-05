@@ -14,9 +14,9 @@
       </div>
     </div>
     <form action="http://localhost:5000/movieInfo/{{movie.movieID}}" method="POST" name="edit_movie">
-      <hr class="one">
+      <hr class="one" style="border-top: 1px solid white;">
       <input class="form-control" required type="text" name="title" value="{{movie.title}}" style="margin:auto; width: 1000px; font-size: 18px;">
-      <hr class="one">
+      <hr class="one" style="border-top: 1px solid white;">
       <div class="row">
         <div class="column" style="font-size:20px; text-align: left;">
           <div class="form-floating">
@@ -52,9 +52,9 @@
         </iframe>
       </div>
     </div>
-    <hr class="one">
+    <hr class="one" style="border-top: 1px solid white;">
     <h3 style="text-align:center"> {{movie.title}} </h3>
-    <hr class="one">
+    <hr class="one" style="border-top: 1px solid white;">
     <div class="row" style="margin-top:30px;">
       <div class="column" style="font-size:20px; text-align: left;">
         <p> {{movie.director}} </p>
