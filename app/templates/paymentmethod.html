@@ -2,7 +2,13 @@
 {% block title %} addUser {% endblock %}
 {% block content %}
 
-
+<head>  
+    <title>Checkout</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://js.stripe.com/v3/"></script>  <!-- new -->
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+</head>
     <!------------main---------------->
 <div class="container-fluid">
 	<div class="paragraph" style="height:930px; text-align: center; background-color: rgb(0, 0, 0);">
@@ -14,7 +20,7 @@
 
                 <hr style="width: 880px;border-width:5px; color:rgb(255, 255, 255);">
   
-                <p align="center"><a href=stripepayment ><button class="btn btn-outline-secondary push" style="height:300px;width:1240px"><h2 style= "color:rgb(255, 255, 255)">PAY ONLINE<span></span></h2></button></a></p>
+                <p align="center"><button class="btn btn-outline-secondary push" style="height:300px;width:1240px" id = "submitBtn"><h2 style= "color:rgb(255, 255, 255)">PAY ONLINE<span></span></h2></button></p>
                 <p align="center"><a  ><button class="btn btn-outline-secondary push" style="height:300px;width:1240px"><h2 style= "color:rgb(255, 255, 255)">PAY BY CASH<span></span></h2></button></a></p>
                 </div>
         
@@ -25,4 +31,26 @@
     </div>
 
 </div>
+<script>
+    fetch("/config")
+    .then((result) => { return result.json(); })
+    .then((data) => {
+      // Initialize Stripe.js
+      const stripe = Stripe("{{publicKey.publicKey}}");
+    
+      document.querySelector("#submitBtn").addEventListener("click", () => {
+        // Get Checkout Session ID
+        fetch("/create-checkout-session")
+        .then((result) => { return result.json(); })
+        .then((data) => {
+          console.log(data);
+          // Redirect to Stripe Checkout
+          return stripe.redirectToCheckout({sessionId: data.sessionID})
+        })
+        .then((res) => {
+          console.log(res);
+        });
+      });
+    });
+</script>
 {% endblock %}

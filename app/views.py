@@ -373,6 +373,9 @@ def seats():
 @app.route('/paymentmethod',  methods=['GET', 'POST'])# if choose to pay by cash will create a unpaid ticket which will skip over the online paymentpage
 def paymentmethod():
     paymentTable = dbmodel.PaymentTable
+    stripeConfig = {
+        "publicKey" : stripeKeys["publishableKey"]
+    }
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         name = dbmodel.getUserFromID(session["id"])
         flag = "1"
@@ -380,7 +383,7 @@ def paymentmethod():
         name = None
         flag = "0"
 
-    return render_template("paymentmethod.html", flag = flag, name = name)
+    return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig)
 
 @app.route('/payment',  methods=['GET', 'POST'])
 def payment():
@@ -545,7 +548,8 @@ def createCheckoutSession():
                 line_items = lineItems,
                 mode = 'payment',
                 payment_method_types = ['card'],
-                customer = member.stripeCustomerID
+                customer = member.stripeCustomerID,
+                customer_email = member.email
             )
         else:
             checkoutSession = stripe.checkout.Session.create(
@@ -633,6 +637,7 @@ def showSeating(screeningID):
 def showTickets(memberID):
     current_user = dbmodel.getUserFromID(memberID)
     tickets = dbmodel.getTickets(memberID)
+    print(tickets)
     bookings = dbmodel.getBookingTable()
     screening = dbmodel.getScreeningTable()
     movies = dbmodel.getMoviesTable()
