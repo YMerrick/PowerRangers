@@ -393,6 +393,7 @@ class Models():
         )
         return payment
 
+
     def getMemberfromPaymentID(self,paymentId):
         memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentId)
         member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
@@ -401,6 +402,7 @@ class Models():
     def getPaymentListfromPMemberID(self,memberID):
         paymentList = self.db.session.query(self.PaymentTable.memberID).filter_by(memberID = memberID).all()   
         return paymentList
+
 
     def updatePayment(self,paymentID,paymentMethod=None,chargeID=None):
         paymentRecord = self.getPayment(paymentID)

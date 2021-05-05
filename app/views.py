@@ -407,12 +407,15 @@ def paymentmethod():
         name = None
         flag = "0"
     if request.method == 'POST':
-        return redirect(url_for('paymentsuccess'),flag = flag, name = name)
-        # else:
-        #     flash("YOU DONT HAVE ENOUGH FUND!")
-            # return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)    
+        if (name.walletBalance < payment.totalprice):
+            number = float(payment.totalprice)-float(name.walletBalance)
+            flash("no enough funds")
 
-    return render_template("paymentmethod.html", admin = admin, flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+            return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+        else:
+            name.walletBalance = float(name.walletBalance) - float(payment.totalprice)
+            return redirect(url_for('success2'))
+    return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
 def payment():
@@ -590,7 +593,7 @@ def createCheckoutSession():
     print(lineItems)
     try:
         if "logged_in" in session and session["logged_in"] == True:
-            member = dbmodel.getMember(int(session['id']))
+            member = dbmodel.getMemberTable(int(session['id']))
             checkoutSession = stripe.checkout.Session.create(
                 success_url = domain + '/success',
                 cancel_url = domain + '/cancel',
@@ -645,10 +648,10 @@ def success():
     for ticket in session['ticketIDList']:
         dbmodel.makeTicketPdf(ticket)
     #Adds the payment to customer table and the tickets associated with that payment
-    print(session)
+    #print(session)
     session["checkout"] = stripe.checkout.Session.retrieve(session["checkout"])
     session.modified = True
-    print(session)
+    #print(session)
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'card',session['checkout']['payment_intent'])
     #Sends the email here
@@ -658,6 +661,20 @@ def success():
         createEmail(session['checkout']['customer_email'])
     
     return redirect(url_for('movieDetails'))
+@app.route('/success2')
+def success2():
+    #Send the tickets to the email of the customer
+    #Creates the ticket pdfs after the success
+    for ticket in session['ticketIDList']:
+        dbmodel.makeTicketPdf(ticket)
+    #Adds the payment to customer table and the tickets associated with that payment
+    member = dbmodel.getMemberTable(session['id']).email
+    print(member)
+    dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
+    dbmodel.updatePayment(int(session['paymentID']),'Wallet')
+    #Sends the email here
+    createEmail(member)
+    return redirect(url_for('paymentsuccess'))
 
 @app.route('/addFunds')
 def addFunds(member_id):
