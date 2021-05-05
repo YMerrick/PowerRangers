@@ -4,6 +4,7 @@ from flask import Flask
 from app import app
 from fpdf import FPDF
 import re
+import qrcode
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -363,6 +364,14 @@ class Models():
         location = 'app/static/'
         file = FPDF(orientation = 'L', format = (74,105))
 
+        qr = qrcode.QRCode(
+            version=1,
+            box_size=4,
+            border=4,
+        )
+        qr.add_data(ticketId)
+        qr.make(fit=True)
+
         file.open()
         file.add_page()
 
@@ -371,6 +380,8 @@ class Models():
 
         file.set_font('Courier',size= 10)
         ticketInfo = self.getBookingInfoForTicket(ticketId)
+        print(ticketInfo)
+        qrCodeImg = qr.make_image(fill_color="black", back_color="white")
         file.cell(17,file.font_size,txt= 'Title: ')
         file.multi_cell(0,file.font_size,txt= ticketInfo.title,ln=1,max_line_height=file.font_size)
         file.cell(file.epw,file.font_size,txt= 'Screen: '+ticketInfo.screenName,ln=1)
@@ -381,9 +392,10 @@ class Models():
         file.cell(17,file.font_size,txt='Row: ')
         file.cell(0,file.font_size,txt=str(ticketInfo.rowNumber),ln=1)
         file.cell(17,file.font_size,txt='Seat: ')
-        file.cell(0,file.font_size,txt=str(ticketInfo.seatNumber),ln=1)
+        file.cell(0,file.font_size,txt=str(ticketInfo.seatCount),ln=1)
+        file.image(qrCodeImg.get_image(),x=60,y=32)
 
-        file.output(name = location + 'test.pdf')
+        file.output(name = location+'tickets/' + str(ticketId)+'.pdf')
         file.close()
 
     def updateMovieRecord(self,movieId):
