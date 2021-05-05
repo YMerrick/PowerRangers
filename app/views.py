@@ -353,6 +353,7 @@ def payment():
 def paybywallet():
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         name = dbmodel.getUserFromID(session["id"])
+
         flag = "1"
     else:
         name = None
