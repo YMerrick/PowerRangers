@@ -226,8 +226,11 @@ class Models():
     #getting tickets
     def getTickets(self,memberIDIn):
         ticketsTable = self.TicketTable
-        tickets = self.db.session.query(ticketsTable).filter_by(memberID=int(memberIDIn)).all()
-        return tickets
+        tickets = self.db.session.query(ticketsTable.ticketID).filter_by(memberID=int(memberIDIn)).all()
+        ticketInfoList = []
+        for ticket in tickets:
+            ticketInfoList.append(self.getBookingInfoForTicket(ticket.ticketID))
+        return ticketInfoList
 
     #adding members into member
     def addMemberTableEntry(self,memberIn):
