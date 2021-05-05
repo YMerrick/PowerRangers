@@ -565,7 +565,7 @@ def createCheckoutSession():
                 mode = 'payment',
                 payment_method_types = ['card'],
             )
-        session['checkout'] = checkoutSession
+        session['checkout'] = checkoutSession["id"]
         return jsonify({"sessionID":checkoutSession["id"]})
     except Exception as e:
         return jsonify(error=str(e)), 403
@@ -599,6 +599,7 @@ def cancel():
 def success():
     #Send the tickets to the email of the customer
     #Adds the payment to customer table and the tickets associated with that payment
+    session["checkout"] = stripe.checkout.Session.retrieve(session["checkout"])
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'card',session['checkout']['payment_intent'])
     return redirect(url_for('movieDetails'))
