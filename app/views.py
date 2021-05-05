@@ -581,7 +581,7 @@ def createCheckoutSession():
     print(lineItems)
     try:
         if "logged_in" in session and session["logged_in"] == True:
-            member = dbmodel.getMember(int(session['id']))
+            member = dbmodel.getMemberTable(int(session['id']))
             checkoutSession = stripe.checkout.Session.create(
                 success_url = domain + '/success',
                 cancel_url = domain + '/cancel',
@@ -636,10 +636,10 @@ def success():
     for ticket in session['ticketIDList']:
         dbmodel.makeTicketPdf(ticket)
     #Adds the payment to customer table and the tickets associated with that payment
-    print(session)
+    #print(session)
     session["checkout"] = stripe.checkout.Session.retrieve(session["checkout"])
     session.modified = True
-    print(session)
+    #print(session)
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'card',session['checkout']['payment_intent'])
     #Sends the email here
