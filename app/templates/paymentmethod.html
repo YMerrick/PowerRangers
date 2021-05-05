@@ -19,13 +19,19 @@
                 
 
                 <hr style="width: 880px;border-width:5px; color:rgb(255, 255, 255);">
-                <a>Available Fund: </a><a>{{name.walletBalance}}</a>
-                <span>---</span>
-                <a>Ticket Price: </a><a>{{payment.totalprice}}</a>
-                <p align="center"><button class="btn btn-outline-secondary push" style="height:300px;width:1240px" id = "submitBtn"><h2 style= "color:rgb(255, 255, 255)">PAY BY CARD<span></span></h2></button></p>
+                {% if admin == 0 %}
+                  <a>Available Fund: </a><a>{{name.walletBalance}}</a>
+                  <span>---</span>
+                  <a>Ticket Price: </a><a>{{payment.totalprice}}</a>
+                  <p align="center"><button class="btn btn-outline-secondary push" style="height:300px;width:1240px" id = "submitBtn"><h2 style= "color:rgb(255, 255, 255)">PAY BY CARD<span></span></h2></button></p>
+                  <form action = "/paymentmethod" method = "POST" align="center">
+                  <button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)">PAY BY WALLET</button>
+                  </form>
+                {% else %}
                 <form action = "/paymentmethod" method = "POST" align="center">
-                 <button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)">PAY BY WALLET</button>
-                </form>
+                <button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)"><a href="/payByCash">PAY BY CASH</a></button>
+                  </form>
+                {% endif %}
                 </div>
         
 

@@ -22,16 +22,18 @@
         {% endfor %}
     </table>
     <h4>Total : {{ paymentOut.totalprice }}</h4>
+    
     <form action = "http://127.0.0.1:5000/payByCash" method = "POST">
-        <button type="submit" value="Submit" class="btn btn-dark">Proceed to counter!</button>
+        <p>Cash : <input type = "text" name = "Money" /></p>
+        <button type="submit" value="Submit" class="btn btn-dark">Process Payment</button>
     </form>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li style="color:white">{{ message }}</li>
-    {% endfor %}
-    </ul>
+        <ul class=flashes>
+        {% for message in messages %}
+        <h4>{{ message }}</h4>
+        {% endfor %}
+        </ul>
     {% endif %}
 {% endwith %}
 </div>

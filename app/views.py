@@ -80,6 +80,10 @@ def movieDetails():
     else:
         flag = "0"
         name = None
+    if session["username"] == "admin":
+        admin = 1
+    else:
+        admin = 0
     genreList = dbmodel.getGenres()
     if request.method == "POST":
         genre = request.form.get("selectGenre")
@@ -111,7 +115,7 @@ def movieDetails():
                 movieList = dbmodel.getMovie(genre=genre,date=date)
             else:
                 movieList = dbmodel.getMovie(genre=genre,)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList, flag = flag, name = name)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = movieList, genreList = genreList, flag = flag, name = name,admin = admin)
 
         if "date" in session and session["date"] != "" and session["date"] != None:
             date = session["date"]
@@ -120,8 +124,9 @@ def movieDetails():
                 listFromDate = dbmodel.getMovie(genre=genre,date=date)
             else:
                 listFromDate = dbmodel.getMovie(date=date)
-            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag, name = name)
+            return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag, name = name,admin = admin)
 
+        
     movies = dbmodel.getMovie(date="2021-04-01") # assume today is 2021-04-01
     session["date"] = "2021-04-01"
     return render_template('Movie Details.html',
@@ -391,6 +396,10 @@ def paymentmethod():
     stripeConfig = {
         "publicKey" : stripeKeys["publishableKey"]
     }
+    if session["username"] == "admin":
+        admin = 1
+    else:
+        admin = 0
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         name = dbmodel.getUserFromID(session["id"])
         flag = "1"
@@ -403,7 +412,7 @@ def paymentmethod():
         #     flash("YOU DONT HAVE ENOUGH FUND!")
             # return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)    
 
-    return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+    return render_template("paymentmethod.html", admin = admin, flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
 def payment():
@@ -693,7 +702,7 @@ def showTickets(memberID):
     return render_template("ticketLog.html",flag="1",name=current_user, ticketsOut=tickets,userOut = current_user)
 
 #paying by cash
-@app.route('/payByCash')
+@app.route('/payByCash', methods = ['POST','GET'])
 def payByCash():
     ticketIDList = session['ticketIDList']
     payment = dbmodel.getLastPayment()
@@ -702,8 +711,22 @@ def payByCash():
         tickets.append(dbmodel.getBookingInfoForTicket(ticketID))
         dbmodel.makeTicketPdf(ticketID)
     if request.method == 'POST':
-        flash("See you at the reception! Enjoy")
-    return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets)
+        cash = int(request.form['Money'])
+        if cash > payment.totalprice:
+            cash = cash - payment.totalprice
+            flash("Payment Succeed.")
+            if(cash != 0):
+                flash("Return : "+str(cash))
+        else:
+            cash = cash - payment.totalprice
+            flash("You are short "+str(-cash))
+    return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets,ticketIDListOut = ticketIDList)
+
+@app.route('/payByCash/success')
+def sucessCash():
+    dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
+    dbmodel.updatePayment(int(session['paymentID']),'cash')
+    return redirect(url_for('movieDetails'))
 
 
 @app.route('/paymentsHistory/<int:memberID>',methods = ['POST','GET'])
