@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %} paymentsHistory {% endblock %}
+{% block content %}
+
+
+    <!------------main---------------->
+<div class="container-fluid">
+	<div class="paragraph" style="height:930px; text-align: center; background-color: rgb(0, 0, 0);">
+    <div class="main">
+    	
+        	<div class="title"><h2 style= "color:rgb(255, 255, 255)">PAYMENT METHOD<span></span></h2></div>
+            <div class="form-group">
+                
+
+                <hr style="width: 880px;border-width:5px; color:rgb(255, 255, 255);">
+                <a>WalletBalance: </a><a>{{name.walletBalance}}</a>
+                <!-- {% for payment in paymentList%}
+                <td><a>Payment amount: {{payment.totalprice}}</a><a>Payment method: {{payment.paymentMethod}}</a><a>Time: {{payment.time}}</a></td>
+                {% end for%} -->
+
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

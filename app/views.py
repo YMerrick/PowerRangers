@@ -348,6 +348,25 @@ def payment():
         flag = "0"
     return render_template("paymentpage.html", flag = flag, name = name)
 
+@app.route('/paybywallet',  methods=['GET', 'POST'])
+def paybywallet():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    return render_template("Paybywallet.html", flag = flag, name = name)
+
+@app.route('/paymentsuccess',  methods=['GET', 'POST'])
+def paymentsuccess():
+    if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
+        name = dbmodel.getUserFromID(session["id"])
+        flag = "1"
+    else:
+        name = None
+        flag = "0"
+    return render_template("PaymentSuccess.html", flag = flag, name = name)
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
 def addWallet(id):
@@ -518,3 +537,9 @@ def showTickets(memberID):
     screening = dbmodel.getScreeningTable()
     movies = dbmodel.getMoviesTable()
     return render_template("ticketLog.html",flag="1",name=current_user,moviesOut = movies,screeningsOut = screening,ticketsOut=tickets,userOut = current_user,bookingsOut = bookings)
+
+@app.route('/paymentsHistory/<int:memberID>',methods = ['POST','GET'])
+def showPayment(memberID):
+    current_user = dbmodel.getUserFromID(memberID)
+    # paymentList = dbmode1.getPaymentListfromPMemberID(memberID)
+    return render_template("paymentsHistory.html",flag="1",name=current_user)
