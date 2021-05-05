@@ -94,17 +94,18 @@
            return true;
        }
    };
+
+
    $('#downloadPDF').click(function () {
-    domtoimage.toPng(document.getElementById('content'))
-        .then(function (blob) {
-            var pdf = new jsPDF('l', 'pt', [$('#content').width(), $('#content').height()]);
-
-            pdf.addImage(blob, 'PNG', 0, 0, $('#content').width(), $('#content').height());
-            pdf.save("ticket.pdf");
-
-            that.options.api.optionsChanged();
-        });
-}); 
+    doc.fromHTML($('#content').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+    doc.save('ticket.pdf');
+});
 </script>
+
+
+
 </html>
 
