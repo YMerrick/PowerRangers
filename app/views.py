@@ -126,10 +126,10 @@ def ticketTest():
                            title = 'Test Ticket',ticket = ticketInfo)
 
 
-@app.route('/print')
-def printTicket():
+@app.route('/print/<int:ticketID>')
+def printTicket(ticketID):
     #ticket generator
-    ticketInfo = dbmodel.getBookingInfoForTicket('0')
+    ticketInfo = dbmodel.getBookingInfoForTicket(ticketID)
     return render_template('print.html',
                            title = 'Test Ticket',ticket = ticketInfo)
 
@@ -637,7 +637,6 @@ def showSeating(screeningID):
 def showTickets(memberID):
     current_user = dbmodel.getUserFromID(memberID)
     tickets = dbmodel.getTickets(memberID)
-    print(tickets)
     bookings = dbmodel.getBookingTable()
     screening = dbmodel.getScreeningTable()
     movies = dbmodel.getMoviesTable()
