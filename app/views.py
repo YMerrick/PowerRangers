@@ -659,12 +659,12 @@ def success2():
     for ticket in session['ticketIDList']:
         dbmodel.makeTicketPdf(ticket)
     #Adds the payment to customer table and the tickets associated with that payment
-    member = dbmodel.getMemberTable(session['id'])
+    member = dbmodel.getMemberTable(session['id']).email
     print(member)
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'Wallet')
     #Sends the email here
-    createEmail(member.email)
+    createEmail(member)
     return redirect(url_for('paymentsuccess'))
 
 @app.route('/addFunds')
