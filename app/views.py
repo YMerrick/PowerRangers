@@ -8,6 +8,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import logging # for testing
 import os
 import stripe
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 dbmodel = Models()
 QRcode(app)
 stripeKeys = {
@@ -42,8 +47,11 @@ def home():
 
 @app.route('/testing')
 def index():
+    #for ticket in dbmodel.getTicketTable():
+    #    dbmodel.makeTicketPdf(ticket.ticketID)
+    #createEmail('yorklork@gmail.com')
     #dbmodel.makeTicketPdf(0)
-    dbmodel.makeTicketPdf(8000001288)
+    #dbmodel.makeTicketPdf(8000001288)
     movies = dbmodel.getMovie()
     rows = dbmodel.getRowForScreening(1)
     booked = dbmodel.getBookingInfoForScreening(3)
@@ -627,10 +635,22 @@ def cancel():
 @app.route('/success')
 def success():
     #Send the tickets to the email of the customer
+    #Creates the ticket pdfs after the success
+    for ticket in session['ticketIDList']:
+        dbmodel.makeTicketPdf(ticket)
     #Adds the payment to customer table and the tickets associated with that payment
+    print(session)
     session["checkout"] = stripe.checkout.Session.retrieve(session["checkout"])
+    session.modified = True
+    print(session)
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'card',session['checkout']['payment_intent'])
+    #Sends the email here
+    if (session['checkout']['customer_details']['email'] != None):
+        createEmail(session['checkout']['customer_details']['email'])
+    elif (session['checkout']['customer_email'] != None):
+        createEmail(session['checkout']['customer_email'])
+    
     return redirect(url_for('movieDetails'))
 
 @app.route('/addFunds')
@@ -678,12 +698,64 @@ def showTickets(memberID):
 #paying by cash
 @app.route('/payByCash')
 def payByCash():
-    paymentTable = dbmodel.getPaymentTable()
-    length = dbmodel.getLastPayment()
-    return render_template("payByCash.html",lengthOut = length)
+    ticketIDList = session['ticketIDList']
+    payment = dbmodel.getLastPayment()
+    tickets = []
+    for ticketID in ticketIDList:
+        tickets.append(dbmodel.getBookingInfoForTicket(ticketID))
+        dbmodel.makeTicketPdf(ticketID)
+    if request.method == 'POST':
+        flash("See you at the reception! Enjoy")
+    return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets)
+
 
 @app.route('/paymentsHistory/<int:memberID>',methods = ['POST','GET'])
 def showPayment(memberID):
     current_user = dbmodel.getUserFromID(memberID)
     # paymentList = dbmode1.getPaymentListfromPMemberID(memberID)
     return render_template("paymentsHistory.html",flag="1",name=current_user)
+
+def createEmail(customerEmail):
+    body = '''
+    Thank you for your purchase!
+    Your tickets are attached to this email.
+    
+    Your sincerely,
+    Netflex
+    '''
+    sender = 'powerrangernetflex7@gmail.com'
+    password = 'powerRanger1234!'
+    client = customerEmail
+
+    email = MIMEMultipart()
+    email['From'] = sender
+    email['To'] = client
+    email['Subject'] = 'Tickets for your movie'
+
+    email.attach(MIMEText(body,'plain'))
+
+    #List of tickets to be added to document
+    for ticketId in session['ticketIDList']:
+        ticketFile = str(ticketId) + '.pdf'
+
+        workingdir = os.path.abspath(os.getcwd())
+        filepath = workingdir + '\\app\static\\tickets\\'
+
+        binaryTicket = open(filepath + ticketFile,'rb')
+
+        payload = MIMEBase('application','octate-stream',Name=ticketFile)
+
+        payload.set_payload((binaryTicket).read())
+
+        encoders.encode_base64(payload)
+
+        payload.add_header('Content-Decomposition','attachment',filename = ticketFile)
+        email.attach(payload)
+
+    mailSesh = smtplib.SMTP('smtp.gmail.com',587)
+    mailSesh.starttls()
+    mailSesh.login(sender,password)
+    testMsg = email.as_string()
+    mailSesh.sendmail(sender,client,testMsg)
+    mailSesh.quit()
+

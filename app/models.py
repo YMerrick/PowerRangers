@@ -393,21 +393,23 @@ class Models():
         )
         return payment
 
-    # def getMemberfromPaymentID(self,paymentId):
-    #     memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentID)
-    #     member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
-    #     return member
 
-    # def getPaymentListfromPMemberID(self,memberID):
-    #     paymentList = self.db.session.query(self.PaymentTable.memberID).filter_by(memberID = memberID).all()   
-    #     return paymentList
+    def getMemberfromPaymentID(self,paymentId):
+        memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentId)
+        member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
+        return member
+
+    def getPaymentListfromPMemberID(self,memberID):
+        paymentList = self.db.session.query(self.PaymentTable.memberID).filter_by(memberID = memberID).all()   
+        return paymentList
+
 
     def updatePayment(self,paymentID,paymentMethod=None,chargeID=None):
-        paymentRecord = self.getPayment(paymentId)
+        paymentRecord = self.getPayment(paymentID)
         if paymentMethod != None:
             paymentRecord.paymentMethod = paymentMethod
-        if chargeId != None:
-            paymentRecord.chargeID = chargeId
+        if chargeID != None:
+            paymentRecord.chargeID = chargeID
         self.db.session.commit()
         self.db.session.close()
 
@@ -553,5 +555,4 @@ class Models():
     def getLastPayment(self):
         paymentTable = self.getPaymentTable()
         payment = self.db.session.query(self.PaymentTable).filter_by(paymentID = str(len(paymentTable))).first()
-        length = payment.totalprice
-        return length
+        return payment
