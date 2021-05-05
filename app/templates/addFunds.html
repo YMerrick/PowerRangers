@@ -6,9 +6,9 @@
       <p>{{ userOut.walletBalance }}</p>
       <form action = "http://localhost:5000/addFunds/{{ userOut.memberID }}" method = "POST">
         <p>Add balance <input class="form-control" type = "text" name = "wallet" style="margin:auto; width:200px; margin-top:10px;"></p>
-        <button class="btn btn-outline-secondary push" type="submit">Submit</button>
+        <button class="btn btn-outline-secondary push" type="submit" style="margin-left:-120px;">Submit</button>
     </form>
-    <a href="http://localhost:5000/addFunds/{{ userOut.memberID }}/pay"><button class="btn btn-outline-secondary push" type="submit" style="margin-top:30px;">Pay</button></a>
+    <a href="http://localhost:5000/addFunds/{{ userOut.memberID }}/pay"><button class="btn btn-outline-secondary push" type="submit" style="margin-left:150px;margin-top:-70px;">Pay</button></a>
   </div>
 </div>
 {% endblock %}
