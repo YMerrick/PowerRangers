@@ -544,5 +544,4 @@ class Models():
     def getLastPayment(self):
         paymentTable = self.getPaymentTable()
         payment = self.db.session.query(self.PaymentTable).filter_by(paymentID = str(len(paymentTable))).first()
-        length = payment.totalprice
-        return length
+        return payment

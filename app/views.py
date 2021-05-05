@@ -649,6 +649,12 @@ def showTickets(memberID):
 #paying by cash
 @app.route('/payByCash')
 def payByCash():
-    paymentTable = dbmodel.getPaymentTable()
-    length = dbmodel.getLastPayment()
-    return render_template("payByCash.html",lengthOut = length)
+    ticketIDList = session['ticketIDList']
+    payment = dbmodel.getLastPayment()
+    tickets = []
+    for ticketID in ticketIDList:
+        tickets.append(dbmodel.getBookingInfoForTicket(ticketID))
+        dbmodel.makeTicketPdf(ticketID)
+    if request.method == 'POST':
+        flash("See you at the reception! Enjoy")
+    return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets)
