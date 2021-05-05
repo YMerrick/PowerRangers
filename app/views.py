@@ -35,6 +35,7 @@ def home():
 @app.route('/testing')
 def index():
     #dbmodel.makeTicketPdf(0)
+    dbmodel.makeTicketPdf(8000001288)
     movies = dbmodel.getMovie()
     rows = dbmodel.getRowForScreening(1)
     booked = dbmodel.getBookingInfoForScreening(3)
