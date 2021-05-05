@@ -1,0 +1,28 @@
+href={% extends "base.html" %}
+{% block title %} addUser {% endblock %}
+{% block content %}
+
+
+    <!------------main---------------->
+<div class="container-fluid">
+	<div class="paragraph" style="height:930px; text-align: center; background-color: rgb(0, 0, 0);">
+    <div class="main">
+    	
+        	<div class="title"><h2 style= "color:rgb(255, 255, 255)">PAYMENT METHOD<span></span></h2></div>
+            <div class="form-group">
+                
+
+                <hr style="width: 880px;border-width:5px; color:rgb(255, 255, 255);">
+  
+                <p align="center"><a href=print ><button class="btn btn-outline-secondary push" style="height:300px;width:1240px"><h2 style= "color:rgb(255, 255, 255)">Download YOUR TICKET<span></span></h2></button></a></p>
+                <p align="center"><h2>YOU CAN ALSO GET TICKET FROM AN EMAIL</h2></p><a><strong>{{name.email}}</strong></a>
+                </div>
+        
+
+
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

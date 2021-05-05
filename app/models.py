@@ -387,18 +387,27 @@ class Models():
         )
         return price.first()
     
-    def getPayment(self,paymentId):
+    def getPayment(self,paymentID):
         payment = (
-            self.db.session.query(self.PaymentTable).get(paymentId)
+            self.db.session.query(self.PaymentTable).get(paymentID)
         )
         return payment
 
-    def updatePayment(self,paymentId,paymentMethod=None,chargeId=None):
-        paymentRecord = self.getPayment(paymentId)
+    def getMemberfromPaymentID(self,paymentId):
+        memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentId)
+        member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
+        return member
+
+    def getPaymentListfromPMemberID(self,memberID):
+        paymentList = self.db.session.query(self.PaymentTable.memberID).filter_by(memberID = memberID).all()   
+        return paymentList
+
+    def updatePayment(self,paymentID,paymentMethod=None,chargeID=None):
+        paymentRecord = self.getPayment(paymentID)
         if paymentMethod != None:
             paymentRecord.paymentMethod = paymentMethod
-        if chargeId != None:
-            paymentRecord.chargeID = chargeId
+        if chargeID != None:
+            paymentRecord.chargeID = chargeID
         self.db.session.commit()
         self.db.session.close()
 
