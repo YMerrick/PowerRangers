@@ -378,7 +378,8 @@ def seats():
 
 @app.route('/paymentmethod',  methods=['GET', 'POST'])# if choose to pay by cash will create a unpaid ticket which will skip over the online paymentpage
 def paymentmethod():
-    paymentTable = dbmodel.PaymentTable
+    
+    payment = dbmodel.getPayment(session['paymentID'])
     stripeConfig = {
         "publicKey" : stripeKeys["publishableKey"]
     }
@@ -388,8 +389,13 @@ def paymentmethod():
     else:
         name = None
         flag = "0"
+    if request.method == 'POST':
+        return redirect(url_for('paymentsuccess'),flag = flag, name = name)
+        # else:
+        #     flash("YOU DONT HAVE ENOUGH FUND!")
+            # return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)    
 
-    return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig)
+    return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
 def payment():
