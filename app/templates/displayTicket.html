@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Profile {% endblock %}
+{% block content %}
+<div class="paragraph" style="height:960px; text-align: center;">
+    <p>Your tickets</p>
+    <table class="table table-bordered" style="color:white;">
+        <tr>
+            <th>Title</th>
+            <th>Screening Name</th>
+            <th>Screening Time</th>
+            <th>Screening Date</th>
+            <th>Seat</th>
+        </tr>
+        {% for ticket in ticketsOut %}
+        <tr>
+            <td><a href="http://localhost:5000/printTest/{{ticket[6]}}">{{ticket[0]}}</a></td>
+            <td>{{ticket[1]}}</td>
+            <td>{{ticket[2]}}</td>
+            <td>{{ticket[3]}}</td>
+            <td>{{ticket[4]}}{{ticket[5]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
