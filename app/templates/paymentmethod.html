@@ -2,7 +2,7 @@
 {% block title %} addUser {% endblock %}
 {% block content %}
 
-<head>  
+<head>
     <title>Checkout</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,21 +13,31 @@
 <div class="container-fluid">
 	<div class="paragraph" style="height:930px; text-align: center; background-color: rgb(0, 0, 0);">
     <div class="main">
-    	
+
         	<div class="title"><h2 style= "color:rgb(255, 255, 255)">PAYMENT METHOD<span></span></h2></div>
+						{% with messages = get_flashed_messages() %}
+							{% if messages %}
+								{% for msg in messages %}
+								<div class="alert alert-warning alert-dismissible fade show" role="alert" style="width:300px; margin:auto;">
+									<strong> {{ msg }} </strong>
+									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+								</div>
+								{% endfor %}
+							{% endif %}
+						{% endwith %}
             <div class="form-group">
-                
+
 
                 <hr style="width: 880px;border-width:5px; color:rgb(255, 255, 255);">
-                <a>Available Fund: </a><a>{{name.walletBalance}}</a>
+                <a>Available Funds: </a><a>{{name.walletBalance}}</a>
                 <span>---</span>
                 <a>Ticket Price: </a><a>{{payment.totalprice}}</a>
                 <p align="center"><button class="btn btn-outline-secondary push" style="height:300px;width:1240px" id = "submitBtn"><h2 style= "color:rgb(255, 255, 255)">PAY BY CARD<span></span></h2></button></p>
                 <form action = "/paymentmethod" method = "POST" align="center">
-                 <button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)">PAY BY WALLET</button>
+                  <p align="center"><button type="submit" class="btn btn-outline-secondary push" style="height:300px;width:1240px" id = "submitBtn"><h2 style= "color:rgb(255, 255, 255)">PAY BY WALLET<span></span></h2></button></p>
                 </form>
                 </div>
-        
+
 
 
 
@@ -41,7 +51,7 @@
     .then((data) => {
       // Initialize Stripe.js
       const stripe = Stripe("{{publicKey.publicKey}}");
-    
+
       document.querySelector("#submitBtn").addEventListener("click", () => {
         // Get Checkout Session ID
         fetch("/create-checkout-session")

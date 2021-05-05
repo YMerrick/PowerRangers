@@ -398,11 +398,14 @@ def paymentmethod():
         name = None
         flag = "0"
     if request.method == 'POST':
-        return redirect(url_for('paymentsuccess'),flag = flag, name = name)
-        # else:
-        #     flash("YOU DONT HAVE ENOUGH FUND!")
-            # return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)    
+        if (name.walletBalance < payment.totalprice):
+            number = float(payment.totalprice)-float(name.walletBalance)
+            flash("no enough funds")
 
+            return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+        else:
+            name.walletBalance = float(name.walletBalance) - float(payment.totalprice)
+            return redirect(url_for('paymentsuccess'))
     return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
@@ -695,9 +698,16 @@ def showTickets(memberID):
 #paying by cash
 @app.route('/payByCash')
 def payByCash():
-    paymentTable = dbmodel.getPaymentTable()
-    length = dbmodel.getLastPayment()
-    return render_template("payByCash.html",lengthOut = length)
+    ticketIDList = session['ticketIDList']
+    payment = dbmodel.getLastPayment()
+    tickets = []
+    for ticketID in ticketIDList:
+        tickets.append(dbmodel.getBookingInfoForTicket(ticketID))
+        dbmodel.makeTicketPdf(ticketID)
+    if request.method == 'POST':
+        flash("See you at the reception! Enjoy")
+    return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets)
+
 
 @app.route('/paymentsHistory/<int:memberID>',methods = ['POST','GET'])
 def showPayment(memberID):
@@ -748,3 +758,4 @@ def createEmail(customerEmail):
     testMsg = email.as_string()
     mailSesh.sendmail(sender,client,testMsg)
     mailSesh.quit()
+
