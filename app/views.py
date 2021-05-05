@@ -1,4 +1,4 @@
-from flask import render_template, Flask, request, flash, session, url_for, redirect, jsonify
+from flask import render_template, Flask, request, flash, session, url_for, redirect, jsonify, send_from_directory
 from flask_qrcode import QRcode
 from app import app
 from flask_sqlalchemy import SQLAlchemy
@@ -130,9 +130,14 @@ def ticketTest():
 def printTicket(ticketID):
     #ticket generator
     ticketInfo = dbmodel.getBookingInfoForTicket(ticketID)
-    return render_template('print.html',
+    return render_template('printTest.html',
                            title = 'Test Ticket',ticket = ticketInfo)
 
+@app.route("/printTest/<int:ticketID>")
+def tos():
+    workingdir = os.path.abspath(os.getcwd())
+    filepath = workingdir + '/static/'
+    return send_from_directory(filepath, 'test.pdf')
 
 @app.route('/ticket')
 def ticket():
