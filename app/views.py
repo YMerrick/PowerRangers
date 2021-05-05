@@ -135,9 +135,9 @@ def printTicket(ticketID):
                            title = 'Test Ticket',ticket = ticketInfo)
 
 @app.route("/printTest/<int:ticketID>")
-def tos():
+def printTicketTest():
     workingdir = os.path.abspath(os.getcwd())
-    filepath = workingdir + '/static/'
+    filepath = workingdir + '/static/tickets/'
     return send_from_directory(filepath, 'test.pdf')
 
 @app.route('/ticket')
