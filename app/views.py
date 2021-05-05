@@ -637,5 +637,4 @@ def showSeating(screeningID):
 def showTickets(memberID):
     current_user = dbmodel.getUserFromID(memberID)
     tickets = dbmodel.getTickets(memberID)
-    print(tickets)
     return render_template("ticketLog.html",flag="1",name=current_user, ticketsOut=tickets,userOut = current_user)
