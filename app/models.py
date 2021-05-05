@@ -394,7 +394,7 @@ class Models():
         return payment
 
     def getMemberfromPaymentID(self,paymentId):
-        memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentID)
+        memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentId)
         member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
         return member
 
