@@ -405,7 +405,7 @@ def paymentmethod():
             return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
         else:
             name.walletBalance = float(name.walletBalance) - float(payment.totalprice)
-            return redirect(url_for('paymentsuccess'))
+            return redirect(url_for('success2'))
     return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
@@ -652,6 +652,20 @@ def success():
         createEmail(session['checkout']['customer_email'])
     
     return redirect(url_for('movieDetails'))
+@app.route('/success2')
+def success2():
+    #Send the tickets to the email of the customer
+    #Creates the ticket pdfs after the success
+    for ticket in session['ticketIDList']:
+        dbmodel.makeTicketPdf(ticket)
+    #Adds the payment to customer table and the tickets associated with that payment
+    member = dbmodel.getMemberTable(session['id'])
+    print(member)
+    dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
+    dbmodel.updatePayment(int(session['paymentID']),'Wallet')
+    #Sends the email here
+    createEmail(member.email)
+    return redirect(url_for('paymentsuccess'))
 
 @app.route('/addFunds')
 def addFunds(member_id):
