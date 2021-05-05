@@ -637,7 +637,5 @@ def showSeating(screeningID):
 def showTickets(memberID):
     current_user = dbmodel.getUserFromID(memberID)
     tickets = dbmodel.getTickets(memberID)
-    bookings = dbmodel.getBookingTable()
-    screening = dbmodel.getScreeningTable()
-    movies = dbmodel.getMoviesTable()
-    return render_template("ticketLog.html",flag="1",name=current_user,moviesOut = movies,screeningsOut = screening,ticketsOut=tickets,userOut = current_user,bookingsOut = bookings)
+    print(tickets)
+    return render_template("ticketLog.html",flag="1",name=current_user, ticketsOut=tickets,userOut = current_user)

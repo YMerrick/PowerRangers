@@ -3,32 +3,21 @@
 {% block content %}
 <div class="paragraph" style="height:960px; text-align: center;">
     <p>{{ userOut.email }}</p>
-    <table>
+    <table class="table table-bordered" style="color:white;">
         <tr>
-            <th>Booking ID</th>
             <th>Title</th>
-            <th>Screening Date</th>
+            <th>Screening Name</th>
             <th>Screening Time</th>
+            <th>Screening Date</th>
+            <th>Seat</th>
         </tr>
-    
         {% for ticket in ticketsOut %}
         <tr>
-            <td>{{ ticket.bookingID }}</td>
-            {% for booking in bookingsOut %}
-                {% if ticket.bookingID == booking.bookingID %}
-                    {% for screening in screeningsOut %}
-                        {% if screening.screeningID == booking.screeningID %}
-                            {% for movie in moviesOut %}
-                                {%if screening.movieID == movie.movieID %}
-                                    <td>{{ movie.title }}</td>
-                                {% endif %}
-                            {% endfor %}
-                            <td>{{ screening.date }}</td>
-                            <td>{{ screening.time }}</td>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
+            <td><a href="http://localhost:5000/print/{{ticket[6]}}">{{ticket[0]}}</a></td>
+            <td>{{ticket[1]}}</td>
+            <td>{{ticket[2]}}</td>
+            <td>{{ticket[3]}}</td>
+            <td>{{ticket[4]}}{{ticket[5]}}</td>
         </tr>
         {% endfor %}
     </table>
