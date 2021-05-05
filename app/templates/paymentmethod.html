@@ -38,9 +38,9 @@
                   <button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)">PAY BY WALLET</button>
                   </form>
                 {% else %}
-                <form action = "/paymentmethod" method = "POST" align="center">
-                <button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)"><a href="/payByCash">PAY BY CASH</a></button>
-                  </form>
+                    <form action = "/payByCash" method = "POST" align="center">
+                        <a href="/payByCash"></a><button type ="submit" class="btn btn-outline-secondary" style="color:rgb(255, 255, 255)">PAY BY CASH</button>
+                    </form>
                 {% endif %}
                 </div>
 
