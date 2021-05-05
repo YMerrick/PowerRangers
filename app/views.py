@@ -72,7 +72,7 @@ def mainPage():
 
 @app.route('/movieDetails', methods = ['POST' ,'GET'])
 def movieDetails():
-    session.pop('_flashes', None)
+   #session.pop('_flashes', None)
     print(session)
     if "logged_in" in session and session["logged_in"] == True: # to check if user is online then hide the menu login and signup
         flag = "1"
@@ -126,7 +126,7 @@ def movieDetails():
                 listFromDate = dbmodel.getMovie(date=date)
             return render_template('Movie Details.html', title = 'Movie Details', movies = listFromDate, genreList = genreList, flag = flag, name = name,admin = admin)
 
-        
+    print(session)  
     movies = dbmodel.getMovie(date="2021-04-01") # assume today is 2021-04-01
     session["date"] = "2021-04-01"
     return render_template('Movie Details.html',
@@ -409,13 +409,15 @@ def paymentmethod():
     if request.method == 'POST':
         if (name.walletBalance < payment.totalprice):
             number = float(payment.totalprice)-float(name.walletBalance)
-            flash("no enough funds")
-
-            return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+            if(admin == 0):
+                flash("no enough funds")
+            else:
+                return render_template("paymentmethod.html",admin = admin, flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+            return render_template("paymentmethod.html",admin = admin, flag = flag, name = name,publicKey = stripeConfig,payment = payment)
         else:
             name.walletBalance = float(name.walletBalance) - float(payment.totalprice)
             return redirect(url_for('success2'))
-    return render_template("paymentmethod.html", flag = flag, name = name,publicKey = stripeConfig,payment = payment)
+    return render_template("paymentmethod.html", admin = admin,flag = flag, name = name,publicKey = stripeConfig,payment = payment)
 
 @app.route('/payment',  methods=['GET', 'POST'])
 def payment():
@@ -435,6 +437,7 @@ def paybywallet():
     else:
         name = None
         flag = "0"
+    
     return render_template("Paybywallet.html", flag = flag, name = name)
 
 @app.route('/paymentsuccess',  methods=['GET', 'POST'])
@@ -445,6 +448,11 @@ def paymentsuccess():
     else:
         name = None
         flag = "0"
+    currUser = dbmodel.getUserFromID(session['id'])
+    currPayment = dbmodel.getPayment(session['paymentID'])
+    wallet = int(currUser.walletBalance) - int(currPayment.totalprice)
+    currUser.walletBalance = str(wallet)
+    dbmodel.db.session.commit()
     return render_template("PaymentSuccess.html", flag = flag, name = name)
 
 @app.route('/addFunds/<int:id>',methods = ['POST','GET'])
@@ -729,20 +737,26 @@ def payByCash():
         dbmodel.makeTicketPdf(ticketID)
     if request.method == 'POST':
         cash = int(request.form['Money'])
-        if cash > payment.totalprice:
+        if cash >= payment.totalprice:
             cash = cash - payment.totalprice
-            flash("Payment Succeed.")
-            if(cash != 0):
-                flash("Return : "+str(cash))
+            if(cash == 0):
+                return redirect('payByCash/success')
+            else:
+                flash("Return : "+str(cash)+"£")
+                return redirect('payByCash/success')
+            
         else:
             cash = cash - payment.totalprice
             flash("You are short "+str(-cash))
+            
     return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets,ticketIDListOut = ticketIDList)
 
 @app.route('/payByCash/success')
 def sucessCash():
+    print(session)
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'cash')
+    flash("Payment Succeed.")
     return redirect(url_for('movieDetails'))
 
 

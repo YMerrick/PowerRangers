@@ -4,9 +4,15 @@
 <div class="container-fluid">
   <form method="POST">
     <div class="paragraph">
-      {% for msg in get_flashed_messages()%}
-          <h3>{{msg}}</h3>
-      {% endfor %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+          {% for message in messages %}
+            <h4>{{ message }}</h4>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
       <div class="wrapper">
         <select name="selectGenre" id="selectGenre" class="form-control" onfocus='this.size=6;' onblur='this.size=1;' onchange='this.size=1; this.blur(); this.form.submit();' style="margin-left: 16px; background-color:#c9c7c7;">
           <option value="">Choose Genre</option>
