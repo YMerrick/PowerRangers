@@ -403,11 +403,11 @@ class Models():
         return paymentList
 
     def updatePayment(self,paymentID,paymentMethod=None,chargeID=None):
-        paymentRecord = self.getPayment(paymentId)
+        paymentRecord = self.getPayment(paymentID)
         if paymentMethod != None:
             paymentRecord.paymentMethod = paymentMethod
-        if chargeId != None:
-            paymentRecord.chargeID = chargeId
+        if chargeID != None:
+            paymentRecord.chargeID = chargeID
         self.db.session.commit()
         self.db.session.close()
 
