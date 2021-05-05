@@ -721,29 +721,35 @@ def showTickets(memberID):
 #paying by cash
 @app.route('/payByCash', methods = ['POST','GET'])
 def payByCash():
-    ticketIDList = session['ticketIDList']
-    payment = dbmodel.getLastPayment()
-    tickets = []
-    for ticketID in ticketIDList:
-        tickets.append(dbmodel.getBookingInfoForTicket(ticketID))
-        dbmodel.makeTicketPdf(ticketID)
-    if request.method == 'POST':
-        cash = int(request.form['Money'])
-        if cash > payment.totalprice:
-            cash = cash - payment.totalprice
-            flash("Payment Succeed.")
-            if(cash != 0):
-                flash("Return : "+str(cash))
-        else:
-            cash = cash - payment.totalprice
-            flash("You are short "+str(-cash))
-    return render_template("payByCash.html",paymentOut = payment,ticketsOut = tickets,ticketIDListOut = ticketIDList)
+    print(session)
+    payment = dbmodel.getPayment(session['paymentID'])
+    return render_template("payByCash.html",paymentOut = payment)
+
+@app.route('/payByCash/check', methods = ['POST','GET'])
+def check():
+    print(session)
+    cash = int(request.form.get('Money'))
+    print(cash)
+    payment = int(request.form.get('amount'))
+    if cash >= payment:
+        redirect(url_for('/payByCash/success'))
+    else:
+        print(session)
+        cash = cash - payment
+        flash("You are short "+str(-cash))
+        print(session)
+        redirect(url_for('payByCash'))
+    return render_template('testing.html')
 
 @app.route('/payByCash/success')
 def sucessCash():
+    tickets = []
+    for ticketID in session['ticketIDList']:
+        tickets.append(dbmodel.getBookingInfoForTicket(ticketID))
+        dbmodel.makeTicketPdf(ticketID)
     dbmodel.insertCustomers(session['ticketIDList'],int(session['paymentID']))
     dbmodel.updatePayment(int(session['paymentID']),'cash')
-    return redirect(url_for('movieDetails'))
+    return render_template('displayTicket.html',tickets=tickets)
 
 
 @app.route('/paymentsHistory/<int:memberID>',methods = ['POST','GET'])
