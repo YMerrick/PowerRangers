@@ -644,3 +644,10 @@ def showTickets(memberID):
     current_user = dbmodel.getUserFromID(memberID)
     tickets = dbmodel.getTickets(memberID)
     return render_template("ticketLog.html",flag="1",name=current_user, ticketsOut=tickets,userOut = current_user)
+
+#paying by cash
+@app.route('/payByCash')
+def payByCash():
+    paymentTable = dbmodel.getPaymentTable()
+    length = dbmodel.getLastPayment()
+    return render_template("payByCash.html",lengthOut = length)
