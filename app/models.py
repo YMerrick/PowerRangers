@@ -393,14 +393,14 @@ class Models():
         )
         return payment
 
-    def getMemberfromPaymentID(self,paymentId):
-        memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentID)
-        member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
-        return member
+    # def getMemberfromPaymentID(self,paymentId):
+    #     memberID = self.db.session.query(self.PaymentTable.memberID).filter_by(paymentID = paymentID)
+    #     member = self.db.session.query(self.MemberTable).filter_by(memberID = memberID).first()
+    #     return member
 
-    def getPaymentListfromPMemberID(self,memberID):
-        paymentList = self.db.session.query(self.PaymentTable.memberID).filter_by(memberID = memberID).all()   
-        return paymentList
+    # def getPaymentListfromPMemberID(self,memberID):
+    #     paymentList = self.db.session.query(self.PaymentTable.memberID).filter_by(memberID = memberID).all()   
+    #     return paymentList
 
     def updatePayment(self,paymentID,paymentMethod=None,chargeID=None):
         paymentRecord = self.getPayment(paymentId)
