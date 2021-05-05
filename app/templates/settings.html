@@ -4,6 +4,7 @@
 {%if admin == "0"%}
 <div class="paragraph" style="height:960px; text-align: center;">
     <label>Balance: {{name.walletBalance}}</label>
+    <br>
     <a href="http://localhost:5000/addFunds/{{session['id']}}"><button class="btn btn-outline-secondary push" type="submit">Add funds</button></a>
     <a href="http://localhost:5000/ticketsHistory/{{session['id']}}"><button class="btn btn-outline-secondary push" type="submit">Ticket History</button></a>
 </div>
